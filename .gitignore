@@ -1,0 +1,4 @@
+*pyc
+.project
+.pydevproject
+makerscience_server/whoosh_index

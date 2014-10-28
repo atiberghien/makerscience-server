@@ -1,0 +1,2 @@
+-e git+git@github.com:UnissonCo/dataserver.git@bed9f83ac3b0a85eac321172d12e69d20d453be2#egg=dataserver-project
+django-grappelli==2.5.5
