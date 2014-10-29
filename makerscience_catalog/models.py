@@ -4,5 +4,5 @@ from projects.models import Project
 
 class MakerScienceProject(models.Model):
     parent = models.ForeignKey(Project)
-    
     tags = TaggableManager()
+    modified = models.DateTimeField()
