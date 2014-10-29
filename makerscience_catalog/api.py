@@ -4,6 +4,8 @@ from tastypie.authorization import Authorization
 from tastypie import fields
 from projects.api import ProjectResource
 from graffiti.api import TagResource
+from taggit.models import Tag
+from tastypie.constants import ALL_WITH_RELATIONS
 
 
 class MakerScienceProjectResource(ModelResource):
@@ -16,3 +18,13 @@ class MakerScienceProjectResource(ModelResource):
         resource_name = 'makerscience/project'
         authorization = Authorization()
         always_return_data = True
+        filtering = { 
+            'parent' : ALL_WITH_RELATIONS,
+        }
+
+    def hydrate(self, bundle):
+        tags_objects = []
+        for tagName in bundle.data["tags"]:
+            tags_objects.append(Tag.objects.get_or_create(name=tagName)[0])
+        bundle.data["tags"] = tags_objects
+        return bundle
