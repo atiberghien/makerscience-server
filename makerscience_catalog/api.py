@@ -6,7 +6,7 @@ from projects.api import ProjectResource
 from graffiti.api import TagResource
 from taggit.models import Tag
 from tastypie.constants import ALL_WITH_RELATIONS
-
+from datetime import datetime
 
 class MakerScienceProjectResource(ModelResource):
     parent = fields.OneToOneField(ProjectResource, 'parent')
@@ -27,4 +27,5 @@ class MakerScienceProjectResource(ModelResource):
         for tagName in bundle.data["tags"]:
             tags_objects.append(Tag.objects.get_or_create(name=tagName)[0])
         bundle.data["tags"] = tags_objects
+        bundle.data["modified"] = datetime.now()
         return bundle
