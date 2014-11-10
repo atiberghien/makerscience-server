@@ -1,12 +1,13 @@
 from .models import MakerScienceProject
 from tastypie.resources import ModelResource
-from tastypie.authorization import Authorization
+from tastypie.authorization import DjangoAuthorization
 from tastypie import fields
 from projects.api import ProjectResource
 from graffiti.api import TagResource
 from taggit.models import Tag
 from tastypie.constants import ALL_WITH_RELATIONS
 from datetime import datetime
+from dataserver.authentication import AnonymousApiKeyAuthentication
 
 class MakerScienceProjectResource(ModelResource):
     parent = fields.OneToOneField(ProjectResource, 'parent')
@@ -16,7 +17,8 @@ class MakerScienceProjectResource(ModelResource):
         queryset = MakerScienceProject.objects.all()
         allowed_methods = ['get', 'post', 'put', 'patch']
         resource_name = 'makerscience/project'
-        authorization = Authorization()
+        authentication = AnonymousApiKeyAuthentication()
+        authorization = DjangoAuthorization()
         always_return_data = True
         filtering = { 
             'parent' : ALL_WITH_RELATIONS,
