@@ -31,3 +31,8 @@ class MakerScienceProjectResource(ModelResource):
         bundle.data["tags"] = tags_objects
         bundle.data["modified"] = datetime.now()
         return bundle
+    
+    def dehydrate(self, bundle):
+        bundle.data["title"] = bundle.obj.parent.title 
+        bundle.data["begin_date"] = bundle.obj.parent.begin_date 
+        return bundle
