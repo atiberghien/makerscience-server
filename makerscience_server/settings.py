@@ -78,6 +78,7 @@ INSTALLED_APPS = (
     'projectsheet',
     
     'makerscience_catalog',
+    'makerscience_profile',
 )
 
 MIDDLEWARE_CLASSES = (
