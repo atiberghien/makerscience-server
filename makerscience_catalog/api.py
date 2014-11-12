@@ -35,4 +35,5 @@ class MakerScienceProjectResource(ModelResource):
     def dehydrate(self, bundle):
         bundle.data["title"] = bundle.obj.parent.title 
         bundle.data["begin_date"] = bundle.obj.parent.begin_date 
+        bundle.data["slug"] = bundle.obj.parent.slug
         return bundle

@@ -19,3 +19,8 @@ class MakerScienceProfileResource(ModelResource):
         filtering = { 
             'parent' : ALL_WITH_RELATIONS,
         }
+    
+    def dehydrate(self, bundle):
+        bundle.data["first_name"] = bundle.obj.parent.user.first_name
+        bundle.data["last_name"] = bundle.obj.parent.user.last_name
+        return bundle
