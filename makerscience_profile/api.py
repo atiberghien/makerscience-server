@@ -5,10 +5,12 @@ from tastypie import fields
 from tastypie.constants import ALL_WITH_RELATIONS
 from dataserver.authentication import AnonymousApiKeyAuthentication
 from accounts.api import ProfileResource
+from scout.api import PostalAddressResource
 
 class MakerScienceProfileResource(ModelResource):
     parent = fields.OneToOneField(ProfileResource, 'parent')
-    
+    location = fields.ToOneField(PostalAddressResource, 'location', null=True, blank=True)
+        
     class Meta:
         queryset = MakerScienceProfile.objects.all()
         allowed_methods = ['get', 'post', 'put', 'patch']
