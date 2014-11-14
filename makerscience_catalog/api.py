@@ -1,17 +1,20 @@
-from .models import MakerScienceProject
-from tastypie.resources import ModelResource
-from tastypie.authorization import DjangoAuthorization
-from tastypie import fields
-from projects.api import ProjectResource
-from graffiti.api import TagResource
-from taggit.models import Tag
-from tastypie.constants import ALL_WITH_RELATIONS
-from datetime import datetime
 from dataserver.authentication import AnonymousApiKeyAuthentication
+from datetime import datetime
+from graffiti.api import TagResource
+from projects.api import ProjectResource
+
+from taggit.models import Tag
+from tastypie import fields
+from tastypie.authorization import DjangoAuthorization
+from tastypie.constants import ALL_WITH_RELATIONS
+from tastypie.resources import ModelResource
+
+from .models import MakerScienceProject
+
 
 class MakerScienceProjectResource(ModelResource):
     parent = fields.OneToOneField(ProjectResource, 'parent')
-    tags = fields.ToManyField(TagResource, 'tags') 
+    tags = fields.ToManyField(TagResource, 'tags')
     
     class Meta:
         queryset = MakerScienceProject.objects.all()
@@ -23,7 +26,7 @@ class MakerScienceProjectResource(ModelResource):
         filtering = { 
             'parent' : ALL_WITH_RELATIONS,
         }
-
+        
     def hydrate(self, bundle):
         tags_objects = []
         for tagName in bundle.data["tags"]:
