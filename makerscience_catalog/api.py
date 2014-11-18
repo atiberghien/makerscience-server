@@ -10,11 +10,12 @@ from tastypie.constants import ALL_WITH_RELATIONS
 from tastypie.resources import ModelResource
 
 from .models import MakerScienceProject
+from projectsheet.models import ProjectSheet
 
 
 class MakerScienceProjectResource(ModelResource):
-    parent = fields.OneToOneField(ProjectResource, 'parent')
-    tags = fields.ToManyField(TagResource, 'tags')
+    parent = fields.ToOneField(ProjectResource, 'parent', full=True)
+    tags = fields.ToManyField(TagResource, 'tags', full=True)
     
     class Meta:
         queryset = MakerScienceProject.objects.all()
@@ -34,9 +35,7 @@ class MakerScienceProjectResource(ModelResource):
         bundle.data["tags"] = tags_objects
         bundle.data["modified"] = datetime.now()
         return bundle
-    
+
     def dehydrate(self, bundle):
-        bundle.data["title"] = bundle.obj.parent.title 
-        bundle.data["begin_date"] = bundle.obj.parent.begin_date 
-        bundle.data["slug"] = bundle.obj.parent.slug
-        return bundle
+        bundle.data["template"] = ProjectSheet.objects.get(project=bundle.obj.parent).template
+        return bundle 

@@ -11,7 +11,7 @@ from bucket.api import BucketResource, BucketFileResource, BucketTagResource, Bu
 from graffiti.api import TagResource, TaggedItemResource, ContentTypeResource
 
 
-from projects.api import ProjectResource
+from projects.api import ProjectResource, ProjectProgressResource, ProjectProgressRangeResource
 from projectsheet.api import ProjectSheetResource, ProjectSheetTemplateResource, ProjectSheetSuggestedItemResource, ProjectSheetQuestionResource
 
 from makerscience_catalog.api import MakerScienceProjectResource
@@ -48,6 +48,8 @@ api.register(TaggedItemResource())
 api.register(ContentTypeResource())
 # Projects
 api.register(ProjectResource())
+api.register(ProjectProgressRangeResource())
+api.register(ProjectProgressResource())
 
 # Project Sheets
 api.register(ProjectSheetResource())
