@@ -14,7 +14,7 @@ from graffiti.api import TagResource, TaggedItemResource, ContentTypeResource
 from projects.api import ProjectResource, ProjectProgressResource, ProjectProgressRangeResource
 from projectsheet.api import ProjectSheetResource, ProjectSheetTemplateResource, ProjectSheetSuggestedItemResource, ProjectSheetQuestionResource
 
-from makerscience_catalog.api import MakerScienceProjectResource
+from makerscience_catalog.api import MakerScienceProjectResource, MakerScienceResourceResource
 from makerscience_profile.api import MakerScienceProfileResource
 
 admin.autodiscover()
@@ -59,7 +59,7 @@ api.register(ProjectSheetQuestionResource())
 
 #MakerScience Catalog
 api.register(MakerScienceProjectResource())
-
+api.register(MakerScienceResourceResource())
 #MakerScience Profile
 api.register(MakerScienceProfileResource())
 

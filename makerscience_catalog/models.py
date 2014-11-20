@@ -6,3 +6,9 @@ class MakerScienceProject(models.Model):
     parent = models.ForeignKey(Project)
     tags = TaggableManager()
     modified = models.DateTimeField()
+    
+
+class MakerScienceResource(models.Model):
+    parent = models.ForeignKey(Project)
+    tags = TaggableManager()
+    modified = models.DateTimeField()
