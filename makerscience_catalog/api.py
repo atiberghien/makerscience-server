@@ -11,6 +11,7 @@ from tastypie.resources import ModelResource
 
 from .models import MakerScienceProject, MakerScienceResource
 from projectsheet.models import ProjectSheet
+from projects.models import ProjectTeam
 
 
 class MakerScienceProjectResource(ModelResource):
@@ -27,7 +28,13 @@ class MakerScienceProjectResource(ModelResource):
         filtering = { 
             'parent' : ALL_WITH_RELATIONS,
         }
-        
+     
+    def obj_create(self, bundle, **kwargs):
+        res = ModelResource.obj_create(self, bundle, **kwargs)
+        team, _ = ProjectTeam.objects.get_or_create(project=res.obj.parent)
+        team.members.add(bundle.request.user.get_profile())
+        return res
+       
     def hydrate(self, bundle):
         tags_objects = []
         for tagName in bundle.data["tags"]:
