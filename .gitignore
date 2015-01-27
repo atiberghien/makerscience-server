@@ -1,3 +1,5 @@
+/media/cache/*
+/media/bucket/*
 *pyc
 .project
 .pydevproject
