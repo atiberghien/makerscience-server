@@ -2,6 +2,7 @@ from dataserver.authentication import AnonymousApiKeyAuthentication
 from datetime import datetime
 from graffiti.api import TagResource
 from projects.api import ProjectResource
+from projectsheet.api import ProjectSheetResource
 
 from taggit.models import Tag
 from tastypie import fields
@@ -17,7 +18,11 @@ from projects.models import ProjectTeam
 class MakerScienceProjectResource(ModelResource):
     parent = fields.ToOneField(ProjectResource, 'parent', full=True)
     tags = fields.ToManyField(TagResource, 'tags', full=True)
-    
+
+    base_projectsheet = fields.ToOneField(ProjectSheetResource, 'parent__projectsheet', null=True, full=True)
+
+    linked_resources = fields.ToManyField('makerscience_catalog.api.MakerScienceResourceResource', 'linked_resources', full=True,null=True)
+
     class Meta:
         queryset = MakerScienceProject.objects.all()
         allowed_methods = ['get', 'post', 'put', 'patch']
@@ -25,16 +30,16 @@ class MakerScienceProjectResource(ModelResource):
         authentication = AnonymousApiKeyAuthentication()
         authorization = DjangoAuthorization()
         always_return_data = True
-        filtering = { 
+        filtering = {
             'parent' : ALL_WITH_RELATIONS,
         }
-     
+
     def obj_create(self, bundle, **kwargs):
         res = ModelResource.obj_create(self, bundle, **kwargs)
         team, _ = ProjectTeam.objects.get_or_create(project=res.obj.parent)
         team.members.add(bundle.request.user.get_profile())
         return res
-       
+
     def hydrate(self, bundle):
         tags_objects = []
         for tagName in bundle.data["tags"]:
@@ -43,14 +48,14 @@ class MakerScienceProjectResource(ModelResource):
         bundle.data["modified"] = datetime.now()
         return bundle
 
-    def dehydrate(self, bundle):
-        bundle.data["template"] = ProjectSheet.objects.get(project=bundle.obj.parent).template
-        return bundle
-    
+#     def dehydrate(self, bundle):
+#         bundle.data["template"] = ProjectSheet.objects.get(project=bundle.obj.parent).template
+#         return bundle
+
 class MakerScienceResourceResource(ModelResource):
     parent = fields.ToOneField(ProjectResource, 'parent', full=True)
     tags = fields.ToManyField(TagResource, 'tags', full=True)
-    
+
     class Meta:
         queryset = MakerScienceResource.objects.all()
         allowed_methods = ['get', 'post', 'put', 'patch']
@@ -58,10 +63,10 @@ class MakerScienceResourceResource(ModelResource):
         authentication = AnonymousApiKeyAuthentication()
         authorization = DjangoAuthorization()
         always_return_data = True
-        filtering = { 
+        filtering = {
             'parent' : ALL_WITH_RELATIONS,
         }
-        
+
     def hydrate(self, bundle):
         tags_objects = []
         for tagName in bundle.data["tags"]:
@@ -72,4 +77,4 @@ class MakerScienceResourceResource(ModelResource):
 
     def dehydrate(self, bundle):
         bundle.data["template"] = ProjectSheet.objects.get(project=bundle.obj.parent).template
-        return bundle 
+        return bundle
