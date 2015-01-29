@@ -41,20 +41,14 @@ class MakerScienceProjectResource(ModelResource):
         return res
 
     def hydrate(self, bundle):
-        tags_objects = []
-        for tagName in bundle.data["tags"]:
-            tags_objects.append(Tag.objects.get_or_create(name=tagName)[0])
-        bundle.data["tags"] = tags_objects
         bundle.data["modified"] = datetime.now()
         return bundle
-
-#     def dehydrate(self, bundle):
-#         bundle.data["template"] = ProjectSheet.objects.get(project=bundle.obj.parent).template
-#         return bundle
 
 class MakerScienceResourceResource(ModelResource):
     parent = fields.ToOneField(ProjectResource, 'parent', full=True)
     tags = fields.ToManyField(TagResource, 'tags', full=True)
+
+    base_resourcesheet = fields.ToOneField(ProjectSheetResource, 'parent__projectsheet', null=True, full=True)
 
     class Meta:
         queryset = MakerScienceResource.objects.all()
@@ -68,13 +62,5 @@ class MakerScienceResourceResource(ModelResource):
         }
 
     def hydrate(self, bundle):
-        tags_objects = []
-        for tagName in bundle.data["tags"]:
-            tags_objects.append(Tag.objects.get_or_create(name=tagName)[0])
-        bundle.data["tags"] = tags_objects
         bundle.data["modified"] = datetime.now()
-        return bundle
-
-    def dehydrate(self, bundle):
-        bundle.data["template"] = ProjectSheet.objects.get(project=bundle.obj.parent).template
         return bundle
