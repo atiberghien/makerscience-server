@@ -9,8 +9,8 @@ from scout.api import PostalAddressResource
 
 class MakerScienceProfileResource(ModelResource):
     parent = fields.OneToOneField(ProfileResource, 'parent')
-    location = fields.ToOneField(PostalAddressResource, 'location', null=True, blank=True)
-        
+    location = fields.ToOneField(PostalAddressResource, 'location', null=True, blank=True, full=True)
+
     class Meta:
         queryset = MakerScienceProfile.objects.all()
         allowed_methods = ['get', 'post', 'put', 'patch']
@@ -18,10 +18,10 @@ class MakerScienceProfileResource(ModelResource):
         authentication = AnonymousApiKeyAuthentication()
         authorization = DjangoAuthorization()
         always_return_data = True
-        filtering = { 
+        filtering = {
             'parent' : ALL_WITH_RELATIONS,
         }
-    
+
     def dehydrate(self, bundle):
         bundle.data["first_name"] = bundle.obj.parent.user.first_name
         bundle.data["last_name"] = bundle.obj.parent.user.last_name
