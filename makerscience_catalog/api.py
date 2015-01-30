@@ -32,6 +32,7 @@ class MakerScienceProjectResource(ModelResource):
         always_return_data = True
         filtering = {
             'parent' : ALL_WITH_RELATIONS,
+            'featured' : ['exact'],
         }
 
     def obj_create(self, bundle, **kwargs):

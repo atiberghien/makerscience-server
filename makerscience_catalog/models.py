@@ -9,6 +9,8 @@ class MakerScienceProject(models.Model):
 
     linked_resources = models.ManyToManyField("MakerScienceResource", null=True, blank=True)
 
+    featured = models.BooleanField(default=False)
+
 
 class MakerScienceResource(models.Model):
 
@@ -25,3 +27,5 @@ class MakerScienceResource(models.Model):
     level = models.CharField(max_length=1, choices=LEVEL_CHOICES)
     duration = models.CharField(max_length=30)
     cost = models.PositiveIntegerField(default=0)
+
+    featured = models.BooleanField(default=False)
