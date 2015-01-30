@@ -61,7 +61,14 @@ class MakerScienceResourceResource(ModelResource):
         always_return_data = True
         filtering = {
             'parent' : ALL_WITH_RELATIONS,
+            'featured' : ['exact'],
         }
+
+    def obj_create(self, bundle, **kwargs):
+        res = ModelResource.obj_create(self, bundle, **kwargs)
+        team, _ = ProjectTeam.objects.get_or_create(project=res.obj.parent)
+        team.members.add(bundle.request.user.get_profile())
+        return res
 
     def hydrate(self, bundle):
         bundle.data["tags"] = [Tag.objects.get_or_create(name=tag_name)[0] for tag_name in bundle.data["tags"]]
