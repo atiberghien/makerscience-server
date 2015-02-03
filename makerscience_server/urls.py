@@ -8,7 +8,7 @@ from tastypie.api import Api
 from scout.api import MapResource, TileLayerResource, DataLayerResource, MarkerResource, MarkerCategoryResource, PostalAddressResource
 from accounts.api import UserResource, GroupResource, ProfileResource
 from bucket.api import BucketResource, BucketFileResource, BucketTagResource, BucketFileCommentResource
-from graffiti.api import TagResource, TaggedItemResource, ContentTypeResource
+from graffiti.api import TagResource, TaggedItemResource
 
 
 from projects.api import ProjectResource, ProjectProgressResource, ProjectProgressRangeResource, ProjectTeamResource
@@ -46,7 +46,7 @@ api.register(BucketFileCommentResource())
 #Graffiti
 api.register(TagResource())
 api.register(TaggedItemResource())
-api.register(ContentTypeResource())
+
 # Projects
 api.register(ProjectResource())
 api.register(ProjectProgressRangeResource())
