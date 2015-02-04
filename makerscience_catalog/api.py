@@ -42,7 +42,6 @@ class MakerScienceProjectResource(ModelResource):
         return res
 
     def hydrate(self, bundle):
-        # bundle.data["tags"] = [Tag.objects.get_or_create(name=tag_name)[0] for tag_name in bundle.data["tags"]]
         bundle.data["modified"] = datetime.now()
         return bundle
 
@@ -71,6 +70,5 @@ class MakerScienceResourceResource(ModelResource):
         return res
 
     def hydrate(self, bundle):
-        # bundle.data["tags"] = [Tag.objects.get_or_create(name=tag_name)[0] for tag_name in bundle.data["tags"]]
         bundle.data["modified"] = datetime.now()
         return bundle
