@@ -6,10 +6,13 @@ from tastypie.constants import ALL_WITH_RELATIONS
 from dataserver.authentication import AnonymousApiKeyAuthentication
 from accounts.api import ProfileResource
 from scout.api import PostalAddressResource
+from projects.api import ProjectTeamResource
 
 class MakerScienceProfileResource(ModelResource):
     parent = fields.OneToOneField(ProfileResource, 'parent', full=True)
     location = fields.ToOneField(PostalAddressResource, 'location', null=True, blank=True, full=True)
+
+    teams = fields.ToManyField(ProjectTeamResource, 'parent__projectteam_set', full=True, null=True)
 
     class Meta:
         queryset = MakerScienceProfile.objects.all()
