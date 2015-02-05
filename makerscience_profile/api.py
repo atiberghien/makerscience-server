@@ -8,7 +8,7 @@ from accounts.api import ProfileResource
 from scout.api import PostalAddressResource
 
 class MakerScienceProfileResource(ModelResource):
-    parent = fields.OneToOneField(ProfileResource, 'parent')
+    parent = fields.OneToOneField(ProfileResource, 'parent', full=True)
     location = fields.ToOneField(PostalAddressResource, 'location', null=True, blank=True, full=True)
 
     class Meta:
