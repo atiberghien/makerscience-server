@@ -15,7 +15,7 @@ from projects.api import ProjectResource, ProjectProgressResource, ProjectProgre
 from projectsheet.api import ProjectSheetResource, ProjectSheetTemplateResource, ProjectSheetSuggestedItemResource, ProjectSheetQuestionResource
 
 from makerscience_catalog.api import MakerScienceProjectResource, MakerScienceResourceResource
-from makerscience_profile.api import MakerScienceProfileResource
+from makerscience_profile.api import MakerScienceProfileResource, MakerScienceProfileTaggedItemResource
 import bucket
 
 admin.autodiscover()
@@ -64,6 +64,7 @@ api.register(MakerScienceProjectResource())
 api.register(MakerScienceResourceResource())
 #MakerScience Profile
 api.register(MakerScienceProfileResource())
+api.register(MakerScienceProfileTaggedItemResource())
 
 
 urlpatterns = patterns('',
