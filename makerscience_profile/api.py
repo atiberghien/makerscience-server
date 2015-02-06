@@ -1,4 +1,4 @@
-from .models import MakerScienceProfile
+from .models import MakerScienceProfile, MakerScienceProfileTaggedItem
 from tastypie.resources import ModelResource
 from tastypie.authorization import DjangoAuthorization
 from tastypie import fields
@@ -16,7 +16,9 @@ class MakerScienceProfileResource(ModelResource):
     parent = fields.OneToOneField(ProfileResource, 'parent', full=True)
     location = fields.ToOneField(PostalAddressResource, 'location', null=True, blank=True, full=True)
 
-    teams = fields.ToManyField(ProjectTeamResource, 'parent__projectteam_set', full=True, null=True)
+    tags = fields.ToManyField('makerscience_profile.api.MakerScienceProfileTaggedItemResource', 'tagged_items', full=True, null=True, readonly=True)
+
+    teams = fields.ToManyField(ProjectTeamResource, 'parent__projectteam_set', full=True, null=True, readonly=True)
 
     class Meta:
         queryset = MakerScienceProfile.objects.all()
@@ -32,6 +34,11 @@ class MakerScienceProfileResource(ModelResource):
     def dehydrate(self, bundle):
         bundle.data["full_name"] = "%s %s" % (bundle.obj.parent.user.first_name, bundle.obj.parent.user.last_name)
         return bundle
+
+    def hydrate(self, bundle):
+        bundle.data["modified"] = datetime.now()
+        return bundle
+
 class MakerScienceProfileTaggedItemResource(TaggedItemResource):
 
     class Meta:
