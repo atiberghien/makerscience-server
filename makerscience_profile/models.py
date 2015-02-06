@@ -22,6 +22,13 @@ class MakerScienceProfile(models.Model):
     modified = models.DateTimeField(auto_now=True)
 
     tags = TaggableManager(through=MakerScienceProfileTaggedItem, blank=True)
+
+    facebook = models.CharField(max_length=500, null=True, blank=True)
+    twitter = models.CharField(max_length=500, null=True, blank=True)
+    linkedin = models.CharField(max_length=500, null=True, blank=True)
+    contact_email = models.CharField(max_length=500, null=True, blank=True)
+
+
 @receiver(post_save, sender=Profile)
 def create_profile_on_user_signup(sender, created, instance, **kwargs):
     if created:
