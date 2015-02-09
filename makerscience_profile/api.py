@@ -29,6 +29,7 @@ class MakerScienceProfileResource(ModelResource):
         always_return_data = True
         filtering = {
             'parent' : ALL_WITH_RELATIONS,
+            "location" : ['isnull', ],
         }
 
     def dehydrate(self, bundle):
