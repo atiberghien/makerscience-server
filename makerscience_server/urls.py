@@ -9,7 +9,7 @@ from scout.api import MapResource, TileLayerResource, DataLayerResource, MarkerR
 from accounts.api import UserResource, GroupResource, ProfileResource
 from bucket.api import BucketResource, BucketFileResource, BucketTagResource, BucketFileCommentResource
 from graffiti.api import TagResource, TaggedItemResource
-
+from ucomment.api import CommentResource
 
 from projects.api import ProjectResource, ProjectProgressResource, ProjectProgressRangeResource, ProjectTeamResource
 from projectsheet.api import ProjectSheetResource, ProjectSheetTemplateResource, ProjectSheetSuggestedItemResource, ProjectSheetQuestionResource
@@ -46,6 +46,9 @@ api.register(BucketFileCommentResource())
 #Graffiti
 api.register(TagResource())
 api.register(TaggedItemResource())
+
+#Ucomment
+api.register(CommentResource())
 
 # Projects
 api.register(ProjectResource())

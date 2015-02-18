@@ -12,6 +12,9 @@ https://docs.djangoproject.com/en/1.6/ref/settings/
 import os
 BASE_DIR = os.path.dirname(os.path.dirname(__file__))
 
+ADMINS = (
+    ('Freddy', 'freddy.limpens@gmail.com'),
+)
 
 # Quick-start development settings - unsuitable for production
 # See https://docs.djangoproject.com/en/1.6/howto/deployment/checklist/
@@ -45,10 +48,12 @@ INSTALLED_APPS = (
     'django.contrib.auth',
     'django.contrib.contenttypes',
     'django.contrib.sessions',
+    'django.contrib.sites',
     'django.contrib.messages',
     'django.contrib.staticfiles',
     'django.contrib.gis',
 
+    'django_comments',
     'south',
     'corsheaders',
     'reversion',
@@ -73,6 +78,7 @@ INSTALLED_APPS = (
     'scout',
     'multiuploader',
     'graffiti',
+    'ucomment',
     
     'projects',
     'projectsheet',
