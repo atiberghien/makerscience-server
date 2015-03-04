@@ -6,7 +6,6 @@ from tastypie.constants import ALL_WITH_RELATIONS
 from dataserver.authentication import AnonymousApiKeyAuthentication
 from accounts.api import ProfileResource
 from scout.api import PostalAddressResource
-from projects.api import ProjectTeamResource
 from graffiti.api import TaggedItemResource
 from django.conf.urls import url
 from tastypie.utils import trailing_slash
@@ -17,8 +16,6 @@ class MakerScienceProfileResource(ModelResource):
     location = fields.ToOneField(PostalAddressResource, 'location', null=True, blank=True, full=True)
 
     tags = fields.ToManyField('makerscience_profile.api.MakerScienceProfileTaggedItemResource', 'tagged_items', full=True, null=True, readonly=True)
-
-    teams = fields.ToManyField(ProjectTeamResource, 'parent__projectteam_set', full=True, null=True, readonly=True)
 
     class Meta:
         queryset = MakerScienceProfile.objects.all()
