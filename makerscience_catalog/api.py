@@ -47,6 +47,7 @@ class MakerScienceProjectResource(ModelResource):
 
             bundle.data["by"] = {
                 'profile_id' : profile.id,
+                'profile_email' : profile.parent.user.email,
                 'full_name' : "%s %s" % (profile.parent.user.first_name, profile.parent.user.last_name)
             }
         except Exception, e:
@@ -84,6 +85,7 @@ class MakerScienceResourceResource(ModelResource):
 
             bundle.data["by"] = {
                 'profile_id' : profile.id,
+                'profile_email' : profile.parent.user.email,
                 'full_name' : "%s %s" % (profile.parent.user.first_name, profile.parent.user.last_name)
             }
         except Exception, e:
