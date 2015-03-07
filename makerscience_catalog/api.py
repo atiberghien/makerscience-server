@@ -1,3 +1,5 @@
+from django.contrib.contenttypes.models import ContentType
+
 from dataserver.authentication import AnonymousApiKeyAuthentication
 from datetime import datetime
 from graffiti.api import TaggedItemResource
@@ -11,6 +13,8 @@ from tastypie.constants import ALL_WITH_RELATIONS
 from tastypie.resources import ModelResource
 
 from .models import MakerScienceProject, MakerScienceResource
+from makerscience_profile.api import MakerScienceProfileResource
+from accounts.models import ObjectProfileLink
 from projectsheet.models import ProjectSheet
 
 
@@ -34,6 +38,21 @@ class MakerScienceProjectResource(ModelResource):
             'featured' : ['exact'],
         }
 
+    def dehydrate(self, bundle):
+        try:
+            link = ObjectProfileLink.objects.get(content_type=ContentType.objects.get_for_model(bundle.obj.parent),
+                                                   object_id=bundle.obj.parent.id,
+                                                   level=0)
+            profile = link.profile.makerscienceprofile_set.all()[0]
+
+            bundle.data["by"] = {
+                'profile_id' : profile.id,
+                'full_name' : "%s %s" % (profile.parent.user.first_name, profile.parent.user.last_name)
+            }
+        except Exception, e:
+            pass
+        return bundle
+
     def hydrate(self, bundle):
         bundle.data["modified"] = datetime.now()
         return bundle
@@ -55,6 +74,21 @@ class MakerScienceResourceResource(ModelResource):
             'parent' : ALL_WITH_RELATIONS,
             'featured' : ['exact'],
         }
+
+    def dehydrate(self, bundle):
+        try:
+            link = ObjectProfileLink.objects.get(content_type=ContentType.objects.get_for_model(bundle.obj.parent),
+                                                   object_id=bundle.obj.parent.id,
+                                                   level=0)
+            profile = link.profile.makerscienceprofile_set.all()[0]
+
+            bundle.data["by"] = {
+                'profile_id' : profile.id,
+                'full_name' : "%s %s" % (profile.parent.user.first_name, profile.parent.user.last_name)
+            }
+        except Exception, e:
+            pass
+        return bundle
 
     def hydrate(self, bundle):
         bundle.data["modified"] = datetime.now()
