@@ -26,7 +26,7 @@ class MakerScienceResource(models.Model):
 
     level = models.CharField(max_length=1, choices=LEVEL_CHOICES)
     duration = models.CharField(max_length=30)
-    cost = models.PositiveIntegerField(default=0)
+    cost = models.CharField(max_length=30)
 
     linked_resources = models.ManyToManyField("MakerScienceResource", null=True, blank=True)
 
