@@ -64,6 +64,8 @@ class MakerScienceResourceResource(ModelResource):
 
     base_resourcesheet = fields.ToOneField(ProjectSheetResource, 'parent__projectsheet', null=True, full=True)
 
+    linked_resources = fields.ToManyField('makerscience_catalog.api.MakerScienceResourceResource', 'linked_resources', full=True,null=True)
+
     class Meta:
         queryset = MakerScienceResource.objects.all()
         allowed_methods = ['get', 'post', 'put', 'patch']

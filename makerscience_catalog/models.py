@@ -28,4 +28,6 @@ class MakerScienceResource(models.Model):
     duration = models.CharField(max_length=30)
     cost = models.PositiveIntegerField(default=0)
 
+    linked_resources = models.ManyToManyField("MakerScienceResource", null=True, blank=True)
+
     featured = models.BooleanField(default=False)
