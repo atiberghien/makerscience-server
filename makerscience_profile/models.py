@@ -27,6 +27,7 @@ class MakerScienceProfile(models.Model):
     twitter = models.CharField(max_length=500, null=True, blank=True)
     linkedin = models.CharField(max_length=500, null=True, blank=True)
     contact_email = models.CharField(max_length=500, null=True, blank=True)
+    website = models.CharField(max_length=500, null=True, blank=True)
 
 
 @receiver(post_save, sender=Profile)
