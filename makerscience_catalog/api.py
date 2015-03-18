@@ -1,8 +1,14 @@
+import json
+
 from django.contrib.contenttypes.models import ContentType
+from django.conf.urls import patterns, url, include
+from django.shortcuts import get_object_or_404
 
 from dataserver.authentication import AnonymousApiKeyAuthentication
+from dataserver.authorization import GuardianAuthorization
 from datetime import datetime
 from graffiti.api import TaggedItemResource
+from guardian.shortcuts import assign_perm
 from projects.api import ProjectResource
 from projectsheet.api import ProjectSheetResource
 
@@ -11,10 +17,12 @@ from tastypie import fields
 from tastypie.authorization import DjangoAuthorization
 from tastypie.constants import ALL_WITH_RELATIONS
 from tastypie.resources import ModelResource
+from tastypie.utils import trailing_slash
+
 
 from .models import MakerScienceProject, MakerScienceResource
 from makerscience_profile.api import MakerScienceProfileResource
-from accounts.models import ObjectProfileLink
+from accounts.models import ObjectProfileLink, Profile
 from projectsheet.models import ProjectSheet
 
 
@@ -31,12 +39,28 @@ class MakerScienceProjectResource(ModelResource):
         allowed_methods = ['get', 'post', 'put', 'patch']
         resource_name = 'makerscience/project'
         authentication = AnonymousApiKeyAuthentication()
-        authorization = DjangoAuthorization()
+        authorization = GuardianAuthorization(
+            create_permission_code="add_makerscienceproject",
+            view_permission_code="view_makerscienceproject",
+            update_permission_code="change_makerscienceproject",
+            delete_permission_code="delete_makerscienceproject"
+        )
         always_return_data = True
         filtering = {
             'parent' : ALL_WITH_RELATIONS,
             'featured' : ['exact'],
         }
+
+
+    def prepend_urls(self):
+        """
+        URL override for when giving change perm to a user profile passed as parameter profile_id
+        """
+        return [
+           url(r"^(?P<resource_name>%s)/(?P<ms_id>\d+)/assign%s$" % 
+                (self._meta.resource_name, trailing_slash()),
+                 self.wrap_view('ms_edit_assign'), name="api_ms_project_assign"),
+        ]
 
     def dehydrate(self, bundle):
         try:
@@ -57,6 +81,28 @@ class MakerScienceProjectResource(ModelResource):
     def hydrate(self, bundle):
         bundle.data["modified"] = datetime.now()
         return bundle
+
+    def ms_edit_assign(self, request, **kwargs):
+        """
+        Method to assign edit permissions for a MSResource or MSProject 'ms_id' to
+        a user with profile passed as POST parameter 'profile_id' 
+        """
+        self.method_check(request, allowed=['post'])
+        self.throttle_check(request)
+        self.is_authenticated(request)
+       
+        target_profile_id = json.loads(request.body)['profile_id']
+        target_profile = get_object_or_404(Profile, pk=target_profile_id)
+        target_object_id = kwargs['ms_id']
+        
+        if kwargs['resource_name'] == 'makerscience/resource':
+            target_object = get_object_or_404(MakerScienceResource, pk=target_object_id)
+            assign_perm("change_makerscienceresource", user_or_group=target_profile.user, obj=target_object)
+        elif kwargs['resource_name'] == 'makerscience/project':
+            target_object = get_object_or_404(MakerScienceProject, pk=target_object_id)
+            assign_perm("change_makerscienceproject", user_or_group=target_profile.user, obj=target_object)
+        
+        return self.create_response(request, {'success': True})
 
 class MakerScienceResourceResource(ModelResource):
     parent = fields.ToOneField(ProjectResource, 'parent', full=True)
@@ -71,7 +117,12 @@ class MakerScienceResourceResource(ModelResource):
         allowed_methods = ['get', 'post', 'put', 'patch']
         resource_name = 'makerscience/resource'
         authentication = AnonymousApiKeyAuthentication()
-        authorization = DjangoAuthorization()
+        authorization = GuardianAuthorization(
+            create_permission_code="add_makerscienceresource",
+            view_permission_code="view_makerscienceresource",
+            update_permission_code="change_makerscienceresource",
+            delete_permission_code="delete_makerscienceresource"
+        )
         always_return_data = True
         filtering = {
             'parent' : ALL_WITH_RELATIONS,
@@ -97,3 +148,37 @@ class MakerScienceResourceResource(ModelResource):
     def hydrate(self, bundle):
         bundle.data["modified"] = datetime.now()
         return bundle
+
+    def prepend_urls(self):
+        """
+        URL override for when giving change perm to a user profile passed as parameter profile_id
+        """
+        return [
+           url(r"^(?P<resource_name>%s)/(?P<ms_id>\d+)/assign%s$" % 
+                (self._meta.resource_name, trailing_slash()),
+                 self.wrap_view('ms_edit_assign'), name="api_ms_resource_assign"),
+        ]
+
+    def ms_edit_assign(self, request, **kwargs):
+        """
+        Method to assign edit permissions for a MSResource or MSProject 'ms_id' to
+        a user with profile passed as POST parameter 'profile_id' 
+        """
+        self.method_check(request, allowed=['post'])
+        self.throttle_check(request)
+        self.is_authenticated(request)
+       
+        target_profile_id = json.loads(request.body)['profile_id']
+        target_profile = get_object_or_404(Profile, pk=target_profile_id)
+        target_object_id = kwargs['ms_id']
+        
+        if kwargs['resource_name'] == 'makerscience/resource':
+            target_object = get_object_or_404(MakerScienceResource, pk=target_object_id)
+            assign_perm("change_makerscienceresource", user_or_group=target_profile.user, obj=target_object)
+        elif kwargs['resource_name'] == 'makerscience/project':
+            target_object = get_object_or_404(MakerScienceProject, pk=target_object_id)
+            assign_perm("change_makerscienceproject", user_or_group=target_profile.user, obj=target_object)
+        
+        return self.create_response(request, {'success': True})
+
+
