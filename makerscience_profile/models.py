@@ -34,3 +34,6 @@ class MakerScienceProfile(models.Model):
 def create_profile_on_user_signup(sender, created, instance, **kwargs):
     if created:
         MakerScienceProfile.objects.create(parent=instance)
+
+#FIXME : create editor group with all edit rights for all resources except 
+#        MSProject and MSResources and assign all new users to it

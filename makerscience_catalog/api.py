@@ -60,8 +60,7 @@ class MakerScienceProjectResource(ModelResource):
         allowed_methods = ['get', 'post', 'put', 'patch']
         resource_name = 'makerscience/project'
         authentication = AnonymousApiKeyAuthentication()
-        authorization = DjangoAuthorization()
-        #authorization = MakerScienceProjectAuthorization()
+        authorization = MakerScienceProjectAuthorization()
         always_return_data = True
         filtering = {
             'parent' : ALL_WITH_RELATIONS,
