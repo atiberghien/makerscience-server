@@ -1,128 +1,18 @@
 """
 Django settings for makerscience_server project.
 
-For more information on this file, see
-https://docs.djangoproject.com/en/1.6/topics/settings/
-
-For the full list of settings and their values, see
-https://docs.djangoproject.com/en/1.6/ref/settings/
 """
-
-# Build paths inside the project like this: os.path.join(BASE_DIR, ...)
-import os
-BASE_DIR = os.path.dirname(os.path.dirname(__file__))
-
-ADMINS = (
-    ('Freddy', 'freddy.limpens@gmail.com'),
-)
-
-# Quick-start development settings - unsuitable for production
-# See https://docs.djangoproject.com/en/1.6/howto/deployment/checklist/
-
-# SECURITY WARNING: keep the secret key used in production secret!
-SECRET_KEY = 'afg=tuy3+g+$i*j4#j6x)-u)uvwpf-t0e5ripy+qaw#h^369if'
-
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = True
-
 TEMPLATE_DEBUG = True
 
-ALLOWED_HOSTS = []
-
-PROJECT_DIR = os.path.dirname(os.path.realpath(__file__))
-MEDIA_ROOT = os.path.join(PROJECT_DIR, '..', 'media/')
-MEDIA_URL = '/media/'
-STATIC_ROOT = os.path.join(PROJECT_DIR, '..', '..', 'static/')
-STATIC_URL = '/static/'
-
-STATICFILES_FINDERS = (
-    'django.contrib.staticfiles.finders.FileSystemFinder',
-    'django.contrib.staticfiles.finders.AppDirectoriesFinder',
-    'compressor.finders.CompressorFinder',
+ADMINS = (
+    #('Freddy', 'freddy.limpens@gmail.com'),
 )
 
-# Application definition
-INSTALLED_APPS = (
-    'grappelli',
-    'django.contrib.admin',
-    'django.contrib.auth',
-    'django.contrib.contenttypes',
-    'django.contrib.sessions',
-    'django.contrib.sites',
-    'django.contrib.messages',
-    'django.contrib.staticfiles',
-    'django.contrib.gis',
-
-    'django_comments',
-    'south',
-    'corsheaders',
-    'reversion',
-    'django_extensions',
-    'compressor',
-    'sekizai',
-    
-    'guardian',
-    'userena',
-    'accounts',
-
-    'tastypie',
-    'sendfile',
-
-    'autoslug',
-    'taggit',
-    'haystack',
-    'sorl.thumbnail',
-    'whoosh',
-
-    'bucket',
-    'scout',
-    'multiuploader',
-    'graffiti',
-    'ucomment',
-    
-    'projects',
-    'projectsheet',
-    
-    'makerscience_catalog',
-    'makerscience_profile',
-)
-
-MIDDLEWARE_CLASSES = (
-    'corsheaders.middleware.CorsMiddleware',
-    'django.middleware.common.CommonMiddleware',
-    'django.contrib.sessions.middleware.SessionMiddleware',
-    'django.middleware.csrf.CsrfViewMiddleware',
-    'django.contrib.auth.middleware.AuthenticationMiddleware',
-    'django.contrib.messages.middleware.MessageMiddleware',
-    'django.middleware.locale.LocaleMiddleware',
-    'django.middleware.doc.XViewMiddleware',
-)
-
-AUTHENTICATION_BACKENDS = (
-    'userena.backends.UserenaAuthenticationBackend',
-    'guardian.backends.ObjectPermissionBackend',
-    'django.contrib.auth.backends.ModelBackend',
-)
-
-
-TEMPLATE_CONTEXT_PROCESSORS = (
-    'django.contrib.auth.context_processors.auth',
-    'django.core.context_processors.request',
-    'django.core.context_processors.i18n',
-    'django.core.context_processors.media',
-    'django.core.context_processors.static',
-    'sekizai.context_processors.sekizai',
-    'multiuploader.context_processors.booleans',
-)
-
-ROOT_URLCONF = 'makerscience_server.urls'
-
-WSGI_APPLICATION = 'makerscience_server.wsgi.application'
-
-
+MANAGERS = ADMINS
 # Database
 # https://docs.djangoproject.com/en/1.6/ref/settings/#databases
-
 DATABASES = {
     'default': {
         'ENGINE': 'django.contrib.gis.db.backends.postgis',
@@ -132,6 +22,7 @@ DATABASES = {
     }
 }
 
+ALLOWED_HOSTS = ['api.gup.extra-muros.coop', 'gup.extra-muros.coop']
 # Internationalization
 # https://docs.djangoproject.com/en/1.6/topics/i18n/
 
@@ -140,15 +31,139 @@ LANGUAGE_CODE = 'fr-FR'
 LANGUAGES = [
     ('fr-FR', 'French'),
 ]
+
 SITE_ID = 1
 USE_I18N = True
 USE_L10N = True
 USE_TZ = False
 
+# Build paths inside the project like this: os.path.join(BASE_DIR, ...)
+import os
+#BASE_DIR = os.path.dirname(os.path.dirname(__file__))
+
+PROJECT_DIR = os.path.dirname(os.path.realpath(__file__))
+MEDIA_ROOT = os.path.join(PROJECT_DIR, '..', 'media/')
+MEDIA_URL = '/media/'
+STATIC_ROOT = os.path.join(PROJECT_DIR, '..', '..', 'static/')
+STATIC_URL = '/static/'
+
 # Static files (CSS, JavaScript, Images)
 # https://docs.djangoproject.com/en/1.6/howto/static-files/
 
-STATIC_URL = '/static/'
+# Additional locations of static files
+STATICFILES_DIRS = (
+    # Put strings here, like "/home/html/static" or "C:/www/django/static".
+    # Always use forward slashes, even on Windows.
+    # Don't forget to use absolute paths, not relative paths.
+    os.path.join(PROJECT_DIR, '..', 'static/'),
+)
+
+STATICFILES_FINDERS = (
+    'django.contrib.staticfiles.finders.FileSystemFinder',
+    'django.contrib.staticfiles.finders.AppDirectoriesFinder',
+    'compressor.finders.CompressorFinder',
+)
+
+# SECURITY WARNING: keep the secret key used in production secret!
+SECRET_KEY = 'afg=tuy3+g+$i*j4#j6x)-u)uvwpf-t0e5ripy+qaw#h^369if'
+
+# List of callables that know how to import templates from various sources.
+TEMPLATE_LOADERS = (
+    'django.template.loaders.filesystem.Loader',
+    'django.template.loaders.app_directories.Loader',
+#     'django.template.loaders.eggs.Loader',
+)
+
+MIDDLEWARE_CLASSES = (
+    'django.middleware.common.CommonMiddleware',
+    'django.contrib.sessions.middleware.SessionMiddleware',
+    'django.middleware.csrf.CsrfViewMiddleware',
+    'django.contrib.auth.middleware.AuthenticationMiddleware',
+    'django.contrib.messages.middleware.MessageMiddleware',
+    'django.middleware.locale.LocaleMiddleware',
+    'django.middleware.doc.XViewMiddleware',
+    
+    'corsheaders.middleware.CorsMiddleware',
+)
+
+AUTHENTICATION_BACKENDS = (
+    'userena.backends.UserenaAuthenticationBackend',
+    'guardian.backends.ObjectPermissionBackend',
+    'django.contrib.auth.backends.ModelBackend',
+)
+
+ROOT_URLCONF = 'makerscience_server.urls'
+
+WSGI_APPLICATION = 'makerscience_server.wsgi.application'
+
+TEMPLATE_DIRS = (
+    # Put strings here, like "/home/html/django_templates" or "C:/www/django/templates".
+    # Always use forward slashes, even on Windows.
+    # Don't forget to use absolute paths, not relative paths.
+    os.path.join(PROJECT_DIR, '..', 'templates'),
+)
+
+TEMPLATE_CONTEXT_PROCESSORS = (
+    'django.contrib.auth.context_processors.auth',
+    'django.core.context_processors.i18n',
+    'django.core.context_processors.request',
+    'django.core.context_processors.media',
+    'django.core.context_processors.static',
+    'sekizai.context_processors.sekizai',
+    'multiuploader.context_processors.booleans',
+)
+
+# Application definition
+INSTALLED_APPS = (
+    'django.contrib.auth',
+    'django.contrib.contenttypes',
+    'django.contrib.sessions',
+    'django.contrib.sites',
+    'django.contrib.messages',
+    'django.contrib.staticfiles',
+    'django.contrib.gis',
+    'grappelli',
+    'django.contrib.admin',
+
+    'django_comments',
+    'south',
+    'corsheaders',
+    'reversion',
+    'compressor',
+    'django_extensions',
+
+    'sekizai',
+    
+    'guardian',
+    'userena',
+
+    'tastypie',
+    'autoslug',
+    'taggit',
+    'multiuploader',
+    'sendfile',
+    'sorl.thumbnail',
+    'haystack',
+    
+    'whoosh',
+# From dataserver
+    'dataserver',
+    'accounts',
+    'bucket',
+    'scout',
+    'deal',
+    'flipflop',    
+    'alambic',
+    'projects',
+    'projectsheet',
+    'graffiti',
+    'commons',
+    'unisson',
+    
+    'ucomment',
+    'makerscience_catalog',
+    'makerscience_profile',
+)
 
 LOGGING = {
     'version': 1,

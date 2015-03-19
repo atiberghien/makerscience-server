@@ -8,7 +8,7 @@ from dataserver.authentication import AnonymousApiKeyAuthentication
 from dataserver.authorization import GuardianAuthorization
 from datetime import datetime
 from graffiti.api import TaggedItemResource
-from guardian.shortcuts import assign_perm
+from guardian.shortcuts import assign_perm, get_objects_for_user
 from projects.api import ProjectResource
 from projectsheet.api import ProjectSheetResource
 
@@ -25,6 +25,27 @@ from makerscience_profile.api import MakerScienceProfileResource
 from accounts.models import ObjectProfileLink, Profile
 from projectsheet.models import ProjectSheet
 
+#FIXME : needs heavy refactoring
+class MakerScienceProjectAuthorization(GuardianAuthorization):
+    def __init__(self):
+        super(MakerScienceProjectAuthorization, self).__init__(
+            create_permission_code="add_makerscienceproject",
+            view_permission_code="view_makerscienceproject",
+            update_permission_code="change_makerscienceproject",
+            delete_permission_code="delete_makerscienceproject"
+        )
+
+    def read_detail(self, object_list, bundle):
+        """
+        For MakerScienceResources we let anyone read detail 
+        """
+        return True
+
+    def read_list(self, object_list, bundle):
+        """
+        For MakerScienceResources we let anyone read list 
+        """
+        return object_list
 
 class MakerScienceProjectResource(ModelResource):
     parent = fields.ToOneField(ProjectResource, 'parent', full=True)
@@ -39,12 +60,8 @@ class MakerScienceProjectResource(ModelResource):
         allowed_methods = ['get', 'post', 'put', 'patch']
         resource_name = 'makerscience/project'
         authentication = AnonymousApiKeyAuthentication()
-        authorization = GuardianAuthorization(
-            create_permission_code="add_makerscienceproject",
-            view_permission_code="view_makerscienceproject",
-            update_permission_code="change_makerscienceproject",
-            delete_permission_code="delete_makerscienceproject"
-        )
+        authorization = DjangoAuthorization()
+        #authorization = MakerScienceProjectAuthorization()
         always_return_data = True
         filtering = {
             'parent' : ALL_WITH_RELATIONS,
@@ -82,6 +99,7 @@ class MakerScienceProjectResource(ModelResource):
         bundle.data["modified"] = datetime.now()
         return bundle
 
+    #FIXME / DRY me out !
     def ms_edit_assign(self, request, **kwargs):
         """
         Method to assign edit permissions for a MSResource or MSProject 'ms_id' to
@@ -104,6 +122,27 @@ class MakerScienceProjectResource(ModelResource):
         
         return self.create_response(request, {'success': True})
 
+class MakerScienceResourceAuthorization(GuardianAuthorization):
+    def __init__(self):
+        super(MakerScienceResourceAuthorization, self).__init__(
+            create_permission_code="add_makerscienceresource",
+            view_permission_code="view_makerscienceresource",
+            update_permission_code="change_makerscienceresource",
+            delete_permission_code="delete_makerscienceresource"
+        )
+
+    def read_detail(self, object_list, bundle):
+        """
+        For MakerScienceResources we let anyone read detail 
+        """
+        return True
+
+    def read_list(self, object_list, bundle):
+        """
+        For MakerScienceResources we let anyone read list 
+        """
+        return object_list
+
 class MakerScienceResourceResource(ModelResource):
     parent = fields.ToOneField(ProjectResource, 'parent', full=True)
     tags = fields.ToManyField(TaggedItemResource, 'tagged_items', full=True, null=True)
@@ -117,12 +156,7 @@ class MakerScienceResourceResource(ModelResource):
         allowed_methods = ['get', 'post', 'put', 'patch']
         resource_name = 'makerscience/resource'
         authentication = AnonymousApiKeyAuthentication()
-        authorization = GuardianAuthorization(
-            create_permission_code="add_makerscienceresource",
-            view_permission_code="view_makerscienceresource",
-            update_permission_code="change_makerscienceresource",
-            delete_permission_code="delete_makerscienceresource"
-        )
+        authorization = MakerScienceResourceAuthorization()
         always_return_data = True
         filtering = {
             'parent' : ALL_WITH_RELATIONS,
@@ -159,6 +193,7 @@ class MakerScienceResourceResource(ModelResource):
                  self.wrap_view('ms_edit_assign'), name="api_ms_resource_assign"),
         ]
 
+    #FIXME / DRY me out !
     def ms_edit_assign(self, request, **kwargs):
         """
         Method to assign edit permissions for a MSResource or MSProject 'ms_id' to

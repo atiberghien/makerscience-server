@@ -1,8 +1,15 @@
 from django.db import models
+from django.utils.translation import ugettext as _
 from taggit.managers import TaggableManager
 from projects.models import Project
 
+
 class MakerScienceProject(models.Model):
+    class Meta:
+        permissions = (
+            ('view_makerscienceproject', _("View MakerScienceProject")),
+        )
+
     parent = models.ForeignKey(Project)
     tags = TaggableManager()
     modified = models.DateTimeField()
@@ -13,6 +20,11 @@ class MakerScienceProject(models.Model):
 
 
 class MakerScienceResource(models.Model):
+
+    class Meta:
+        permissions = (
+            ('view_makerscienceresource', _("View MakerScienceResource")),
+        )
 
     LEVEL_CHOICES = (
         ("1", "Facile"),
