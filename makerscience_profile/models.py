@@ -1,4 +1,5 @@
 # -*- coding: utf-8 -*-
+from django.contrib.auth.models import User
 from django.db import models
 from accounts.models import Profile
 from django.db.models.signals import post_save
@@ -6,6 +7,7 @@ from django.dispatch.dispatcher import receiver
 from scout.models import PostalAddress
 from taggit.models import TaggedItem
 from taggit.managers import TaggableManager
+from guardian.shortcuts import assign_perm
 
 class MakerScienceProfileTaggedItem (TaggedItem):
     PROFILE_TAG_TYPE_CHOICES = (
@@ -34,3 +36,10 @@ class MakerScienceProfile(models.Model):
 def create_profile_on_user_signup(sender, created, instance, **kwargs):
     if created:
         MakerScienceProfile.objects.create(parent=instance)
+
+@receiver(post_save, sender=User)
+def allow_user_to_create_MS_resources_and_project(sender, instance, created, *args, **kwargs):
+    assign_perm("makerscience_catalog.add_makerscienceresource", instance)
+    assign_perm("makerscience_catalog.add_makerscienceproject", instance)
+    assign_perm("makerscience_catalog.view_makerscienceresource", instance)
+    assign_perm("makerscience_catalog.view_makerscienceproject", instance)
