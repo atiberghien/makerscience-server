@@ -26,26 +26,40 @@ from accounts.models import ObjectProfileLink, Profile
 from projectsheet.models import ProjectSheet
 
 #FIXME : needs heavy refactoring
-class MakerScienceProjectAuthorization(GuardianAuthorization):
-    def __init__(self):
-        super(MakerScienceProjectAuthorization, self).__init__(
-            create_permission_code="add_makerscienceproject",
-            view_permission_code="view_makerscienceproject",
-            update_permission_code="change_makerscienceproject",
-            delete_permission_code="delete_makerscienceproject"
-        )
+class MakerScienceAPIAuthorization(GuardianAuthorization):
 
     def read_detail(self, object_list, bundle):
         """
-        For MakerScienceResources we let anyone read detail 
+        For MakerScienceResources we let anyone authenticated or not read detail 
         """
+        self.generic_base_check(object_list, bundle)
         return True
 
     def read_list(self, object_list, bundle):
         """
-        For MakerScienceResources we let anyone read list 
+        For MakerScienceResources we let anyone authenticated or not read list 
         """
+        self.generic_base_check(object_list, bundle)
         return object_list
+
+    def create_detail(self, object_list, bundle):
+        """
+        For MakerScienceResources we let anyone with add permissions
+        *FIXME* : this override should not be required since we assign global edit
+        rights to all new users (see .models.py)
+    
+        """
+        self.generic_base_check(object_list, bundle)
+        return bundle.request.user.has_perm(self.create_permission_code)
+
+class MakerScienceProjectAuthorization(MakerScienceAPIAuthorization):
+    def __init__(self):
+        super(MakerScienceProjectAuthorization, self).__init__(
+            create_permission_code="makerscience_catalog.add_makerscienceproject",
+            view_permission_code="makerscience_catalog.view_makerscienceproject",
+            update_permission_code="makerscience_catalog.change_makerscienceproject",
+            delete_permission_code="makerscience_catalog.delete_makerscienceproject"
+        )
 
 class MakerScienceProjectResource(ModelResource):
     parent = fields.ToOneField(ProjectResource, 'parent', full=True)
@@ -113,7 +127,8 @@ class MakerScienceProjectResource(ModelResource):
         target_profile_id = json.loads(request.body)['profile_id']
         target_profile = get_object_or_404(Profile, pk=target_profile_id)
         target_object_id = kwargs['ms_id']
-        
+        # FIXME : for better security, we should also check that request.user has edit rights on target object
+        # => which implies that change rigths are automatically given to creator of a sheet
         target_object = get_object_or_404(MakerScienceProject, pk=target_object_id)
         assign_perm("change_makerscienceproject", user_or_group=target_profile.user, obj=target_object)
         
@@ -137,7 +152,7 @@ class MakerScienceProjectResource(ModelResource):
         else:
             return self.create_response(request, {'has_perm':False})
 
-class MakerScienceResourceAuthorization(GuardianAuthorization):
+class MakerScienceResourceAuthorization(MakerScienceAPIAuthorization):
     def __init__(self):
         super(MakerScienceResourceAuthorization, self).__init__(
             create_permission_code="add_makerscienceresource",
@@ -145,18 +160,6 @@ class MakerScienceResourceAuthorization(GuardianAuthorization):
             update_permission_code="change_makerscienceresource",
             delete_permission_code="delete_makerscienceresource"
         )
-
-    def read_detail(self, object_list, bundle):
-        """
-        For MakerScienceResources we let anyone read detail 
-        """
-        return True
-
-    def read_list(self, object_list, bundle):
-        """
-        For MakerScienceResources we let anyone read list 
-        """
-        return object_list
 
 class MakerScienceResourceResource(ModelResource):
     parent = fields.ToOneField(ProjectResource, 'parent', full=True)
@@ -224,7 +227,8 @@ class MakerScienceResourceResource(ModelResource):
         target_profile_id = json.loads(request.body)['profile_id']
         target_profile = get_object_or_404(Profile, pk=target_profile_id)
         target_object_id = kwargs['ms_id']
-        
+        # FIXME : for better security, we should also check that request.user has edit rights on target object
+        # => which implies that change rigths are automatically given to creator of a sheet
         target_object = get_object_or_404(MakerScienceResource, pk=target_object_id)
         assign_perm("change_makerscienceresource", user_or_group=target_profile.user, obj=target_object)
         
