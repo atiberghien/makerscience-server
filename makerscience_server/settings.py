@@ -7,7 +7,7 @@ DEBUG = True
 TEMPLATE_DEBUG = True
 
 ADMINS = (
-    #('Freddy', 'freddy.limpens@gmail.com'),
+    ('Alban Tiberghien', 'alban@nonetype.fr'),
 )
 
 MANAGERS = ADMINS
@@ -16,13 +16,13 @@ MANAGERS = ADMINS
 DATABASES = {
     'default': {
         'ENGINE': 'django.contrib.gis.db.backends.postgis',
-        'NAME': 'dataserver', 
+        'NAME': 'dataserver',
         'USER': 'dataserver',
         'PASSWORD': 'dataserver',
     }
 }
 
-ALLOWED_HOSTS = ['api.gup.extra-muros.coop', 'gup.extra-muros.coop']
+ALLOWED_HOSTS = ['', '']
 # Internationalization
 # https://docs.djangoproject.com/en/1.6/topics/i18n/
 
@@ -82,7 +82,7 @@ MIDDLEWARE_CLASSES = (
     'django.contrib.messages.middleware.MessageMiddleware',
     'django.middleware.locale.LocaleMiddleware',
     'django.middleware.doc.XViewMiddleware',
-    
+
     'corsheaders.middleware.CorsMiddleware',
 )
 
@@ -133,7 +133,7 @@ INSTALLED_APPS = (
     'django_extensions',
 
     'sekizai',
-    
+
     'guardian',
     'userena',
 
@@ -144,23 +144,25 @@ INSTALLED_APPS = (
     'sendfile',
     'sorl.thumbnail',
     'haystack',
-    
+
     'whoosh',
+
 # From dataserver
     'dataserver',
     'accounts',
     'bucket',
     'scout',
-    'deal',
-    'flipflop',    
-    'alambic',
+
+    # 'deal',
+    # 'flipflop',
+    # 'alambic',
     'projects',
     'projectsheet',
     'graffiti',
     'commons',
-    'unisson',
-    
+    # 'unisson',
     'ucomment',
+
     'makerscience_catalog',
     'makerscience_profile',
 )
