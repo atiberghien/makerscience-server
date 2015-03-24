@@ -156,10 +156,10 @@ class MakerScienceProjectResource(ModelResource):
 class MakerScienceResourceAuthorization(MakerScienceAPIAuthorization):
     def __init__(self):
         super(MakerScienceResourceAuthorization, self).__init__(
-            create_permission_code="add_makerscienceresource",
-            view_permission_code="view_makerscienceresource",
-            update_permission_code="change_makerscienceresource",
-            delete_permission_code="delete_makerscienceresource"
+            create_permission_code="makerscience_catalog.add_makerscienceresource",
+            view_permission_code="makerscience_catalog.view_makerscienceresource",
+            update_permission_code="makerscience_catalog.change_makerscienceresource",
+            delete_permission_code="makerscience_catalog.delete_makerscienceresource"
         )
 
 class MakerScienceResourceResource(ModelResource):
