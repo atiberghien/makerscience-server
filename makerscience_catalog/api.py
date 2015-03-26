@@ -13,6 +13,8 @@ from guardian.shortcuts import assign_perm, get_objects_for_user
 from projects.api import ProjectResource
 from projectsheet.api import ProjectSheetResource
 
+from haystack.query import SearchQuerySet
+
 from taggit.models import Tag
 from tastypie import fields
 from tastypie.authorization import DjangoAuthorization
@@ -26,7 +28,6 @@ from makerscience_profile.api import MakerScienceProfileResource
 from accounts.models import ObjectProfileLink, Profile
 from projectsheet.models import ProjectSheet
 
-#FIXME : needs heavy refactoring
 class MakerScienceAPIAuthorization(GuardianAuthorization):
 
     def read_detail(self, object_list, bundle):
@@ -113,7 +114,40 @@ class MakerScienceProjectResource(ModelResource):
            url(r"^(?P<resource_name>%s)/(?P<ms_id>\d+)/check/(?P<user_id>\d+)%s$" % 
                 (self._meta.resource_name, trailing_slash()),
                  self.wrap_view('ms_project_check_edit_perm'), name="api_ms_project_check_edit_perm"),
+           url(r"^(?P<resource_name>%s)/search%s$" % (self._meta.resource_name, 
+                                trailing_slash()), self.wrap_view('ms_project_search'), name="api_ms_project_search"),
+
         ]
+
+    def ms_project_search(self, request, **kwargs):
+        self.method_check(request, allowed=['get'])
+        self.throttle_check(request)
+        self.is_authenticated(request)
+
+        # Query params
+        query = request.GET.get('q', '')
+        selected_facets = request.GET.getlist('facet', None)
+        
+        sqs = SearchQuerySet().models(MakerScienceProject).facet('tags')
+        # narrow down QS with facets
+        if selected_facets:
+            for facet in selected_facets:
+                sqs = sqs.narrow('tags:%s' % (facet))
+        # launch query
+        if query != "":
+            sqs = sqs.auto_query(query)
+        # build object list
+        objects = []
+        for result in sqs:
+            bundle = self.build_bundle(obj=result.object, request=request)
+            bundle = self.full_dehydrate(bundle)
+            objects.append(bundle)
+        object_list = {
+            'objects': objects,
+        }
+
+        self.log_throttled_access(request)
+        return self.create_response(request, object_list)
 
     #FIXME / DRY me out !
     def ms_project_edit_assign(self, request, **kwargs):
