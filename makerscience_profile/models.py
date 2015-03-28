@@ -1,5 +1,5 @@
 # -*- coding: utf-8 -*-
-from django.contrib.auth.models import User
+from django.contrib.auth.models import User, Group
 from django.db import models
 from accounts.models import Profile
 from django.db.models.signals import post_save
@@ -39,7 +39,61 @@ def create_profile_on_user_signup(sender, created, instance, **kwargs):
 
 @receiver(post_save, sender=User)
 def allow_user_to_create_MS_resources_and_project(sender, instance, created, *args, **kwargs):
-    assign_perm("makerscience_catalog.add_makerscienceresource", instance)
-    assign_perm("makerscience_catalog.add_makerscienceproject", instance)
-    assign_perm("makerscience_catalog.view_makerscienceresource", instance)
-    assign_perm("makerscience_catalog.view_makerscienceproject", instance)
+    """
+    We also need to assign all non MS-specific permissions for objects that come with MSResources/MSProjects:
+    - Project 
+    - ProjectSheet
+    - Pro
+
+    """
+    # Check if authenticated_user group exists, if not create it and add following perms
+    group, created = Group.objects.get_or_create(name='ms_authenticated_users')
+    if created:
+        # assign perms to group
+        assign_perm('makerscience_catalog.add_makerscienceproject', group)
+        assign_perm('makerscience_catalog.view_makerscienceproject', group)
+        assign_perm('makerscience_catalog.add_makerscienceresource', group)
+        assign_perm('makerscience_catalog.view_makerscienceresource', group)
+        
+        assign_perm('makerscience_profile.change_makerscienceprofile', group)
+        assign_perm('makerscience_profile.add_makerscienceprofiletaggeditem', group)
+        assign_perm('makerscience_profile.change_makerscienceprofiletaggeditem', group)
+        assign_perm('makerscience_profile.delete_makerscienceprofiletaggeditem', group)
+        
+        assign_perm('accounts.add_objectprofilelink', group)
+        assign_perm('accounts.change_objectprofilelink', group)
+        assign_perm('accounts.delete_objectprofilelink', group)
+        assign_perm('accounts.change_profile', group)
+        assign_perm('accounts.view_profile', group)
+        assign_perm('bucket.add_bucket', group)
+        assign_perm('bucket.change_bucket', group)
+        assign_perm('bucket.view_bucket', group)
+        assign_perm('bucket.add_bucketfile', group)
+        assign_perm('django_comments.add_comment', group)
+        assign_perm('django_comments.change_comment', group)
+        assign_perm('django_comments.delete_comment', group)
+        assign_perm('django_comments.add_commentflag', group)
+        assign_perm('django_comments.change_commentflag', group)
+        assign_perm('projects.add_project', group)
+        assign_perm('projects.change_project', group)
+        assign_perm('projects.add_projectprogress', group)
+        assign_perm('projects.change_projectprogress', group)
+        assign_perm('projects.delete_projectprogress', group)
+        assign_perm('projects.add_projectprogressrange', group)
+        assign_perm('projects.change_projectprogressrange', group)
+        assign_perm('projects.delete_projectprogressrange', group)
+        assign_perm('projectsheet.add_projectsheet', group)
+        assign_perm('projectsheet.change_projectsheet', group)
+        assign_perm('projectsheet.add_projectsheetquestion', group)
+        assign_perm('projectsheet.change_projectsheetquestion', group)
+        assign_perm('projectsheet.add_projectsheetsuggesteditem', group)
+        assign_perm('projectsheet.change_projectsheetsuggesteditem', group)
+        assign_perm('taggit.add_tag', group)
+        assign_perm('taggit.change_tag', group)
+        assign_perm('taggit.delete_tag', group)
+        assign_perm('taggit.add_taggeditem', group)
+        assign_perm('taggit.change_taggeditem', group)
+        assign_perm('taggit.delete_taggeditem', group)
+       
+    # assign user to group
+    instance.groups.add(group)
