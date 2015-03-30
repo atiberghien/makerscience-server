@@ -8,6 +8,7 @@ from scout.models import PostalAddress
 from taggit.models import TaggedItem
 from taggit.managers import TaggableManager
 from guardian.shortcuts import assign_perm
+from autoslug import AutoSlugField
 
 class MakerScienceProfileTaggedItem (TaggedItem):
     PROFILE_TAG_TYPE_CHOICES = (
@@ -17,6 +18,9 @@ class MakerScienceProfileTaggedItem (TaggedItem):
     tag_type = models.CharField(max_length=2, choices=PROFILE_TAG_TYPE_CHOICES)
 
 class MakerScienceProfile(models.Model):
+    slug = AutoSlugField(unique=True,
+                         always_update=True,
+                         populate_from=lambda instance: instance.parent.get_full_name_or_username())
     parent = models.ForeignKey(Profile)
     activity = models.CharField(max_length=255)
     bio = models.TextField()

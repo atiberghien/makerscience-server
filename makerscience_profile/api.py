@@ -24,6 +24,7 @@ class MakerScienceProfileResource(ModelResource):
         authentication = AnonymousApiKeyAuthentication()
         authorization = DjangoAuthorization()
         always_return_data = True
+        detail_uri_name = 'slug'
         filtering = {
             'parent' : ALL_WITH_RELATIONS,
             "location" : ['isnull', ],
