@@ -4,14 +4,12 @@ from south.db import db
 from south.v2 import SchemaMigration
 from django.db import models
 
-import random
-
 class Migration(SchemaMigration):
 
     def forwards(self, orm):
         # Adding field 'MakerScienceProfile.slug'
         db.add_column(u'makerscience_profile_makerscienceprofile', 'slug',
-                      self.gf('autoslug.fields.AutoSlugField')(default=lambda : 'slug-%s' % int(random.random()*1000), unique=True, max_length=50, populate_from=None, unique_with=()),
+                      self.gf('autoslug.fields.AutoSlugField')(default='slug', max_length=50, populate_from=None, unique_with=()),
                       keep_default=False)
 
 

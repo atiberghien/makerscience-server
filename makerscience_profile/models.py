@@ -18,8 +18,7 @@ class MakerScienceProfileTaggedItem (TaggedItem):
     tag_type = models.CharField(max_length=2, choices=PROFILE_TAG_TYPE_CHOICES)
 
 class MakerScienceProfile(models.Model):
-    slug = AutoSlugField(unique=True,
-                         always_update=True,
+    slug = AutoSlugField(always_update=True,
                          populate_from=lambda instance: instance.parent.get_full_name_or_username())
     parent = models.ForeignKey(Profile)
     activity = models.CharField(max_length=255)
@@ -45,7 +44,7 @@ def create_profile_on_user_signup(sender, created, instance, **kwargs):
 def allow_user_to_create_MS_resources_and_project(sender, instance, created, *args, **kwargs):
     """
     We also need to assign all non MS-specific permissions for objects that come with MSResources/MSProjects:
-    - Project 
+    - Project
     - ProjectSheet
     - Pro
 
@@ -58,12 +57,12 @@ def allow_user_to_create_MS_resources_and_project(sender, instance, created, *ar
         assign_perm('makerscience_catalog.view_makerscienceproject', group)
         assign_perm('makerscience_catalog.add_makerscienceresource', group)
         assign_perm('makerscience_catalog.view_makerscienceresource', group)
-        
+
         assign_perm('makerscience_profile.change_makerscienceprofile', group)
         assign_perm('makerscience_profile.add_makerscienceprofiletaggeditem', group)
         assign_perm('makerscience_profile.change_makerscienceprofiletaggeditem', group)
         assign_perm('makerscience_profile.delete_makerscienceprofiletaggeditem', group)
-        
+
         assign_perm('accounts.add_objectprofilelink', group)
         assign_perm('accounts.change_objectprofilelink', group)
         assign_perm('accounts.delete_objectprofilelink', group)
@@ -98,6 +97,6 @@ def allow_user_to_create_MS_resources_and_project(sender, instance, created, *ar
         assign_perm('taggit.add_taggeditem', group)
         assign_perm('taggit.change_taggeditem', group)
         assign_perm('taggit.delete_taggeditem', group)
-       
+
     # assign user to group
     instance.groups.add(group)
