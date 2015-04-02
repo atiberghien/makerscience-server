@@ -1,0 +1,4 @@
+{{ object.parent.title }}
+{{ object.parent.description }}
+{{ object.parent.baseline }}
+{% for tag in object.tags.all %} {{ tag.name }} {% endfor %}
