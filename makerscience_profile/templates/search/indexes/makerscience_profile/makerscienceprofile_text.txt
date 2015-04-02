@@ -1,0 +1,5 @@
+{{ object.parent.username }}
+{{ object.parent.user.last_name }}
+{{ object.parent.user.first_name }}
+{{ object.bio }}
+{% for tag in object.tags.all %} {{ tag.name }} {% endfor %}
