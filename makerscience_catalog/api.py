@@ -54,34 +54,12 @@ class MakerScienceAPIAuthorization(GuardianAuthorization):
         self.generic_base_check(object_list, bundle)
         return bundle.request.user.has_perm(self.create_permission_code)
 
-class MakerScienceProjectAuthorization(MakerScienceAPIAuthorization):
-    def __init__(self):
-        super(MakerScienceProjectAuthorization, self).__init__(
-            create_permission_code="makerscience_catalog.add_makerscienceproject",
-            view_permission_code="makerscience_catalog.view_makerscienceproject",
-            update_permission_code="makerscience_catalog.change_makerscienceproject",
-            delete_permission_code="makerscience_catalog.delete_makerscienceproject"
-        )
 
-class MakerScienceProjectResource(ModelResource):
+class MakerScienceGenericResource(ModelResource):
     parent = fields.ToOneField(ProjectResource, 'parent', full=True)
     tags = fields.ToManyField(TaggedItemResource, 'tagged_items', full=True, null=True)
-
     base_projectsheet = fields.ToOneField(ProjectSheetResource, 'parent__projectsheet', null=True, full=True)
-
     linked_resources = fields.ToManyField('makerscience_catalog.api.MakerScienceResourceResource', 'linked_resources', full=True,null=True)
-
-    class Meta:
-        queryset = MakerScienceProject.objects.all()
-        allowed_methods = ['get', 'post', 'put', 'patch']
-        resource_name = 'makerscience/project'
-        authentication = AnonymousApiKeyAuthentication()
-        authorization = MakerScienceProjectAuthorization()
-        always_return_data = True
-        filtering = {
-            'parent' : ALL_WITH_RELATIONS,
-            'featured' : ['exact'],
-        }
 
     def dehydrate(self, bundle):
         try:
@@ -111,16 +89,15 @@ class MakerScienceProjectResource(ModelResource):
         return [
            url(r"^(?P<resource_name>%s)/(?P<ms_id>\d+)/assign%s$" % 
                 (self._meta.resource_name, trailing_slash()),
-                 self.wrap_view('ms_project_edit_assign'), name="api_ms_project_assign"),
+                 self.wrap_view('ms_edit_assign'), name="api_edit_assign"),
            url(r"^(?P<resource_name>%s)/(?P<ms_id>\d+)/check/(?P<user_id>\d+)%s$" % 
                 (self._meta.resource_name, trailing_slash()),
-                 self.wrap_view('ms_project_check_edit_perm'), name="api_ms_project_check_edit_perm"),
+                 self.wrap_view('ms_check_edit_perm'), name="api_ms_check_edit_perm"),
            url(r"^(?P<resource_name>%s)/search%s$" % (self._meta.resource_name, 
-                                trailing_slash()), self.wrap_view('ms_project_search'), name="api_ms_project_search"),
-
+                                trailing_slash()), self.wrap_view('ms_search'), name="api_ms_search"),
         ]
 
-    def ms_project_search(self, request, **kwargs):
+    def ms_search(self, request, **kwargs):
         self.method_check(request, allowed=['get'])
         self.throttle_check(request)
         self.is_authenticated(request)
@@ -129,7 +106,7 @@ class MakerScienceProjectResource(ModelResource):
         query = request.GET.get('q', '')
         selected_facets = request.GET.getlist('facet', None)
         
-        sqs = SearchQuerySet().models(MakerScienceProject).facet('tags')
+        sqs = SearchQuerySet().models(self.Meta.object_class).facet('tags')
         # narrow down QS with facets
         if selected_facets:
             for facet in selected_facets:
@@ -151,7 +128,7 @@ class MakerScienceProjectResource(ModelResource):
         return self.create_response(request, object_list)
 
     #FIXME / DRY me out !
-    def ms_project_edit_assign(self, request, **kwargs):
+    def ms_edit_assign(self, request, **kwargs):
         """
         Method to assign edit permissions for a MSResource or MSProject 'ms_id' to
         a user with id passed as POST parameter 'user_id' 
@@ -165,12 +142,13 @@ class MakerScienceProjectResource(ModelResource):
         target_object_id = kwargs['ms_id']
         # FIXME : for better security, we should also check that request.user has edit rights on target object
         # => which implies that change rigths are automatically given to creator of a sheet
-        target_object = get_object_or_404(MakerScienceProject, pk=target_object_id)
-        assign_perm("change_makerscienceproject", user_or_group=target_user, obj=target_object)
+        target_object = get_object_or_404(self.Meta.object_class, pk=target_object_id)
+        change_perm_code = self.Meta.authorization.update_permission_code
+        assign_perm(change_perm_code, user_or_group=target_user, obj=target_object)
         
-        return self.create_response(request, {'Change rights on MakerScienceProject assigned to given profile':True})
+        return self.create_response(request, {'Change rights assigned'})
 
-    def ms_project_check_edit_perm(self, request, **kwargs):
+    def ms_check_edit_perm(self, request, **kwargs):
         """
         Method to check edit permissions for a given user_id
         """   
@@ -182,11 +160,37 @@ class MakerScienceProjectResource(ModelResource):
         user = get_object_or_404(User, pk=user_id)
         
         target_object_id = kwargs['ms_id']
-        target_object = get_object_or_404(MakerScienceProject, pk=target_object_id)
-        if user.has_perm('change_makerscienceproject', target_object):
+        target_object = get_object_or_404(self.Meta.object_class, pk=target_object_id)
+        change_perm_code = self.Meta.authorization.update_permission_code
+        if user.has_perm(change_perm_code, target_object):
             return self.create_response(request, {'has_perm':True})
         else:
             return self.create_response(request, {'has_perm':False})
+
+
+class MakerScienceProjectAuthorization(MakerScienceAPIAuthorization):
+    def __init__(self):
+        super(MakerScienceProjectAuthorization, self).__init__(
+            create_permission_code="makerscience_catalog.add_makerscienceproject",
+            view_permission_code="makerscience_catalog.view_makerscienceproject",
+            update_permission_code="makerscience_catalog.change_makerscienceproject",
+            delete_permission_code="makerscience_catalog.delete_makerscienceproject"
+        )
+
+class MakerScienceProjectResource(MakerScienceGenericResource):
+
+    class Meta:
+        object_class = MakerScienceProject
+        queryset = MakerScienceProject.objects.all()
+        allowed_methods = ['get', 'post', 'put', 'patch']
+        resource_name = 'makerscience/project'
+        authentication = AnonymousApiKeyAuthentication()
+        authorization = MakerScienceProjectAuthorization()
+        always_return_data = True
+        filtering = {
+            'parent' : ALL_WITH_RELATIONS,
+            'featured' : ['exact'],
+        }
 
 class MakerScienceResourceAuthorization(MakerScienceAPIAuthorization):
     def __init__(self):
@@ -197,13 +201,7 @@ class MakerScienceResourceAuthorization(MakerScienceAPIAuthorization):
             delete_permission_code="makerscience_catalog.delete_makerscienceresource"
         )
 
-class MakerScienceResourceResource(ModelResource):
-    parent = fields.ToOneField(ProjectResource, 'parent', full=True)
-    tags = fields.ToManyField(TaggedItemResource, 'tagged_items', full=True, null=True)
-
-    base_resourcesheet = fields.ToOneField(ProjectSheetResource, 'parent__projectsheet', null=True, full=True)
-
-    linked_resources = fields.ToManyField('makerscience_catalog.api.MakerScienceResourceResource', 'linked_resources', full=True,null=True)
+class MakerScienceResourceResource(MakerScienceGenericResource):
 
     class Meta:
         queryset = MakerScienceResource.objects.all()
@@ -216,107 +214,4 @@ class MakerScienceResourceResource(ModelResource):
             'parent' : ALL_WITH_RELATIONS,
             'featured' : ['exact'],
         }
-
-    def dehydrate(self, bundle):
-        try:
-            link = ObjectProfileLink.objects.get(content_type=ContentType.objects.get_for_model(bundle.obj.parent),
-                                                   object_id=bundle.obj.parent.id,
-                                                   level=0)
-            profile = link.profile.makerscienceprofile_set.all()[0]
-
-            bundle.data["by"] = {
-                'profile_slug' : profile.slug,
-                'profile_id' : profile.id,
-                'profile_email' : profile.parent.user.email,
-                'full_name' : "%s %s" % (profile.parent.user.first_name, profile.parent.user.last_name)
-            }
-        except Exception, e:
-            pass
-        return bundle
-
-    def hydrate(self, bundle):
-        bundle.data["modified"] = datetime.now()
-        return bundle
-
-    def prepend_urls(self):
-        """
-        URL override for when giving change perm to a user profile passed as parameter profile_id
-        """
-        return [
-           url(r"^(?P<resource_name>%s)/(?P<ms_id>\d+)/assign%s$" % 
-                (self._meta.resource_name, trailing_slash()),
-                 self.wrap_view('ms_resource_edit_assign'), name="api_ms_resource_assign"),
-           url(r"^(?P<resource_name>%s)/(?P<ms_id>\d+)/check/(?P<user_id>\d+)%s$" % 
-                (self._meta.resource_name, trailing_slash()),
-                 self.wrap_view('ms_resource_check_edit_perm'), name="api_ms_resource_check_edit_perm"),
-           url(r"^(?P<resource_name>%s)/search%s$" % (self._meta.resource_name, 
-                trailing_slash()), self.wrap_view('ms_resource_search'), name="api_ms_resource_search"),
-        ]
-
-    def ms_resource_search(self, request, **kwargs):
-        self.method_check(request, allowed=['get'])
-        self.throttle_check(request)
-        self.is_authenticated(request)
-
-        # Query params
-        query = request.GET.get('q', '')
-        selected_facets = request.GET.getlist('facet', None)
-        
-        sqs = SearchQuerySet().models(MakerScienceResource).facet('tags')
-        # narrow down QS with facets
-        if selected_facets:
-            for facet in selected_facets:
-                sqs = sqs.narrow('tags:%s' % (facet))
-        # launch query
-        if query != "":
-            sqs = sqs.auto_query(query)
-        # build object list
-        objects = []
-        for result in sqs:
-            bundle = self.build_bundle(obj=result.object, request=request)
-            bundle = self.full_dehydrate(bundle)
-            objects.append(bundle)
-        object_list = {
-            'objects': objects,
-        }
-
-        self.log_throttled_access(request)
-        return self.create_response(request, object_list)
-
-    #FIXME / DRY me out !
-    def ms_resource_edit_assign(self, request, **kwargs):
-        """
-        Method to assign edit permissions for a MSResource 'ms_id' to
-        a user with profile passed as POST parameter 'profile_id' 
-        """
-        self.method_check(request, allowed=['post'])
-        self.throttle_check(request)
-        self.is_authenticated(request)
-       
-        target_user_id = json.loads(request.body)['user_id']
-        target_user = get_object_or_404(User, pk=target_user_id)
-        target_object_id = kwargs['ms_id']
-        # FIXME : for better security, we should also check that request.user has edit rights on target object
-        # => which implies that change rigths are automatically given to creator of a sheet
-        target_object = get_object_or_404(MakerScienceResource, pk=target_object_id)
-        assign_perm("change_makerscienceresource", user_or_group=target_user, obj=target_object)
-        
-        return self.create_response(request, {'Change rights on MakerScienceResource assigned to given user':True})
-
-    def ms_resource_check_edit_perm(self, request, **kwargs):
-        """
-        Method to check edit permissions for a given user_id
-        """   
-        self.method_check(request, allowed=['get', 'post'])
-        self.throttle_check(request)
-        self.is_authenticated(request)
-
-        user_id = kwargs['user_id']
-        user = get_object_or_404(User, pk=user_id)
-        target_object_id = kwargs['ms_id']
-        target_object = get_object_or_404(MakerScienceResource, pk=target_object_id)
-        if user.has_perm('change_makerscienceresource', target_object):
-            return self.create_response(request, {'has_perm':True})
-        else:
-            return self.create_response(request, {'has_perm':False})
 
