@@ -146,6 +146,8 @@ INSTALLED_APPS = (
     'haystack',
 
     'whoosh',
+    'solo',
+    'redactor',
 
 # From dataserver
     'dataserver',
@@ -163,6 +165,7 @@ INSTALLED_APPS = (
     # 'unisson',
     'ucomment',
 
+    'makerscience_admin',
     'makerscience_catalog',
     'makerscience_profile',
 )
@@ -272,3 +275,5 @@ THUMBNAIL_CONVERT = 'gm convert'
 
 #Grappeli
 GRAPPELLI_ADMIN_TITLE = "Admin Makerscience"
+REDACTOR_OPTIONS = {'lang': 'fr'}
+REDACTOR_UPLOAD = 'uploads/'

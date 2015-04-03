@@ -16,6 +16,7 @@ from projectsheet.api import ProjectSheetResource, ProjectSheetTemplateResource,
 
 from makerscience_catalog.api import MakerScienceProjectResource, MakerScienceResourceResource
 from makerscience_profile.api import MakerScienceProfileResource, MakerScienceProfileTaggedItemResource
+from makerscience_admin.api import MakerScienceStaticContentResource
 import bucket
 
 admin.autodiscover()
@@ -69,9 +70,12 @@ api.register(MakerScienceResourceResource())
 api.register(MakerScienceProfileResource())
 api.register(MakerScienceProfileTaggedItemResource())
 
+#MakerScience Admin
+api.register(MakerScienceStaticContentResource())
 
 urlpatterns = patterns('',
     url(r'^grappelli/', include('grappelli.urls')),
+    url(r'^redactor/', include('redactor.urls')),
     url(r'^admin/', include(admin.site.urls)),
     url(r'^api/', include(api.urls)),
     url(r'^bucket/', include('bucket.urls'))

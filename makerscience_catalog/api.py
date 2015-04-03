@@ -69,6 +69,7 @@ class MakerScienceGenericResource(ModelResource):
             profile = link.profile.makerscienceprofile_set.all()[0]
 
             bundle.data["by"] = {
+                'profile_slug' : profile.slug,
                 'profile_id' : profile.id,
                 'profile_email' : profile.parent.user.email,
                 'full_name' : "%s %s" % (profile.parent.user.first_name, profile.parent.user.last_name)
@@ -213,3 +214,4 @@ class MakerScienceResourceResource(MakerScienceGenericResource):
             'parent' : ALL_WITH_RELATIONS,
             'featured' : ['exact'],
         }
+
