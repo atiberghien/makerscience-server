@@ -108,8 +108,9 @@ class MakerScienceGenericResource(ModelResource):
         query = request.GET.get('q', '')
         selected_facets = request.GET.getlist('facet', None)
         featured = request.GET.get('featured', '')
-        
+
         sqs = SearchQuerySet().models(self.Meta.object_class).facet('tags')
+
         # narrow down QS with facets
         if selected_facets:
             for facet in selected_facets:
@@ -117,17 +118,19 @@ class MakerScienceGenericResource(ModelResource):
         # launch query
         if query != "":
             sqs = sqs.auto_query(query)
-        if featured:
+
+        if featured != '':
             sqs =sqs.filter(featured=featured)
         
         uri = reverse('api_ms_search', kwargs={'api_name':self.api_name,'resource_name': self._meta.resource_name})
         paginator = Paginator(request.GET, sqs, resource_uri=uri)
- 
+
         objects = []
         for result in paginator.page()['objects']:
-            bundle = self.build_bundle(obj=result.object, request=request)
-            bundle = self.full_dehydrate(bundle)
-            objects.append(bundle)
+            if result:
+                bundle = self.build_bundle(obj=result.object, request=request)
+                bundle = self.full_dehydrate(bundle)
+                objects.append(bundle)
         object_list = {
             'meta': paginator.page()['meta'],
             'objects': objects,
