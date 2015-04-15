@@ -34,14 +34,14 @@ class MakerScienceAPIAuthorization(GuardianAuthorization):
 
     def read_detail(self, object_list, bundle):
         """
-        For MakerScienceResources we let anyone authenticated or not read detail 
+        For MakerScienceResources we let anyone authenticated or not read detail
         """
         self.generic_base_check(object_list, bundle)
         return True
 
     def read_list(self, object_list, bundle):
         """
-        For MakerScienceResources we let anyone authenticated or not read list 
+        For MakerScienceResources we let anyone authenticated or not read list
         """
         self.generic_base_check(object_list, bundle)
         return object_list
@@ -51,7 +51,7 @@ class MakerScienceAPIAuthorization(GuardianAuthorization):
         For MakerScienceResources we let anyone with add permissions
         *FIXME* : this override should not be required since we assign global edit
         rights to all new users (see .models.py)
-    
+
         """
         self.generic_base_check(object_list, bundle)
         return bundle.request.user.has_perm(self.create_permission_code)
@@ -89,13 +89,13 @@ class MakerScienceGenericResource(ModelResource):
         URL override for permissions and search specials
         """
         return [
-           url(r"^(?P<resource_name>%s)/(?P<ms_id>\d+)/assign%s$" % 
+           url(r"^(?P<resource_name>%s)/(?P<ms_id>\d+)/assign%s$" %
                 (self._meta.resource_name, trailing_slash()),
                  self.wrap_view('ms_edit_assign'), name="api_edit_assign"),
-           url(r"^(?P<resource_name>%s)/(?P<ms_id>\d+)/check/(?P<user_id>\d+)%s$" % 
+           url(r"^(?P<resource_name>%s)/(?P<ms_id>\d+)/check/(?P<user_id>\d+)%s$" %
                 (self._meta.resource_name, trailing_slash()),
                  self.wrap_view('ms_check_edit_perm'), name="api_ms_check_edit_perm"),
-           url(r"^(?P<resource_name>%s)/search%s$" % (self._meta.resource_name, 
+           url(r"^(?P<resource_name>%s)/search%s$" % (self._meta.resource_name,
                                 trailing_slash()), self.wrap_view('ms_search'), name="api_ms_search"),
         ]
 
@@ -143,12 +143,12 @@ class MakerScienceGenericResource(ModelResource):
     def ms_edit_assign(self, request, **kwargs):
         """
         Method to assign edit permissions for a MSResource or MSProject 'ms_id' to
-        a user with id passed as POST parameter 'user_id' 
+        a user with id passed as POST parameter 'user_id'
         """
         self.method_check(request, allowed=['post'])
         self.throttle_check(request)
         self.is_authenticated(request)
-       
+
         target_user_id = json.loads(request.body)['user_id']
         target_user = get_object_or_404(User, pk=target_user_id)
         target_object_id = kwargs['ms_id']
@@ -157,20 +157,20 @@ class MakerScienceGenericResource(ModelResource):
         target_object = get_object_or_404(self.Meta.object_class, pk=target_object_id)
         change_perm_code = self.Meta.authorization.update_permission_code
         assign_perm(change_perm_code, user_or_group=target_user, obj=target_object)
-        
+
         return self.create_response(request, {'Change rights assigned'})
 
     def ms_check_edit_perm(self, request, **kwargs):
         """
         Method to check edit permissions for a given user_id
-        """   
+        """
         self.method_check(request, allowed=['get', 'post'])
         self.throttle_check(request)
         self.is_authenticated(request)
 
         user_id = kwargs['user_id']
         user = get_object_or_404(User, pk=user_id)
-        
+
         target_object_id = kwargs['ms_id']
         target_object = get_object_or_404(self.Meta.object_class, pk=target_object_id)
         change_perm_code = self.Meta.authorization.update_permission_code
@@ -226,4 +226,3 @@ class MakerScienceResourceResource(MakerScienceGenericResource):
             'parent' : ALL_WITH_RELATIONS,
             'featured' : ['exact'],
         }
-
