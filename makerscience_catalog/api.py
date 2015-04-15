@@ -1,8 +1,10 @@
 import json
 
+
 from django.contrib.auth.models import User
 from django.contrib.contenttypes.models import ContentType
 from django.conf.urls import patterns, url, include
+from django.core.urlresolvers import reverse
 from django.shortcuts import get_object_or_404
 
 from dataserver.authentication import AnonymousApiKeyAuthentication
@@ -14,11 +16,11 @@ from projects.api import ProjectResource
 from projectsheet.api import ProjectSheetResource
 
 from haystack.query import SearchQuerySet
-
 from taggit.models import Tag
 from tastypie import fields
 from tastypie.authorization import DjangoAuthorization
 from tastypie.constants import ALL_WITH_RELATIONS
+from tastypie.paginator import Paginator
 from tastypie.resources import ModelResource
 from tastypie.utils import trailing_slash
 
@@ -84,7 +86,7 @@ class MakerScienceGenericResource(ModelResource):
 
     def prepend_urls(self):
         """
-        URL override for when giving change perm to a user profile passed as parameter profile_id
+        URL override for permissions and search specials
         """
         return [
            url(r"^(?P<resource_name>%s)/(?P<ms_id>\d+)/assign%s$" %
@@ -105,8 +107,10 @@ class MakerScienceGenericResource(ModelResource):
         # Query params
         query = request.GET.get('q', '')
         selected_facets = request.GET.getlist('facet', None)
+        featured = request.GET.get('featured', '')
 
         sqs = SearchQuerySet().models(self.Meta.object_class).facet('tags')
+
         # narrow down QS with facets
         if selected_facets:
             for facet in selected_facets:
@@ -114,13 +118,21 @@ class MakerScienceGenericResource(ModelResource):
         # launch query
         if query != "":
             sqs = sqs.auto_query(query)
-        # build object list
+
+        if featured != '':
+            sqs =sqs.filter(featured=featured)
+        
+        uri = reverse('api_ms_search', kwargs={'api_name':self.api_name,'resource_name': self._meta.resource_name})
+        paginator = Paginator(request.GET, sqs, resource_uri=uri)
+
         objects = []
-        for result in sqs:
-            bundle = self.build_bundle(obj=result.object, request=request)
-            bundle = self.full_dehydrate(bundle)
-            objects.append(bundle)
+        for result in paginator.page()['objects']:
+            if result:
+                bundle = self.build_bundle(obj=result.object, request=request)
+                bundle = self.full_dehydrate(bundle)
+                objects.append(bundle)
         object_list = {
+            'meta': paginator.page()['meta'],
             'objects': objects,
         }
 

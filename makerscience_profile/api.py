@@ -1,11 +1,14 @@
 from datetime import datetime
 from django.conf.urls import url
+from django.core.urlresolvers import reverse
+
 from haystack.query import SearchQuerySet
 from tastypie.utils import trailing_slash
 from tastypie.resources import ModelResource
 from tastypie.authorization import DjangoAuthorization
 from tastypie import fields
 from tastypie.constants import ALL_WITH_RELATIONS
+from tastypie.paginator import Paginator
 
 from dataserver.authentication import AnonymousApiKeyAuthentication
 from accounts.api import ProfileResource
@@ -67,13 +70,18 @@ class MakerScienceProfileResource(ModelResource):
         # launch query
         if query != "":
             sqs = sqs.auto_query(query)
-        # build object list
+        
+        uri = reverse('api_ms_profile_search', kwargs={'api_name':self.api_name,'resource_name': self._meta.resource_name})
+        paginator = Paginator(request.GET, sqs, resource_uri=uri)
+
         objects = []
-        for result in sqs:
-            bundle = self.build_bundle(obj=result.object, request=request)
-            bundle = self.full_dehydrate(bundle)
-            objects.append(bundle)
+        for result in paginator.page()['objects']:
+            if result:
+                bundle = self.build_bundle(obj=result.object, request=request)
+                bundle = self.full_dehydrate(bundle)
+                objects.append(bundle)
         object_list = {
+            'meta': paginator.page()['meta'],
             'objects': objects,
         }
 

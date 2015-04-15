@@ -9,7 +9,8 @@ class MakerScienceProjectIndex(indexes.SearchIndex, indexes.Indexable):
     
   text = indexes.CharField(document=True, use_template=True)
   tags = indexes.MultiValueField(null=True, faceted=True)
-
+  featured = indexes.BooleanField(model_attr='featured')
+  
   def get_model(self):
       return MakerScienceProject
   
