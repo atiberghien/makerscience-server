@@ -12,7 +12,7 @@ from graffiti.api import TagResource, TaggedItemResource
 from ucomment.api import CommentResource
 
 from projects.api import ProjectResource, ProjectProgressResource, ProjectProgressRangeResource
-from projectsheet.api import ProjectSheetResource, ProjectSheetTemplateResource, ProjectSheetSuggestedItemResource, ProjectSheetQuestionResource
+from projectsheet.api import ProjectSheetResource, ProjectSheetTemplateResource, ProjectSheetQuestionAnswerResource, ProjectSheetQuestionResource
 
 from makerscience_catalog.api import MakerScienceProjectResource, MakerScienceResourceResource
 from makerscience_profile.api import MakerScienceProfileResource, MakerScienceProfileTaggedItemResource
@@ -60,7 +60,7 @@ api.register(ProjectProgressResource())
 # Project Sheets
 api.register(ProjectSheetResource())
 api.register(ProjectSheetTemplateResource())
-api.register(ProjectSheetSuggestedItemResource())
+api.register(ProjectSheetQuestionAnswerResource())
 api.register(ProjectSheetQuestionResource())
 
 #MakerScience Catalog

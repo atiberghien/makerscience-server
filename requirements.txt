@@ -1,4 +1,4 @@
--e git+https://github.com/UnissonCo/dataserver.git@project#egg=dataserver-project
+-e git+https://github.com/UnissonCo/dataserver.git@develop#egg=dataserver-project
 django-wysiwyg-redactor
 django-solo
 django-grappelli==2.5.5

@@ -161,7 +161,7 @@ INSTALLED_APPS = (
     'projects',
     'projectsheet',
     'graffiti',
-    'commons',
+    # 'commons',
     # 'unisson',
     'ucomment',
 
