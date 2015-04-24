@@ -1,7 +1,6 @@
-"""
-Django settings for makerscience_server project.
+# -*- coding: utf-8 -*-
+""" Django settings for dataserver project. """
 
-"""
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = True
 TEMPLATE_DEBUG = True
@@ -23,8 +22,6 @@ DATABASES = {
 }
 
 ALLOWED_HOSTS = ['', '']
-# Internationalization
-# https://docs.djangoproject.com/en/1.6/topics/i18n/
 
 TIME_ZONE = 'Europe/Paris'
 LANGUAGE_CODE = 'fr-FR'
@@ -82,7 +79,9 @@ MIDDLEWARE_CLASSES = (
     'django.contrib.messages.middleware.MessageMiddleware',
     'django.middleware.locale.LocaleMiddleware',
     'django.middleware.doc.XViewMiddleware',
-
+    'simple_history.middleware.HistoryRequestMiddleware',
+    # Uncomment the next line for simple clickjacking protection:
+    # 'django.middleware.clickjacking.XFrameOptionsMiddleware',
     'corsheaders.middleware.CorsMiddleware',
 )
 
@@ -115,6 +114,7 @@ TEMPLATE_CONTEXT_PROCESSORS = (
 
 # Application definition
 INSTALLED_APPS = (
+    'south',
     'django.contrib.auth',
     'django.contrib.contenttypes',
     'django.contrib.sessions',
@@ -126,7 +126,6 @@ INSTALLED_APPS = (
     'django.contrib.admin',
 
     'django_comments',
-    'south',
     'corsheaders',
     'reversion',
     'compressor',
@@ -155,15 +154,11 @@ INSTALLED_APPS = (
     'bucket',
     'scout',
 
-    # 'deal',
-    # 'flipflop',
-    # 'alambic',
     'projects',
     'projectsheet',
     'graffiti',
-    # 'commons',
-    # 'unisson',
     'ucomment',
+    'simple_history',
 
     'makerscience_admin',
     'makerscience_catalog',
@@ -207,8 +202,6 @@ LOGOUT_URL = '/accounts/signout/'
 
 AUTH_PROFILE_MODULE = 'accounts.Profile'
 
-
-
 COMPRESS_ENABLED = True
 COMPRESS_OFFLINE = True
 COMPRESS_PRECOMPILERS = (
@@ -219,7 +212,7 @@ COMPRESS_PRECOMPILERS = (
 CORS_ORIGIN_ALLOW_ALL = True
 TASTYPIE_FULL_DEBUG = DEBUG
 APPEND_SLASH = False
-TASTYPIE_ALLOW_MISSING_SLASH=True
+TASTYPIE_ALLOW_MISSING_SLASH = True
 TASTYPIE_DEFAULT_FORMATS = ['json']
 API_LIMIT_PER_PAGE = 20
 
@@ -232,16 +225,16 @@ HAYSTACK_CONNECTIONS = {
 }
 HAYSTACK_SIGNAL_PROCESSOR = 'bucket.signals.RelatedRealtimeSignalProcessor'
 
-## bucket
+# bucket
 BUCKET_FILES_FOLDER = 'bucket'
 
-## multiuploader
+# multiuploader
 MULTIUPLOADER_FILE_EXPIRATION_TIME = 3600
 
 MULTIUPLOADER_FORMS_SETTINGS = {
     'default': {
-        'FILE_TYPES' : ["txt","zip","jpg","jpeg","flv","png"],
-        'CONTENT_TYPES' : [
+        'FILE_TYPES': ["txt", "zip", "jpg", "jpeg", "flv", "png"],
+        'CONTENT_TYPES': [
             'image/jpeg',
             'image/png',
             'application/msword',
@@ -257,7 +250,7 @@ MULTIUPLOADER_FORMS_SETTINGS = {
             'text/rtf',
         ],
         'MAX_FILE_SIZE': 10485760,
-        'MAX_FILE_NUMBER':5,
+        'MAX_FILE_NUMBER': 5,
         'AUTO_UPLOAD': True,
     },
 }
@@ -266,8 +259,9 @@ MULTIUPLOADER_FORMS_SETTINGS = {
 SENDFILE_BACKEND = 'sendfile.backends.development'
 
 # SORL
+THUMBNAIL_BACKEND = 'sorl.thumbnail.base.ThumbnailBackend'
 THUMBNAIL_ENGINE = 'sorl.thumbnail.engines.convert_engine.Engine' # Needed for Pdf conv
-THUMBNAIL_CONVERT = 'gm convert'
+THUMBNAIL_CONVERT = 'convert'
 
 # SOUTH_MIGRATION_MODULES = {
 #     'taggit': 'taggit.south_migrations',
