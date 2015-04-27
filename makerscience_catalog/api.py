@@ -158,7 +158,7 @@ class MakerScienceGenericResource(ModelResource):
         change_perm_code = self.Meta.authorization.update_permission_code
         assign_perm(change_perm_code, user_or_group=target_user, obj=target_object)
 
-        return self.create_response(request, {'Change rights assigned'})
+        return self.create_response(request, {'msg' : 'Change rights assigned'})
 
     def ms_check_edit_perm(self, request, **kwargs):
         """
