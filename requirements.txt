@@ -1,4 +1,6 @@
 -e git+https://github.com/UnissonCo/dataserver.git@develop#egg=dataserver-project
+django-sekizai==0.8.1
+Whoosh==2.6.0
 django-wysiwyg-redactor
 django-solo
 django-grappelli==2.5.5
