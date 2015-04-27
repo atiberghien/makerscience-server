@@ -73,6 +73,8 @@ def allow_user_to_create_MS_resources_and_project(sender, instance, created, *ar
         assign_perm('bucket.change_bucket', group)
         assign_perm('bucket.view_bucket', group)
         assign_perm('bucket.add_bucketfile', group)
+        assign_perm('scout.change_postaladdress', group)
+        assign_perm('scout.view_postaladdress', group)
         assign_perm('django_comments.add_comment', group)
         assign_perm('django_comments.change_comment', group)
         assign_perm('django_comments.delete_comment', group)
