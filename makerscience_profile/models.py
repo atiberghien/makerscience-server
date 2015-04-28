@@ -38,7 +38,7 @@ class MakerScienceProfile(models.Model):
 @receiver(post_save, sender=Profile)
 def create_profile_on_user_signup(sender, created, instance, **kwargs):
     if created:
-        location, created = PostalAddress.objects.create()
+        location = PostalAddress.objects.create()
         MakerScienceProfile.objects.create(parent=instance, location=location)
 
 @receiver(post_save, sender=User)
