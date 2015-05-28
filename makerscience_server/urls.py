@@ -10,6 +10,7 @@ from accounts.api import UserResource, GroupResource, ProfileResource, ObjectPro
 from bucket.api import BucketResource, BucketFileResource, BucketTagResource, BucketFileCommentResource
 from graffiti.api import TagResource, TaggedItemResource
 from ucomment.api import CommentResource
+from megafon.api   import PostResource
 
 from projects.api import ProjectResource, ProjectProgressResource, ProjectProgressRangeResource
 from projectsheet.api import ProjectSheetResource, ProjectSheetTemplateResource, ProjectSheetQuestionAnswerResource, ProjectSheetQuestionResource
@@ -62,6 +63,9 @@ api.register(ProjectSheetResource())
 api.register(ProjectSheetTemplateResource())
 api.register(ProjectSheetQuestionAnswerResource())
 api.register(ProjectSheetQuestionResource())
+
+# Megafon
+api.register(PostResource())
 
 #MakerScience Catalog
 api.register(MakerScienceProjectResource())

@@ -1,51 +1,59 @@
 # -*- coding: utf-8 -*-
 """ Django settings for dataserver project. """
 
-# SECURITY WARNING: don't run with debug turned on in production!
-DEBUG = True
-TEMPLATE_DEBUG = True
-
-ADMINS = (
-    ('Alban Tiberghien', 'alban@nonetype.fr'),
-)
+from .site_settings import *  # NOQA
 
 MANAGERS = ADMINS
-# Database
-# https://docs.djangoproject.com/en/1.6/ref/settings/#databases
-DATABASES = {
-    'default': {
-        'ENGINE': 'django.contrib.gis.db.backends.postgis',
-        'NAME': 'dataserver',
-        'USER': 'dataserver',
-        'PASSWORD': 'dataserver',
-    }
-}
 
-ALLOWED_HOSTS = ['', '']
-
+# Local time zone for this installation. Choices can be found here:
+# http://en.wikipedia.org/wiki/List_of_tz_zones_by_name
+# although not all choices may be available on all operating systems.
+# In a Windows environment this must be set to your system time zone.
 TIME_ZONE = 'Europe/Paris'
+
+# Language code for this installation. All choices can be found here:
+# http://www.i18nguy.com/unicode/language-identifiers.html
 LANGUAGE_CODE = 'fr-FR'
+
 LANGUAGES = [
     ('fr-FR', 'French'),
 ]
 
 SITE_ID = 1
+
+# If you set this to False, Django will make some optimizations so as not
+# to load the internationalization machinery.
 USE_I18N = True
+
+# If you set this to False, Django will not format dates, numbers and
+# calendars according to the current locale.
 USE_L10N = True
+
+# If you set this to False, Django will not use timezone-aware datetimes.
 USE_TZ = False
 
-# Build paths inside the project like this: os.path.join(BASE_DIR, ...)
 import os
-#BASE_DIR = os.path.dirname(os.path.dirname(__file__))
 
 PROJECT_DIR = os.path.dirname(os.path.realpath(__file__))
-MEDIA_ROOT = os.path.join(PROJECT_DIR, '..', 'media/')
-MEDIA_URL = '/media/'
-STATIC_ROOT = os.path.join(PROJECT_DIR, '..', '..', 'static/')
-STATIC_URL = '/static/'
 
-# Static files (CSS, JavaScript, Images)
-# https://docs.djangoproject.com/en/1.6/howto/static-files/
+# Absolute filesystem path to the directory that will hold user-uploaded files.
+# Example: "/var/www/example.com/media/"
+MEDIA_ROOT = os.path.join(PROJECT_DIR, '..', 'media/')
+
+# URL that handles the media served from MEDIA_ROOT. Make sure to use a
+# trailing slash.
+# Examples: "http://example.com/media/", "http://media.example.com/"
+MEDIA_URL = '/media/'
+
+# Absolute path to the directory static files should be collected to.
+# Don't put anything in this directory yourself; store your static files
+# in apps' "static/" subdirectories and in STATICFILES_DIRS.
+# Example: "/var/www/example.com/static/"
+STATIC_ROOT = os.path.join(PROJECT_DIR, '..', '..', 'static/')
+
+# URL prefix for static files.
+# Example: "http://example.com/static/", "http://static.example.com/"
+STATIC_URL = '/static/'
 
 # Additional locations of static files
 STATICFILES_DIRS = (
@@ -55,20 +63,24 @@ STATICFILES_DIRS = (
     os.path.join(PROJECT_DIR, '..', 'static/'),
 )
 
+# List of finder classes that know how to find static files in
+# various locations.
 STATICFILES_FINDERS = (
     'django.contrib.staticfiles.finders.FileSystemFinder',
     'django.contrib.staticfiles.finders.AppDirectoriesFinder',
+    # 'django.contrib.staticfiles.finders.DefaultStorageFinder',
+    # 'djangular.finders.NamespacedAngularAppDirectoriesFinder',
     'compressor.finders.CompressorFinder',
 )
 
-# SECURITY WARNING: keep the secret key used in production secret!
+# Make this unique, and don't share it with anybody.
 SECRET_KEY = 'afg=tuy3+g+$i*j4#j6x)-u)uvwpf-t0e5ripy+qaw#h^369if'
 
 # List of callables that know how to import templates from various sources.
 TEMPLATE_LOADERS = (
     'django.template.loaders.filesystem.Loader',
     'django.template.loaders.app_directories.Loader',
-#     'django.template.loaders.eggs.Loader',
+    # 'django.template.loaders.eggs.Loader',
 )
 
 MIDDLEWARE_CLASSES = (
@@ -130,6 +142,7 @@ INSTALLED_APPS = (
     'reversion',
     'compressor',
     'django_extensions',
+    'mptt',
 
     'sekizai',
 
@@ -143,6 +156,7 @@ INSTALLED_APPS = (
     'sendfile',
     'sorl.thumbnail',
     'haystack',
+    'simple_history',
 
     'whoosh',
     'solo',
@@ -158,7 +172,7 @@ INSTALLED_APPS = (
     'projectsheet',
     'graffiti',
     'ucomment',
-    'simple_history',
+    'megafon',
 
     'makerscience_admin',
     'makerscience_catalog',
@@ -214,16 +228,7 @@ TASTYPIE_FULL_DEBUG = DEBUG
 APPEND_SLASH = False
 TASTYPIE_ALLOW_MISSING_SLASH = True
 TASTYPIE_DEFAULT_FORMATS = ['json']
-API_LIMIT_PER_PAGE = 20
 
-# Haystack
-HAYSTACK_CONNECTIONS = {
-    'default': {
-        'ENGINE': 'haystack.backends.whoosh_backend.WhooshEngine',
-        'PATH': os.path.join(os.path.dirname(__file__), 'whoosh_index'),
-    },
-}
-HAYSTACK_SIGNAL_PROCESSOR = 'bucket.signals.RelatedRealtimeSignalProcessor'
 
 # bucket
 BUCKET_FILES_FOLDER = 'bucket'
@@ -238,11 +243,11 @@ MULTIUPLOADER_FORMS_SETTINGS = {
             'image/jpeg',
             'image/png',
             'application/msword',
-            'application/vnd.openxmlformats-officedocument.wordprocessingml.document',
+            'application/vnd.openxmlformats-officedocument.wordprocessingml.document',  # NOQA
             'application/vnd.ms-excel',
             'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet',
             'application/vnd.ms-powerpoint',
-            'application/vnd.openxmlformats-officedocument.presentationml.presentation',
+            'application/vnd.openxmlformats-officedocument.presentationml.presentation',  # NOQA
             'application/vnd.oasis.opendocument.text',
             'application/vnd.oasis.opendocument.spreadsheet',
             'application/vnd.oasis.opendocument.presentation',
@@ -262,6 +267,7 @@ SENDFILE_BACKEND = 'sendfile.backends.development'
 THUMBNAIL_BACKEND = 'sorl.thumbnail.base.ThumbnailBackend'
 THUMBNAIL_ENGINE = 'sorl.thumbnail.engines.convert_engine.Engine' # Needed for Pdf conv
 THUMBNAIL_CONVERT = 'convert'
+THUMBNAIL_IDENTIFY = 'identify'
 
 # SOUTH_MIGRATION_MODULES = {
 #     'taggit': 'taggit.south_migrations',
