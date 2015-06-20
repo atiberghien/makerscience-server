@@ -8,7 +8,6 @@ from django.core.urlresolvers import reverse
 from django.shortcuts import get_object_or_404
 
 from dataserver.authentication import AnonymousApiKeyAuthentication
-from dataserver.authorization import GuardianAuthorization
 from datetime import datetime
 from graffiti.api import TaggedItemResource
 from guardian.shortcuts import assign_perm, get_objects_for_user
@@ -26,35 +25,10 @@ from tastypie.utils import trailing_slash
 
 
 from .models import MakerScienceProject, MakerScienceResource
+from makerscience_server.authorizations  import  MakerScienceAPIAuthorization
 from makerscience_profile.api import MakerScienceProfileResource
 from accounts.models import ObjectProfileLink, Profile
 from projectsheet.models import ProjectSheet
-
-class MakerScienceAPIAuthorization(GuardianAuthorization):
-
-    def read_detail(self, object_list, bundle):
-        """
-        For MakerScienceResources we let anyone authenticated or not read detail
-        """
-        self.generic_base_check(object_list, bundle)
-        return True
-
-    def read_list(self, object_list, bundle):
-        """
-        For MakerScienceResources we let anyone authenticated or not read list
-        """
-        self.generic_base_check(object_list, bundle)
-        return object_list
-
-    def create_detail(self, object_list, bundle):
-        """
-        For MakerScienceResources we let anyone with add permissions
-        *FIXME* : this override should not be required since we assign global edit
-        rights to all new users (see .models.py)
-
-        """
-        self.generic_base_check(object_list, bundle)
-        return bundle.request.user.has_perm(self.create_permission_code)
 
 
 class MakerScienceCatalogResource(ModelResource):
