@@ -177,6 +177,7 @@ INSTALLED_APPS = (
     'makerscience_admin',
     'makerscience_catalog',
     'makerscience_profile',
+    'makerscience_forum',
 )
 
 LOGGING = {

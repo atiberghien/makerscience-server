@@ -17,6 +17,7 @@ from projectsheet.api import ProjectSheetResource, ProjectSheetTemplateResource,
 
 from makerscience_catalog.api import MakerScienceProjectResource, MakerScienceResourceResource
 from makerscience_profile.api import MakerScienceProfileResource, MakerScienceProfileTaggedItemResource
+from makerscience_forum.api import MakerSciencePostResource
 from makerscience_admin.api import MakerScienceStaticContentResource
 import bucket
 
@@ -73,6 +74,8 @@ api.register(MakerScienceResourceResource())
 #MakerScience Profile
 api.register(MakerScienceProfileResource())
 api.register(MakerScienceProfileTaggedItemResource())
+#Makerscience Forum
+api.register(MakerSciencePostResource())
 
 #MakerScience Admin
 api.register(MakerScienceStaticContentResource())
