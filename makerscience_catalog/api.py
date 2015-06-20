@@ -57,7 +57,7 @@ class MakerScienceAPIAuthorization(GuardianAuthorization):
         return bundle.request.user.has_perm(self.create_permission_code)
 
 
-class MakerScienceGenericResource(ModelResource):
+class MakerScienceCatalogResource(ModelResource):
     parent = fields.ToOneField(ProjectResource, 'parent', full=True)
     tags = fields.ToManyField(TaggedItemResource, 'tagged_items', full=True, null=True)
     base_projectsheet = fields.ToOneField(ProjectSheetResource, 'parent__projectsheet', null=True, full=True)
@@ -121,7 +121,7 @@ class MakerScienceGenericResource(ModelResource):
 
         if featured != '':
             sqs =sqs.filter(featured=featured)
-        
+
         uri = reverse('api_ms_search', kwargs={'api_name':self.api_name,'resource_name': self._meta.resource_name})
         paginator = Paginator(request.GET, sqs, resource_uri=uri)
 
@@ -189,7 +189,7 @@ class MakerScienceProjectAuthorization(MakerScienceAPIAuthorization):
             delete_permission_code="makerscience_catalog.delete_makerscienceproject"
         )
 
-class MakerScienceProjectResource(MakerScienceGenericResource):
+class MakerScienceProjectResource(MakerScienceCatalogResource):
 
     class Meta:
         object_class = MakerScienceProject
@@ -213,7 +213,7 @@ class MakerScienceResourceAuthorization(MakerScienceAPIAuthorization):
             delete_permission_code="makerscience_catalog.delete_makerscienceresource"
         )
 
-class MakerScienceResourceResource(MakerScienceGenericResource):
+class MakerScienceResourceResource(MakerScienceCatalogResource):
 
     class Meta:
         queryset = MakerScienceResource.objects.all()
