@@ -26,7 +26,6 @@ from tastypie.utils import trailing_slash
 
 from .models import MakerScienceProject, MakerScienceResource
 from makerscience_server.authorizations  import  MakerScienceAPIAuthorization
-from makerscience_profile.api import MakerScienceProfileResource
 from accounts.models import ObjectProfileLink, Profile
 from projectsheet.models import ProjectSheet
 
