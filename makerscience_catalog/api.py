@@ -29,6 +29,8 @@ from makerscience_server.authorizations  import  MakerScienceAPIAuthorization
 from accounts.models import ObjectProfileLink, Profile
 from projectsheet.models import ProjectSheet
 
+import json
+
 
 class MakerScienceCatalogResource(ModelResource):
     parent = fields.ToOneField(ProjectResource, 'parent', full=True)
@@ -49,8 +51,13 @@ class MakerScienceCatalogResource(ModelResource):
                 'profile_email' : profile.parent.user.email,
                 'full_name' : "%s %s" % (profile.parent.user.first_name, profile.parent.user.last_name)
             }
-        except Exception, e:
+        except ObjectProfileLink.DoesNotExist, e:
             pass
+
+        bundle.data["linked_post"] =[]
+        for post_id in bundle.obj.makersciencepost_set.values_list('id', flat=True):
+            bundle.data["linked_post"].append(post_id)
+
         return bundle
 
     def hydrate(self, bundle):
@@ -151,7 +158,6 @@ class MakerScienceCatalogResource(ModelResource):
             return self.create_response(request, {'has_perm':True})
         else:
             return self.create_response(request, {'has_perm':False})
-
 
 class MakerScienceProjectAuthorization(MakerScienceAPIAuthorization):
     def __init__(self):
