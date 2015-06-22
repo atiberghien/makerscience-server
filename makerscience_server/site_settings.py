@@ -80,3 +80,5 @@ AUTHENTICATED_USERS_PERMISSIONS = (
     'megafon.change_post',
     'megafon.delete_post',
     )
+
+API_LIMIT_PER_PAGE = 0
