@@ -4,6 +4,8 @@ from django.utils.translation import ugettext as _
 
 from megafon.models import Post
 
+from makerscience_catalog.models import  MakerScienceProject, MakerScienceResource
+
 class MakerSciencePost(models.Model):
 
     class Meta:
@@ -24,3 +26,6 @@ class MakerSciencePost(models.Model):
 
     parent = models.ForeignKey(Post)
     post_type = models.CharField(max_length=8, choices=POST_TYPE_CHOICES)
+
+    linked_projects = models.ManyToManyField(MakerScienceProject, null=True, blank=True)
+    linked_resources = models.ManyToManyField(MakerScienceResource, null=True, blank=True)

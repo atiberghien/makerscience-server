@@ -1,0 +1,3 @@
+{{ object.parent.title }}
+{{ object.parent.text }}
+{% for tag in object.parent.tags.all %} {{ tag.name }} {% endfor %}
