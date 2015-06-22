@@ -12,7 +12,7 @@ from haystack.query import SearchQuerySet
 from dataserver.authentication import AnonymousApiKeyAuthentication
 from megafon.api  import PostResource
 
-from makerscience_catalog.api  import MakerScienceProjectResource, MakerScienceResourceResource
+from makerscience_catalog.api import MakerScienceProjectResource, MakerScienceResourceResource
 from makerscience_server.authorizations import MakerScienceAPIAuthorization
 from .models import MakerSciencePost
 
@@ -41,6 +41,7 @@ class MakerSciencePostResource(ModelResource):
         filtering = {
             'parent' : ALL_WITH_RELATIONS,
             'post_type' : ['exact'],
+            'linked_projects' : ['isnull']
         }
 
     def prepend_urls(self):
@@ -60,7 +61,7 @@ class MakerSciencePostResource(ModelResource):
         # Query params
         query = request.GET.get('q', '')
         selected_facets = request.GET.getlist('facet', None)
-        featured = request.GET.get('featured', '')
+        order_by = request.GET.get('order_by', '')
 
         sqs = SearchQuerySet().models(self.Meta.object_class).facet('tags')
 
@@ -68,12 +69,12 @@ class MakerSciencePostResource(ModelResource):
         if selected_facets:
             for facet in selected_facets:
                 sqs = sqs.narrow('tags:%s' % (facet))
-        # launch query
+
         if query != "":
             sqs = sqs.auto_query(query)
 
-        if featured != '':
-            sqs =sqs.filter(featured=featured)
+        if order_by != '':
+            sqs =sqs.order_by(order_by)
 
         uri = reverse('api_ms_search', kwargs={'api_name':self.api_name,'resource_name': self._meta.resource_name})
         paginator = Paginator(request.GET, sqs, resource_uri=uri)
