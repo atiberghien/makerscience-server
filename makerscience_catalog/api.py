@@ -63,13 +63,13 @@ class MakerScienceCatalogResource(ModelResource):
         URL override for permissions and search specials
         """
         return [
-           url(r"^(?P<resource_name>%s)/(?P<ms_id>\d+)/assign%s$" %
+            url(r"^(?P<resource_name>%s)/(?P<ms_id>\d+)/assign%s$" %
                 (self._meta.resource_name, trailing_slash()),
                  self.wrap_view('ms_edit_assign'), name="api_edit_assign"),
-           url(r"^(?P<resource_name>%s)/(?P<ms_id>\d+)/check/(?P<user_id>\d+)%s$" %
+            url(r"^(?P<resource_name>%s)/(?P<ms_id>\d+)/check/(?P<user_id>\d+)%s$" %
                 (self._meta.resource_name, trailing_slash()),
                  self.wrap_view('ms_check_edit_perm'), name="api_ms_check_edit_perm"),
-           url(r"^(?P<resource_name>%s)/search%s$" % (self._meta.resource_name,
+            url(r"^(?P<resource_name>%s)/search%s$" % (self._meta.resource_name,
                                 trailing_slash()), self.wrap_view('ms_search'), name="api_ms_search"),
         ]
 
