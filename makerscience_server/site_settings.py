@@ -82,3 +82,7 @@ AUTHENTICATED_USERS_PERMISSIONS = (
     )
 
 API_LIMIT_PER_PAGE = 0
+
+PAGEVIEWS_FILTER = (
+    'makerscience/post',
+)

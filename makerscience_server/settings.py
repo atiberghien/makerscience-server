@@ -95,6 +95,8 @@ MIDDLEWARE_CLASSES = (
     'django.middleware.doc.XViewMiddleware',
     'simple_history.middleware.HistoryRequestMiddleware',
 
+    'makerscience_admin.middleware.PageViewsMiddleware',
+
 )
 
 AUTHENTICATION_BACKENDS = (

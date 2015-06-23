@@ -8,3 +8,8 @@ class MakerScienceStaticContent (SingletonModel):
     about_contact = models.TextField(null=True, blank=True)
     about_faq = models.TextField(null=True, blank=True)
     about_cgu = models.TextField(null=True, blank=True)
+
+
+class PageViews(models.Model):
+    client = models.CharField(max_length=255)
+    resource_uri = models.CharField(max_length=255)
