@@ -1,13 +1,25 @@
 # -*- coding: utf-8 -*-
 
 from django.contrib import admin
+from django.contrib.admin import SimpleListFilter
+from django.contrib.admin.options import ModelAdmin
 from django.conf import settings
 from django import forms
 
 from solo.admin import SingletonModelAdmin
-from .models import MakerScienceStaticContent
-
 from redactor.widgets import RedactorEditor
+
+
+from makerscience_profile.models import MakerScienceProfile
+from makerscience_catalog.models import MakerScienceProject, MakerScienceResource
+from makerscience_forum.models import MakerSciencePost
+from accounts.models import Profile, ObjectProfileLink
+from .models import MakerScienceStaticContent, PageViews
+
+
+# admin_registry = admin.site._registry.copy()
+# for model, model_admin in admin_registry.iteritems():
+#     admin.site.unregister(model)
 
 class MakerScienceStaticContentForm(forms.ModelForm):
     class Meta:
@@ -32,24 +44,6 @@ class MakerScienceStaticContentAdmin(SingletonModelAdmin):
 
 
 admin.site.register(MakerScienceStaticContent, MakerScienceStaticContentAdmin)
-
-
-from django.contrib.admin.options import ModelAdmin
-
-# admin_registry = admin.site._registry.copy()
-# for model, model_admin in admin_registry.iteritems():
-#     admin.site.unregister(model)
-
-
-
-
-from makerscience_profile.models import MakerScienceProfile
-from makerscience_catalog.models import MakerScienceProject, MakerScienceResource
-from makerscience_forum.models import MakerSciencePost
-
-from accounts.models import Profile, ObjectProfileLink
-
-from django.contrib.admin import SimpleListFilter
 
 class ObjectProfileLinkLevelFilter(SimpleListFilter):
     title = 'Type de relation'
@@ -83,3 +77,9 @@ class ObjectProfileLinkAdmin(admin.ModelAdmin):
 
 
 admin.site.register(ObjectProfileLink, ObjectProfileLinkAdmin)
+
+
+class PageViewsAdmin(admin.ModelAdmin):
+    list_display = ('client', 'resource_uri')
+
+admin.site.register(PageViews, PageViewsAdmin)
