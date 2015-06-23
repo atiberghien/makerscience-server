@@ -58,6 +58,10 @@ def allow_user_to_create_MS_resources_and_project(sender, instance, created, *ar
         assign_perm('makerscience_catalog.view_makerscienceproject', group)
         assign_perm('makerscience_catalog.add_makerscienceresource', group)
         assign_perm('makerscience_catalog.view_makerscienceresource', group)
+        assign_perm('makerscience_catalog.change_makerscienceprojecttaggeditem', group)
+        assign_perm('makerscience_catalog.delete_makerscienceprojecttaggeditem', group)
+        assign_perm('makerscience_catalog.change_makerscienceresourcetaggeditem', group)
+        assign_perm('makerscience_catalog.delete_makerscienceresourcetaggeditem', group)
 
         assign_perm('makerscience_profile.change_makerscienceprofile', group)
         assign_perm('makerscience_profile.add_makerscienceprofiletaggeditem', group)
