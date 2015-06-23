@@ -86,3 +86,13 @@ API_LIMIT_PER_PAGE = 0
 PAGEVIEWS_FILTER = (
     'makerscience/post',
 )
+
+OBJECTPROFILELINK_CHOICES = (
+    (0, "Membre d'équipe du projet"),
+    (1, 'Ressource du projet'),
+    (2, 'Fan du projet'),
+    (30, 'Auteur de la discussion'),
+    (31, 'Contributeur à la discussions'),
+    (32, 'Suiveur de la discussion'),
+    (33, 'Fan de la discussion'),
+)
