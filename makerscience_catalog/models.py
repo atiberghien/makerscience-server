@@ -4,7 +4,12 @@ from django.db import models
 from django.utils.translation import ugettext as _
 from taggit.managers import TaggableManager
 from taggit.models import TaggedItem
+
+from scout.models  import Place, PostalAddress
 from projects.models import Project
+
+from django.db.models.signals import post_save
+from django.dispatch.dispatcher import receiver
 
 class MakerScienceProjectTaggedItem (TaggedItem):
     PROJECT_TAG_TYPE_CHOICES = (
@@ -38,6 +43,12 @@ class MakerScienceProject(models.Model):
     linked_resources = models.ManyToManyField("MakerScienceResource", null=True, blank=True)
 
     featured = models.BooleanField(default=False)
+
+@receiver(post_save, sender=MakerScienceProject)
+def assign_place_to_project(sender, created, instance, **kwargs):
+    if instance.parent.location is None:
+        instance.parent.location = Place.objects.create(address=PostalAddress.objects.create())
+        instance.parent.save()
 
 
 class MakerScienceResource(models.Model):
