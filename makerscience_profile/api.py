@@ -12,14 +12,14 @@ from tastypie.paginator import Paginator
 
 from dataserver.authentication import AnonymousApiKeyAuthentication
 from accounts.api import ProfileResource
-from scout.api import PostalAddressResource
+from scout.api import PlaceResource
 from graffiti.api import TaggedItemResource
 
 from .models import MakerScienceProfile, MakerScienceProfileTaggedItem
 
 class MakerScienceProfileResource(ModelResource):
     parent = fields.OneToOneField(ProfileResource, 'parent', full=True)
-    location = fields.ToOneField(PostalAddressResource, 'location', null=True, blank=True, full=True)
+    location = fields.ToOneField(PlaceResource, 'location', null=True, blank=True, full=True)
 
     tags = fields.ToManyField('makerscience_profile.api.MakerScienceProfileTaggedItemResource', 'tagged_items', full=True, null=True, readonly=True)
 
@@ -49,7 +49,7 @@ class MakerScienceProfileResource(ModelResource):
         URL override for when giving change perm to a user profile passed as parameter profile_id
         """
         return [
-            url(r"^(?P<resource_name>%s)/search%s$" % (self._meta.resource_name, 
+            url(r"^(?P<resource_name>%s)/search%s$" % (self._meta.resource_name,
                 trailing_slash()), self.wrap_view('ms_profile_search'), name="api_ms_profile_search"),
             ]
 
@@ -61,7 +61,7 @@ class MakerScienceProfileResource(ModelResource):
         # Query params
         query = request.GET.get('q', '')
         selected_facets = request.GET.getlist('facet', None)
-        
+
         sqs = SearchQuerySet().models(MakerScienceProfile).facet('tags')
         # narrow down QS with facets
         if selected_facets:
@@ -70,7 +70,7 @@ class MakerScienceProfileResource(ModelResource):
         # launch query
         if query != "":
             sqs = sqs.auto_query(query)
-        
+
         uri = reverse('api_ms_profile_search', kwargs={'api_name':self.api_name,'resource_name': self._meta.resource_name})
         paginator = Paginator(request.GET, sqs, resource_uri=uri)
 

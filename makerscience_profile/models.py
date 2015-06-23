@@ -4,7 +4,7 @@ from django.db import models
 from accounts.models import Profile
 from django.db.models.signals import post_save
 from django.dispatch.dispatcher import receiver
-from scout.models import PostalAddress
+from scout.models import PostalAddress, Place
 from taggit.models import TaggedItem
 from taggit.managers import TaggableManager
 from guardian.shortcuts import assign_perm
@@ -23,7 +23,7 @@ class MakerScienceProfile(models.Model):
     parent = models.ForeignKey(Profile)
     activity = models.CharField(max_length=255)
     bio = models.TextField()
-    location = models.ForeignKey(PostalAddress, null=True, blank=True)
+    location = models.ForeignKey(Place, null=True, blank=True)
     modified = models.DateTimeField(auto_now=True)
 
     tags = TaggableManager(through=MakerScienceProfileTaggedItem, blank=True)
@@ -38,7 +38,7 @@ class MakerScienceProfile(models.Model):
 @receiver(post_save, sender=Profile)
 def create_profile_on_user_signup(sender, created, instance, **kwargs):
     if created:
-        location = PostalAddress.objects.create()
+        location = Place.objects.create(address=PostalAddress.objects.create())
         MakerScienceProfile.objects.create(parent=instance, location=location)
 
 @receiver(post_save, sender=User)
