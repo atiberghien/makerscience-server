@@ -24,7 +24,7 @@ from tastypie.resources import ModelResource
 from tastypie.utils import trailing_slash
 
 
-from .models import MakerScienceProject, MakerScienceResource
+from .models import MakerScienceProject, MakerScienceResource, MakerScienceProjectTaggedItem, MakerScienceResourceTaggedItem
 from makerscience_server.authorizations  import  MakerScienceAPIAuthorization
 from accounts.models import ObjectProfileLink, Profile
 from projectsheet.models import ProjectSheet
@@ -34,7 +34,6 @@ import json
 
 class MakerScienceCatalogResource(ModelResource):
     parent = fields.ToOneField(ProjectResource, 'parent', full=True)
-    tags = fields.ToManyField(TaggedItemResource, 'tagged_items', full=True, null=True)
     base_projectsheet = fields.ToOneField(ProjectSheetResource, 'parent__projectsheet', null=True, full=True)
     linked_resources = fields.ToManyField('makerscience_catalog.api.MakerScienceResourceResource', 'linked_resources', full=True,null=True)
 
@@ -169,6 +168,7 @@ class MakerScienceProjectAuthorization(MakerScienceAPIAuthorization):
         )
 
 class MakerScienceProjectResource(MakerScienceCatalogResource):
+    tags = fields.ToManyField('makerscience_catalog.api.MakerScienceProjectTaggedItemResource', 'tagged_items', full=True, null=True, readonly=True)
 
     class Meta:
         object_class = MakerScienceProject
@@ -193,6 +193,7 @@ class MakerScienceResourceAuthorization(MakerScienceAPIAuthorization):
         )
 
 class MakerScienceResourceResource(MakerScienceCatalogResource):
+    tags = fields.ToManyField('makerscience_catalog.api.MakerScienceResourceTaggedItemResource', 'tagged_items', full=True, null=True, readonly=True)
 
     class Meta:
         queryset = MakerScienceResource.objects.all()
@@ -205,3 +206,49 @@ class MakerScienceResourceResource(MakerScienceCatalogResource):
             'parent' : ALL_WITH_RELATIONS,
             'featured' : ['exact'],
         }
+
+class MakerScienceProjectTaggedItemResource(TaggedItemResource):
+
+    class Meta:
+        queryset = MakerScienceProjectTaggedItem.objects.all()
+        resource_name = 'makerscience/projecttaggeditem'
+        default_format = "application/json"
+        filtering = {
+            "tag" : ALL_WITH_RELATIONS,
+            "object_id" : ['exact', ],
+            'tag_type' : ['exact', ]
+        }
+        always_return_data = True
+
+    def prepend_urls(self):
+        return [
+           url(r"^(?P<resource_name>%s)/(?P<content_type>\w+?)/(?P<object_id>\d+?)/(?P<tag_type>\w+?)%s$" % (self._meta.resource_name, trailing_slash()),
+               self.wrap_view('dispatch_list'),
+               name="api_dispatch_list"),
+            url(r"^(?P<resource_name>%s)/(?P<content_type>\w+?)/(?P<object_id>\d+?)/similars%s$" % (self._meta.resource_name, trailing_slash()),
+               self.wrap_view('get_similars'),
+               name="api_get_similars"),
+        ]
+
+class MakerScienceResourceTaggedItemResource(TaggedItemResource):
+
+    class Meta:
+        queryset = MakerScienceResourceTaggedItem.objects.all()
+        resource_name = 'makerscience/resourcetaggeditem'
+        default_format = "application/json"
+        filtering = {
+            "tag" : ALL_WITH_RELATIONS,
+            "object_id" : ['exact', ],
+            'tag_type' : ['exact', ]
+        }
+        always_return_data = True
+
+    def prepend_urls(self):
+        return [
+           url(r"^(?P<resource_name>%s)/(?P<content_type>\w+?)/(?P<object_id>\d+?)/(?P<tag_type>\w+?)%s$" % (self._meta.resource_name, trailing_slash()),
+               self.wrap_view('dispatch_list'),
+               name="api_dispatch_list"),
+            url(r"^(?P<resource_name>%s)/(?P<content_type>\w+?)/(?P<object_id>\d+?)/similars%s$" % (self._meta.resource_name, trailing_slash()),
+               self.wrap_view('get_similars'),
+               name="api_get_similars"),
+        ]

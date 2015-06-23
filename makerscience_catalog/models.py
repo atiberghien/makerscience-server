@@ -1,8 +1,29 @@
+# -*- coding: utf-8 -*-
+
 from django.db import models
 from django.utils.translation import ugettext as _
 from taggit.managers import TaggableManager
+from taggit.models import TaggedItem
 from projects.models import Project
 
+class MakerScienceProjectTaggedItem (TaggedItem):
+    PROJECT_TAG_TYPE_CHOICES = (
+        ('th', 'Thématique'),
+        ('tg', 'Cibles visées'),
+        ('fm', 'Formats'),
+        ('nd', 'Besoins'),
+    )
+    tag_type = models.CharField(max_length=2, choices=PROJECT_TAG_TYPE_CHOICES)
+
+
+class MakerScienceResourceTaggedItem (TaggedItem):
+    RESOURCE_TAG_TYPE_CHOICES = (
+        ('th', 'Thématique'),
+        ('tg', 'Cibles visées'),
+        ('fm', 'Formats'),
+        ('rs', 'Ressources nécessaires'),
+    )
+    tag_type = models.CharField(max_length=2, choices=RESOURCE_TAG_TYPE_CHOICES)
 
 class MakerScienceProject(models.Model):
     class Meta:
@@ -11,7 +32,7 @@ class MakerScienceProject(models.Model):
         )
 
     parent = models.ForeignKey(Project)
-    tags = TaggableManager()
+    tags = TaggableManager(through=MakerScienceProjectTaggedItem, blank=True)
     modified = models.DateTimeField()
 
     linked_resources = models.ManyToManyField("MakerScienceResource", null=True, blank=True)
@@ -33,7 +54,7 @@ class MakerScienceResource(models.Model):
     )
 
     parent = models.ForeignKey(Project)
-    tags = TaggableManager()
+    tags = TaggableManager(through=MakerScienceResourceTaggedItem, blank=True)
     modified = models.DateTimeField()
 
     level = models.CharField(max_length=1, choices=LEVEL_CHOICES)

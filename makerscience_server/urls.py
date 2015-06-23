@@ -15,7 +15,7 @@ from megafon.api   import PostResource
 from projects.api import ProjectResource, ProjectProgressResource, ProjectProgressRangeResource
 from projectsheet.api import ProjectSheetResource, ProjectSheetTemplateResource, ProjectSheetQuestionAnswerResource, ProjectSheetQuestionResource
 
-from makerscience_catalog.api import MakerScienceProjectResource, MakerScienceResourceResource
+from makerscience_catalog.api import MakerScienceProjectResource, MakerScienceResourceResource, MakerScienceProjectTaggedItemResource, MakerScienceResourceTaggedItemResource
 from makerscience_profile.api import MakerScienceProfileResource, MakerScienceProfileTaggedItemResource
 from makerscience_forum.api import MakerSciencePostResource
 from makerscience_admin.api import MakerScienceStaticContentResource
@@ -71,6 +71,8 @@ api.register(PostResource())
 #MakerScience Catalog
 api.register(MakerScienceProjectResource())
 api.register(MakerScienceResourceResource())
+api.register(MakerScienceProjectTaggedItemResource())
+api.register(MakerScienceResourceTaggedItemResource())
 #MakerScience Profile
 api.register(MakerScienceProfileResource())
 api.register(MakerScienceProfileTaggedItemResource())
