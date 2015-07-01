@@ -31,6 +31,8 @@ HAYSTACK_CONNECTIONS = {
     'default': {
         'ENGINE': 'haystack.backends.whoosh_backend.WhooshEngine',
         'PATH': os.path.join(os.path.dirname(__file__), 'whoosh_index'),
+	#'ENGINE': 'haystack.backends.elasticsearch_backend.ElasticsearchSearchEngine',
+	#'URL': 'http://127.0.0.1:9200/',
         'INDEX_NAME': 'bucket',
     },
 }
@@ -47,6 +49,7 @@ AUTHENTICATED_USERS_PERMISSIONS = (
     'bucket.change_bucket',
     'bucket.view_bucket',
     'bucket.add_bucketfile',
+    'bucket.delete_bucketfile', 
     'django_comments.add_comment',
     'django_comments.change_comment',
     'django_comments.delete_comment',
