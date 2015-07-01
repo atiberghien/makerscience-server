@@ -4,3 +4,4 @@ Whoosh==2.6.0
 django-wysiwyg-redactor
 django-solo
 django-grappelli==2.5.5
+django-ipware
