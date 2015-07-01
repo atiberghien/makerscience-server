@@ -25,7 +25,7 @@ class MakerScienceProfileResource(ModelResource):
 
     class Meta:
         queryset = MakerScienceProfile.objects.all()
-        allowed_methods = ['get', 'post', 'put', 'patch']
+        allowed_methods = ['get', 'post', 'put', 'patch', 'delete']
         resource_name = 'makerscience/profile'
         authentication = AnonymousApiKeyAuthentication()
         authorization = DjangoAuthorization()

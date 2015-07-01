@@ -7,6 +7,7 @@ from solo.models import SingletonModel
 from accounts.models import ObjectProfileLink
 
 from makerscience_forum.models import MakerSciencePost
+from makerscience_profile.models import MakerScienceProfile
 
 class MakerScienceStaticContent (SingletonModel):
     about = models.TextField(null=True, blank=True)
@@ -26,5 +27,8 @@ def clear_makerscience(sender, instance, **kwargs):
         ObjectProfileLink.objects.filter(content_type__model='post',
                                       object_id=instance.parent.id).delete()
         instance.parent.delete()
+    if sender == MakerScienceProfile:
+        instance.parent.user.delete()
 
 post_delete.connect(clear_makerscience, sender=MakerSciencePost)
+post_delete.connect(clear_makerscience, sender=MakerScienceProfile)
