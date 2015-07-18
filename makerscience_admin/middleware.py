@@ -13,8 +13,12 @@ class PageViewsMiddleware(object):
 
     def process_response(self, request, response):
         if request.method == 'GET':
-            view, args, kwargs = resolve(request.path)
-            resource_name = kwargs.get("resource_name", None)
+            try:
+                view, args, kwargs = resolve(request.path)
+                resource_name = kwargs.get("resource_name", None)
+            except:
+                resource_name = None
+
             if resource_name :
                 if resource_name in settings.PAGEVIEWS_FILTER:
                     pageviews_counter = 0
