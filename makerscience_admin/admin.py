@@ -69,6 +69,8 @@ class ObjectProfileLinkAdmin(admin.ModelAdmin):
             return 'Experience : %s' % obj.content_object.title
         elif MakerSciencePost.objects.filter(parent=obj.content_object).exists():
             return "Discussion : %s" % obj.content_object.title
+        elif MakerScienceProfile.objects.filter(id=obj.content_object.id).exists():
+            return "Profile %s" % obj.content_object.parent.get_full_name_or_username()
     display_content_object.short_description = 'Contenu lié'
 
     list_display = ('profile', 'display_level', 'display_content_object', 'isValidated')
