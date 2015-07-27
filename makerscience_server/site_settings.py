@@ -99,3 +99,10 @@ OBJECTPROFILELINK_CHOICES = (
     (32, 'Suiveur de la discussion'),
     (33, 'Fan de la discussion'),
 )
+CORS_ORIGIN_WHITELIST = (
+        'localhost:8001',
+        '127.0.0.1:8001',
+        '127.0.0.1:8002',
+        'https://api.twitter.com',
+        'http://localhost:8001',
+)

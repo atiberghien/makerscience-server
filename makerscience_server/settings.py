@@ -85,6 +85,7 @@ TEMPLATE_LOADERS = (
 
 MIDDLEWARE_CLASSES = (
     'corsheaders.middleware.CorsMiddleware',
+    'corsheaders.middleware.CorsPostCsrfMiddleware',
 
     'django.middleware.common.CommonMiddleware',
     'django.contrib.sessions.middleware.SessionMiddleware',
@@ -228,11 +229,7 @@ COMPRESS_PRECOMPILERS = (
 # TASTYPIE/API
 CORS_ALLOW_CREDENTIALS = True
 CORS_ORIGIN_ALLOW_ALL = False
-CORS_ORIGIN_WHITELIST = (
-        'localhost:8001',
-        '127.0.0.1:8001',
-        'api.twitter.com',
-)
+CORS_REPLACE_HTTPS_REFERER = True
 
 TASTYPIE_FULL_DEBUG = DEBUG
 APPEND_SLASH = False
