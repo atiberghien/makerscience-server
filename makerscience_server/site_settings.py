@@ -105,4 +105,5 @@ CORS_ORIGIN_WHITELIST = (
         '127.0.0.1:8002',
         'https://api.twitter.com',
         'http://localhost:8001',
+        'http://makerscience.nonetype.net'
 )
