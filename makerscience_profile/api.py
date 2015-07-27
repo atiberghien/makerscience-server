@@ -34,6 +34,7 @@ class MakerScienceProfileResource(ModelResource):
         filtering = {
             'parent' : ALL_WITH_RELATIONS,
             "location" : ['isnull', ],
+            'id' : ['exact',]
         }
 
     def dehydrate(self, bundle):
