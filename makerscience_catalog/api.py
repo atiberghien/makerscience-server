@@ -39,10 +39,10 @@ class MakerScienceCatalogResource(ModelResource):
 
     def dehydrate(self, bundle):
         try:
-            link = ObjectProfileLink.objects.get(content_type=ContentType.objects.get_for_model(bundle.obj.parent),
-                                                   object_id=bundle.obj.parent.id,
-                                                   level=0)
-            profile = link.profile.makerscienceprofile_set.all()[0]
+            authoring_links = ObjectProfileLink.objects.filter(content_type=ContentType.objects.get_for_model(bundle.obj.parent),
+                                                                object_id=bundle.obj.parent.id,
+                                                                level__in=[0,10]).order_by('created_on')
+            profile = authoring_links[0].profile.makerscienceprofile_set.all()[0]
 
             bundle.data["by"] = {
                 'profile_slug' : profile.slug,
@@ -50,8 +50,13 @@ class MakerScienceCatalogResource(ModelResource):
                 'profile_email' : profile.parent.user.email,
                 'full_name' : "%s %s" % (profile.parent.user.first_name, profile.parent.user.last_name)
             }
-        except ObjectProfileLink.DoesNotExist, e:
-            pass
+        except :
+            bundle.data["by"] = {
+                'profile_slug' : "",
+                'profile_id' : "",
+                'profile_email' : "",
+                'full_name' : ""
+            }
 
         bundle.data["linked_post"] =[]
         for post_id in bundle.obj.makersciencepost_set.values_list('id', flat=True):
