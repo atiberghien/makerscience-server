@@ -65,12 +65,15 @@ class ObjectProfileLinkAdmin(admin.ModelAdmin):
     def display_content_object(self, obj):
         if MakerScienceProject.objects.filter(parent=obj.content_object).exists():
             return 'Projet : %s' % obj.content_object.title
+        if MakerScienceProject.objects.filter(id=obj.content_object.id).exists():
+            return 'Projet : %s' % obj.content_object.parent.title
         elif MakerScienceResource.objects.filter(parent=obj.content_object).exists():
             return 'Experience : %s' % obj.content_object.title
         elif MakerSciencePost.objects.filter(parent=obj.content_object).exists():
             return "Discussion : %s" % obj.content_object.title
         elif MakerScienceProfile.objects.filter(id=obj.content_object.id).exists():
             return "Profile %s" % obj.content_object.parent.get_full_name_or_username()
+        return "Inconnu : %s %s" % (obj.content_type, obj.object_id)
     display_content_object.short_description = 'Contenu lié'
 
     list_display = ('profile', 'display_level', 'display_content_object', 'isValidated')

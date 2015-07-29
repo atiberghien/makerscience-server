@@ -91,13 +91,22 @@ PAGEVIEWS_FILTER = (
 )
 
 OBJECTPROFILELINK_CHOICES = (
-    (0, "Membre d'équipe du projet"),
+    (0, "Auteur du projet"),
     (1, 'Ressource du projet'),
     (2, 'Fan du projet'),
+    (3, 'Commentateur du projet'),
+
+    (10, "Auteur de l'expérience"),
+    (11, "A une expérience similiaire"),
+    (12, "Fan de l'expérience"),
+    (13, "Commentateur d'expérience"),
+
     (30, 'Auteur de la discussion'),
     (31, 'Contributeur à la discussions'),
     (32, 'Suiveur de la discussion'),
     (33, 'Fan de la discussion'),
+
+    (40, 'Contact'),
 )
 CORS_ORIGIN_WHITELIST = (
         'localhost:8001',
