@@ -107,6 +107,9 @@ OBJECTPROFILELINK_CHOICES = (
     (33, 'Fan de la discussion'),
 
     (40, 'Contact'),
+
+    (50, 'A taggé'),
+    (51, 'Suit un tag'),
 )
 CORS_ORIGIN_WHITELIST = (
         'localhost:8001',
