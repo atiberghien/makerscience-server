@@ -84,7 +84,7 @@ AUTHENTICATED_USERS_PERMISSIONS = (
     'megafon.delete_post',
     )
 
-API_LIMIT_PER_PAGE = 0
+API_LIMIT_PER_PAGE = 6
 
 PAGEVIEWS_FILTER = (
     'makerscience/post',
