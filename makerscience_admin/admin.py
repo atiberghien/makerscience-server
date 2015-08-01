@@ -8,7 +8,7 @@ from django import forms
 
 from solo.admin import SingletonModelAdmin
 from redactor.widgets import RedactorEditor
-
+from taggit.models import Tag, TaggedItem
 
 from makerscience_profile.models import MakerScienceProfile
 from makerscience_catalog.models import MakerScienceProject, MakerScienceResource
@@ -63,16 +63,20 @@ class ObjectProfileLinkAdmin(admin.ModelAdmin):
     display_level.short_description = 'Type de relation'
 
     def display_content_object(self, obj):
-        if MakerScienceProject.objects.filter(parent=obj.content_object).exists():
+        if obj.content_type.model == 'makerscienceproject' and MakerScienceProject.objects.filter(parent=obj.content_object).exists():
             return 'Projet : %s' % obj.content_object.title
-        if MakerScienceProject.objects.filter(id=obj.content_object.id).exists():
+        if obj.content_type.model == 'makerscienceproject' and MakerScienceProject.objects.filter(id=obj.content_object.id).exists():
             return 'Projet : %s' % obj.content_object.parent.title
-        elif MakerScienceResource.objects.filter(parent=obj.content_object).exists():
+        elif obj.content_type.model == 'makerscienceresource' and MakerScienceResource.objects.filter(parent=obj.content_object).exists():
             return 'Experience : %s' % obj.content_object.title
-        elif MakerSciencePost.objects.filter(parent=obj.content_object).exists():
+        elif obj.content_type.model == 'makersciencepost' and MakerSciencePost.objects.filter(parent=obj.content_object).exists():
             return "Discussion : %s" % obj.content_object.title
-        elif MakerScienceProfile.objects.filter(id=obj.content_object.id).exists():
+        elif obj.content_type.model == 'makerscienceprofile' and MakerScienceProfile.objects.filter(id=obj.content_object.id).exists():
             return "Profile %s" % obj.content_object.parent.get_full_name_or_username()
+        elif obj.content_type.model == 'tag' and Tag.objects.filter(id=obj.content_object.id).exists():
+            return "Tag %s" % obj.content_object.slug
+        elif obj.content_type.model == 'taggeditem' and TaggedItem.objects.filter(id=obj.content_object.id).exists():
+            return "Tag %s on %s" % (obj.content_object.tag.slug, obj.content_object.content_object)
         return "Inconnu : %s %s" % (obj.content_type, obj.object_id)
     display_content_object.short_description = 'Contenu lié'
 
