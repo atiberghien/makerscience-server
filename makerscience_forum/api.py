@@ -12,9 +12,11 @@ from haystack.query import SearchQuerySet
 from dataserver.authentication import AnonymousApiKeyAuthentication
 from megafon.api  import PostResource
 
+from makerscience_admin.api import SearchableMakerScienceResource
 from makerscience_catalog.api import MakerScienceProjectResource, MakerScienceResourceResource
 from makerscience_server.authorizations import MakerScienceAPIAuthorization
 from .models import MakerSciencePost
+
 
 class MakerSciencePostAuthorization(MakerScienceAPIAuthorization):
     def __init__(self):
@@ -25,7 +27,7 @@ class MakerSciencePostAuthorization(MakerScienceAPIAuthorization):
             delete_permission_code="makerscience_forum.delete_makersciencepost"
         )
 
-class MakerSciencePostResource(ModelResource):
+class MakerSciencePostResource(ModelResource, SearchableMakerScienceResource):
     parent = fields.ToOneField(PostResource, 'parent', full=True)
 
     linked_projects = fields.ToManyField(MakerScienceProjectResource, 'linked_projects', full=True,null=True)
@@ -49,46 +51,5 @@ class MakerSciencePostResource(ModelResource):
         URL override for permissions and search specials
         """
         return [
-           url(r"^(?P<resource_name>%s)/search%s$" % (self._meta.resource_name,
-                                trailing_slash()), self.wrap_view('ms_search'), name="api_ms_search"),
+           url(r"^(?P<resource_name>%s)/search%s$" % (self._meta.resource_name, trailing_slash()), self.wrap_view('ms_search'), name="api_post_search"),
         ]
-
-    def ms_search(self, request, **kwargs):
-        self.method_check(request, allowed=['get'])
-        self.throttle_check(request)
-        self.is_authenticated(request)
-
-        # Query params
-        query = request.GET.get('q', '')
-        selected_facets = request.GET.getlist('facet', None)
-        order_by = request.GET.get('order_by', '')
-
-        sqs = SearchQuerySet().models(self.Meta.object_class).facet('tags')
-
-        # narrow down QS with facets
-        if selected_facets:
-            for facet in selected_facets:
-                sqs = sqs.narrow('tags:%s' % (facet))
-
-        if query != "":
-            sqs = sqs.auto_query(query)
-
-        if order_by != '':
-            sqs =sqs.order_by(order_by)
-
-        uri = reverse('api_ms_search', kwargs={'api_name':self.api_name,'resource_name': self._meta.resource_name})
-        paginator = Paginator(request.GET, sqs, resource_uri=uri)
-
-        objects = []
-        for result in paginator.page()['objects']:
-            if result:
-                bundle = self.build_bundle(obj=result.object, request=request)
-                bundle = self.full_dehydrate(bundle)
-                objects.append(bundle)
-        object_list = {
-            'meta': paginator.page()['meta'],
-            'objects': objects,
-        }
-
-        self.log_throttled_access(request)
-        return self.create_response(request, object_list)
