@@ -44,6 +44,9 @@ class MakerScienceProject(models.Model):
 
     featured = models.BooleanField(default=False)
 
+    class Meta :
+        ordering = ['parent__created_on',]
+
 @receiver(post_save, sender=MakerScienceProject)
 def assign_place_to_project(sender, created, instance, **kwargs):
     if instance.parent.location is None:
@@ -75,3 +78,6 @@ class MakerScienceResource(models.Model):
     linked_resources = models.ManyToManyField("MakerScienceResource", null=True, blank=True)
 
     featured = models.BooleanField(default=False)
+
+    class Meta :
+        ordering = ['parent__created_on',]
