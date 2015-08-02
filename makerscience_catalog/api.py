@@ -77,7 +77,8 @@ class MakerScienceCatalogResource(ModelResource, SearchableMakerScienceResource)
             url(r"^(?P<resource_name>%s)/(?P<ms_id>\d+)/check/(?P<user_id>\d+)%s$" %
                 (self._meta.resource_name, trailing_slash()),
                  self.wrap_view('ms_check_edit_perm'), name="api_ms_check_edit_perm"),
-            url(r"^(?P<resource_name>%s)/search%s$" % (self._meta.resource_name, trailing_slash()), self.wrap_view('ms_search'), name="api_catalog_search"),
+            url(r"^(?P<resource_name>%s)/search%s$" % (self._meta.resource_name, trailing_slash()),
+                self.wrap_view('ms_search'), name="api_catalog_search"),
         ]
 
 
