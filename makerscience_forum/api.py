@@ -47,9 +47,6 @@ class MakerSciencePostResource(ModelResource, SearchableMakerScienceResource):
         }
 
     def prepend_urls(self):
-        """
-        URL override for permissions and search specials
-        """
         return [
            url(r"^(?P<resource_name>%s)/search%s$" % (self._meta.resource_name, trailing_slash()), self.wrap_view('ms_search'), name="api_post_search"),
         ]

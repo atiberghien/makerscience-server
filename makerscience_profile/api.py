@@ -46,9 +46,6 @@ class MakerScienceProfileResource(ModelResource, SearchableMakerScienceResource)
         return bundle
 
     def prepend_urls(self):
-        """
-        URL override for when giving change perm to a user profile passed as parameter profile_id
-        """
         return [
             url(r"^(?P<resource_name>%s)/search%s$" % (self._meta.resource_name, trailing_slash()), self.wrap_view('ms_search'), name="api_profile_search"),
         ]
@@ -67,13 +64,3 @@ class MakerScienceProfileTaggedItemResource(TaggedItemResource):
             'tag_type' : ['exact', ]
         }
         always_return_data = True
-
-    def prepend_urls(self):
-        return [
-           url(r"^(?P<resource_name>%s)/(?P<content_type>\w+?)/(?P<object_id>\d+?)/(?P<tag_type>\w+?)%s$" % (self._meta.resource_name, trailing_slash()),
-               self.wrap_view('dispatch_list'),
-               name="api_dispatch_list"),
-            url(r"^(?P<resource_name>%s)/(?P<content_type>\w+?)/(?P<object_id>\d+?)/similars%s$" % (self._meta.resource_name, trailing_slash()),
-               self.wrap_view('get_similars'),
-               name="api_get_similars"),
-        ]

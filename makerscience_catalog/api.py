@@ -184,16 +184,6 @@ class MakerScienceProjectTaggedItemResource(TaggedItemResource):
         }
         always_return_data = True
 
-    def prepend_urls(self):
-        return [
-           url(r"^(?P<resource_name>%s)/(?P<content_type>\w+?)/(?P<object_id>\d+?)/(?P<tag_type>\w+?)%s$" % (self._meta.resource_name, trailing_slash()),
-               self.wrap_view('dispatch_list'),
-               name="api_dispatch_list"),
-            url(r"^(?P<resource_name>%s)/(?P<content_type>\w+?)/(?P<object_id>\d+?)/similars%s$" % (self._meta.resource_name, trailing_slash()),
-               self.wrap_view('get_similars'),
-               name="api_get_similars"),
-        ]
-
 class MakerScienceResourceTaggedItemResource(TaggedItemResource):
 
     class Meta:
@@ -206,13 +196,3 @@ class MakerScienceResourceTaggedItemResource(TaggedItemResource):
             'tag_type' : ['exact', ]
         }
         always_return_data = True
-
-    def prepend_urls(self):
-        return [
-           url(r"^(?P<resource_name>%s)/(?P<content_type>\w+?)/(?P<object_id>\d+?)/(?P<tag_type>\w+?)%s$" % (self._meta.resource_name, trailing_slash()),
-               self.wrap_view('dispatch_list'),
-               name="api_dispatch_list"),
-            url(r"^(?P<resource_name>%s)/(?P<content_type>\w+?)/(?P<object_id>\d+?)/similars%s$" % (self._meta.resource_name, trailing_slash()),
-               self.wrap_view('get_similars'),
-               name="api_get_similars"),
-        ]
