@@ -171,6 +171,7 @@ class MakerScienceResourceResource(MakerScienceCatalogResource):
             'featured' : ['exact'],
         }
 
+
 class MakerScienceProjectTaggedItemResource(TaggedItemResource):
 
     class Meta:
@@ -183,6 +184,7 @@ class MakerScienceProjectTaggedItemResource(TaggedItemResource):
             'tag_type' : ['exact', ]
         }
         always_return_data = True
+        limit = 0
 
 class MakerScienceResourceTaggedItemResource(TaggedItemResource):
 
@@ -196,3 +198,4 @@ class MakerScienceResourceTaggedItemResource(TaggedItemResource):
             'tag_type' : ['exact', ]
         }
         always_return_data = True
+        limit = 0
