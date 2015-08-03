@@ -22,7 +22,10 @@ class PageViewsMiddleware(object):
             if resource_name :
                 if resource_name in settings.PAGEVIEWS_FILTER:
                     pageviews_counter = 0
-                    content = json.loads(response.content)
+                    try:
+                        content = json.loads(response.content)
+                    except:
+                        pass
                     if 'objects' in content and len(content['objects']) == 1:
                         resource_uri = content['objects'][0]['resource_uri']
                         created = False
