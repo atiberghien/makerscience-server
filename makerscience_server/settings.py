@@ -161,7 +161,8 @@ INSTALLED_APPS = (
     'haystack',
     'simple_history',
 
-    'whoosh',
+    # 'whoosh',
+    'elasticsearch',
     'solo',
     'redactor',
 
