@@ -120,3 +120,4 @@ CORS_ORIGIN_WHITELIST = (
         'http://localhost:8001',
         'http://makerscience.nonetype.net'
 )
+MEDIA_URL = 'http://makerscience.nonetype.net/media/'
