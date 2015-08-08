@@ -5,6 +5,7 @@ from django.contrib.auth.models import User
 from django.contrib.contenttypes.models import ContentType
 from django.conf.urls import patterns, url, include
 from django.shortcuts import get_object_or_404
+from django.db.models import Sum
 
 from dataserver.authentication import AnonymousApiKeyAuthentication
 from datetime import datetime
@@ -26,9 +27,7 @@ from .models import MakerScienceProject, MakerScienceResource, MakerScienceProje
 from makerscience_server.authorizations  import  MakerScienceAPIAuthorization
 from accounts.models import ObjectProfileLink, Profile
 from projectsheet.models import ProjectSheet
-
-import json
-
+from starlet.models import Vote
 
 class MakerScienceCatalogResource(ModelResource, SearchableMakerScienceResource):
     parent = fields.ToOneField(ProjectResource, 'parent', full=True)
@@ -36,6 +35,10 @@ class MakerScienceCatalogResource(ModelResource, SearchableMakerScienceResource)
     linked_resources = fields.ToManyField('makerscience_catalog.api.MakerScienceResourceResource', 'linked_resources', full=True,null=True)
 
     def dehydrate(self, bundle):
+
+        votes = Vote.objects.filter(content_type=ContentType.objects.get_for_model(self._meta.object_class), object_id=bundle.obj.id)
+        bundle.data["total_score"] = votes.aggregate(Sum('score'))['score__sum'] or 0
+
         try:
             authoring_links = ObjectProfileLink.objects.filter(content_type=ContentType.objects.get_for_model(bundle.obj.parent),
                                                                 object_id=bundle.obj.parent.id,

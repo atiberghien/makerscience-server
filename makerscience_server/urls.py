@@ -11,6 +11,7 @@ from bucket.api import BucketResource, BucketFileResource, BucketTagResource, Bu
 from graffiti.api import TagResource, TaggedItemResource
 from ucomment.api import CommentResource
 from megafon.api   import PostResource
+from starlet.api import VoteResource
 
 from projects.api import ProjectResource, ProjectProgressResource, ProjectProgressRangeResource
 from projectsheet.api import ProjectSheetResource, ProjectSheetTemplateResource, ProjectSheetQuestionAnswerResource, ProjectSheetQuestionResource
@@ -53,6 +54,9 @@ api.register(TaggedItemResource())
 
 #Ucomment
 api.register(CommentResource())
+
+#Starlet
+api.register(VoteResource())
 
 # Projects
 api.register(ProjectResource())

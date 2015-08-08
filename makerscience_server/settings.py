@@ -172,6 +172,7 @@ INSTALLED_APPS = (
     'graffiti',
     'ucomment',
     'megafon',
+    'starlet',
 
     'makerscience_admin',
     'makerscience_catalog',

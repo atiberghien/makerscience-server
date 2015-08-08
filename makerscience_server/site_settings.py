@@ -83,6 +83,9 @@ AUTHENTICATED_USERS_PERMISSIONS = (
     'megafon.add_post',
     'megafon.change_post',
     'megafon.delete_post',
+    'starlet.add_vote',
+    'starlet.change_vote',
+    'starlet.delete_vote',
     )
 
 API_LIMIT_PER_PAGE = 0
@@ -96,11 +99,13 @@ OBJECTPROFILELINK_CHOICES = (
     (1, 'Ressource du projet'),
     (2, 'Fan du projet'),
     (3, 'Commentateur du projet'),
+    (4, 'A noté le projet'),
 
     (10, "Auteur de l'expérience"),
     (11, "A une expérience similiaire"),
     (12, "Fan de l'expérience"),
     (13, "Commentateur d'expérience"),
+    (14, "A noté pour l'expérience"),
 
     (30, 'Auteur de la discussion'),
     (31, 'Contributeur à la discussions'),
@@ -121,3 +126,12 @@ CORS_ORIGIN_WHITELIST = (
         'http://makerscience.nonetype.net'
 )
 MEDIA_URL = 'http://makerscience.nonetype.net/media/'
+
+VOTE_TYPE_CHOICES = (
+    ("makerscienceproject_vote_1", "Original"),
+    ("makerscienceproject_vote_2", "Fun"),
+    ("makerscienceproject_vote_3", "Prometteur"),
+    ("makerscienceresource_vote_1", "Inspirant"),
+    ("makerscienceresource_vote_2", "Récomfortant"),
+    ("makerscienceresource_vote_3", "Utile"),
+)
