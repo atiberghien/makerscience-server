@@ -7,7 +7,8 @@ class MakerSciencePostIndex(indexes.SearchIndex, indexes.Indexable):
 
   text = indexes.CharField(document=True, use_template=True)
   tags = indexes.MultiValueField(null=True, faceted=True)
-  updated_on = indexes.BooleanField(model_attr='parent__updated_on')
+  posted_on = indexes.DateTimeField(model_attr='parent__posted_on')
+  updated_on = indexes.DateTimeField(model_attr='parent__updated_on')
   answers_count = indexes.IntegerField(model_attr='parent__answers_count')
 
   def get_model(self):

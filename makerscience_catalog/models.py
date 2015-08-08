@@ -44,6 +44,9 @@ class MakerScienceProject(models.Model):
 
     featured = models.BooleanField(default=False)
 
+    def __unicode__(self):
+        return self.parent.title
+
     class Meta :
         ordering = ['parent__created_on',]
 

@@ -36,6 +36,7 @@ class MakerScienceProfileResource(ModelResource, SearchableMakerScienceResource)
             "location" : ['isnull', ],
             'id' : ['exact',]
         }
+        limit = 6
 
     def dehydrate(self, bundle):
         bundle.data["full_name"] = "%s %s" % (bundle.obj.parent.user.first_name, bundle.obj.parent.user.last_name)
@@ -47,7 +48,7 @@ class MakerScienceProfileResource(ModelResource, SearchableMakerScienceResource)
 
     def prepend_urls(self):
         return [
-            url(r"^(?P<resource_name>%s)/search%s$" % (self._meta.resource_name, trailing_slash()), self.wrap_view('ms_search'), name="api_profile_search"),
+            url(r"^(?P<resource_name>%s)/search%s$" % (self._meta.resource_name, trailing_slash()), self.wrap_view('ms_search'), name="api_ms_search"),
         ]
 
 class MakerScienceProfileTaggedItemResource(TaggedItemResource):

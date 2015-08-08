@@ -45,8 +45,9 @@ class MakerSciencePostResource(ModelResource, SearchableMakerScienceResource):
             'post_type' : ['exact'],
             'linked_projects' : ['isnull']
         }
+        limit = 7
 
     def prepend_urls(self):
         return [
-           url(r"^(?P<resource_name>%s)/search%s$" % (self._meta.resource_name, trailing_slash()), self.wrap_view('ms_search'), name="api_post_search"),
+           url(r"^(?P<resource_name>%s)/search%s$" % (self._meta.resource_name, trailing_slash()), self.wrap_view('ms_search'), name="api_ms_search"),
         ]

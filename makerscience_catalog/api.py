@@ -1,6 +1,5 @@
 import json
 
-
 from django.contrib.auth.models import User
 from django.contrib.contenttypes.models import ContentType
 from django.conf.urls import patterns, url, include
@@ -81,7 +80,7 @@ class MakerScienceCatalogResource(ModelResource, SearchableMakerScienceResource)
                 (self._meta.resource_name, trailing_slash()),
                  self.wrap_view('ms_check_edit_perm'), name="api_ms_check_edit_perm"),
             url(r"^(?P<resource_name>%s)/search%s$" % (self._meta.resource_name, trailing_slash()),
-                self.wrap_view('ms_search'), name="api_catalog_search"),
+                self.wrap_view('ms_search'), name="api_ms_search"),
         ]
 
 
@@ -149,6 +148,7 @@ class MakerScienceProjectResource(MakerScienceCatalogResource):
             'parent' : ALL_WITH_RELATIONS,
             'featured' : ['exact'],
         }
+        limit = 6
 
 class MakerScienceResourceAuthorization(MakerScienceAPIAuthorization):
     def __init__(self):
@@ -163,6 +163,7 @@ class MakerScienceResourceResource(MakerScienceCatalogResource):
     tags = fields.ToManyField('makerscience_catalog.api.MakerScienceResourceTaggedItemResource', 'tagged_items', full=True, null=True, readonly=True)
 
     class Meta:
+        object_class = MakerScienceResource
         queryset = MakerScienceResource.objects.all()
         allowed_methods = ['get', 'post', 'put', 'patch']
         resource_name = 'makerscience/resource'
@@ -173,6 +174,7 @@ class MakerScienceResourceResource(MakerScienceCatalogResource):
             'parent' : ALL_WITH_RELATIONS,
             'featured' : ['exact'],
         }
+        limit = 6
 
 
 class MakerScienceProjectTaggedItemResource(TaggedItemResource):

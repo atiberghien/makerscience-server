@@ -24,19 +24,20 @@ class SearchableMakerScienceResource(object):
         # Query params
         query = request.GET.get('q', '')
         selected_facets = request.GET.getlist('facet', None)
+        ordering = request.GET.get('ordering', None)
 
         sqs = SearchQuerySet().models(self.Meta.object_class).facet('tags')
 
-        # narrow down QS with facets
+        if ordering:
+            sqs = sqs.order_by(ordering)
         if selected_facets:
             for facet in selected_facets:
                 sqs = sqs.narrow('tags:%s' % (facet))
-        # launch query
         if query != "":
             sqs = sqs.auto_query(query)
 
-        # uri = reverse('api_ms_search', kwargs={'api_name':self.api_name,'resource_name': self._meta.resource_name})
-        paginator = Paginator(request.GET, sqs)
+        uri = reverse('api_ms_search', kwargs={'api_name':self.api_name,'resource_name': self._meta.resource_name})
+        paginator = Paginator(request.GET, sqs, resource_uri=uri, limit=self._meta.limit)
 
         objects = []
         for result in paginator.page()['objects']:
