@@ -25,7 +25,7 @@ class PageViewsMiddleware(object):
                     try:
                         content = json.loads(response.content)
                     except:
-                        pass
+                        return response
                     if 'objects' in content and len(content['objects']) == 1:
                         resource_uri = content['objects'][0]['resource_uri']
                         created = False
