@@ -111,6 +111,7 @@ OBJECTPROFILELINK_CHOICES = (
     (31, 'Contributeur à la discussions'),
     (32, 'Suiveur de la discussion'),
     (33, 'Fan de la discussion'),
+    (34, "Fan d'une réponse à la discussion"),
 
     (40, 'Contact'),
 
