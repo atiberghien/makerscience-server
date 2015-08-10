@@ -5,7 +5,7 @@ from .models import MakerSciencePost
 
 class MakerSciencePostIndex(indexes.SearchIndex, indexes.Indexable):
 
-  text = indexes.CharField(document=True, use_template=True)
+  text = indexes.EdgeNgramField(document=True, use_template=True)
   tags = indexes.MultiValueField(null=True, faceted=True)
   posted_on = indexes.DateTimeField(model_attr='parent__posted_on')
   updated_on = indexes.DateTimeField(model_attr='parent__updated_on')

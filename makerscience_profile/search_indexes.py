@@ -7,7 +7,7 @@ from .models import MakerScienceProfile
 
 class MakerScienceProfileIndex(indexes.SearchIndex, indexes.Indexable):
 
-    text = indexes.CharField(document=True, use_template=True)
+    text = indexes.EdgeNgramField(document=True, use_template=True)
     tags = indexes.MultiValueField(null=True, faceted=True)
     date_joined = indexes.BooleanField(model_attr='parent__user__date_joined')
     activity_score = indexes.IntegerField()

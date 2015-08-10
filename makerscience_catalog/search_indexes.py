@@ -12,7 +12,7 @@ import datetime
 
 class MakerScienceProjectIndex(indexes.SearchIndex, indexes.Indexable):
 
-    text = indexes.CharField(document=True, use_template=True)
+    text = indexes.EdgeNgramField(document=True, use_template=True)
     tags = indexes.MultiValueField(null=True, faceted=True)
     featured = indexes.BooleanField(model_attr='featured')
     created_on = indexes.DateTimeField(model_attr='parent__created_on')

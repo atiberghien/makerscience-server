@@ -5,6 +5,7 @@ from django.core.urlresolvers import reverse
 
 from haystack.query import SearchQuerySet
 from tastypie.paginator import Paginator
+from haystack.inputs import Raw
 
 class MakerScienceStaticContentResource(ModelResource):
     class Meta:
@@ -34,7 +35,8 @@ class SearchableMakerScienceResource(object):
             for facet in selected_facets:
                 sqs = sqs.narrow('tags:%s' % (facet))
         if query != "":
-            sqs = sqs.auto_query(query)
+            sqs = sqs.filter(text=Raw(query))
+
 
         uri = reverse('api_ms_search', kwargs={'api_name':self.api_name,'resource_name': self._meta.resource_name})
         paginator = Paginator(request.GET, sqs, resource_uri=uri, limit=self._meta.limit)
