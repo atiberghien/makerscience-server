@@ -114,6 +114,7 @@ OBJECTPROFILELINK_CHOICES = (
     (34, "Fan d'une réponse à la discussion"),
 
     (40, 'Contact'),
+    (41, 'A mentionné'),
 
     (50, 'A taggé'),
     (51, 'Suit un tag'),
