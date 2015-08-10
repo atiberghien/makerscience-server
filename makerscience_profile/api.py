@@ -34,7 +34,8 @@ class MakerScienceProfileResource(ModelResource, SearchableMakerScienceResource)
         filtering = {
             'parent' : ALL_WITH_RELATIONS,
             "location" : ['isnull', ],
-            'id' : ['exact',]
+            'id' : ['exact',],
+            'slug' : ['exact',]
         }
         limit = 6
 
