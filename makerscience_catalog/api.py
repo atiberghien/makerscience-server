@@ -183,6 +183,8 @@ class MakerScienceProjectTaggedItemResource(TaggedItemResource):
         queryset = MakerScienceProjectTaggedItem.objects.all()
         resource_name = 'makerscience/projecttaggeditem'
         default_format = "application/json"
+        authentication = AnonymousApiKeyAuthentication()
+        authorization = DjangoAuthorization()
         filtering = {
             "tag" : ALL_WITH_RELATIONS,
             "object_id" : ['exact', ],
@@ -207,6 +209,8 @@ class MakerScienceResourceTaggedItemResource(TaggedItemResource):
         queryset = MakerScienceResourceTaggedItem.objects.all()
         resource_name = 'makerscience/resourcetaggeditem'
         default_format = "application/json"
+        authentication = AnonymousApiKeyAuthentication()
+        authorization = DjangoAuthorization()
         filtering = {
             "tag" : ALL_WITH_RELATIONS,
             "object_id" : ['exact', ],
