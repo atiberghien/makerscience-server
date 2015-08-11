@@ -57,12 +57,22 @@ class MakerScienceProfileTaggedItemResource(TaggedItemResource):
     class Meta:
         queryset = MakerScienceProfileTaggedItem.objects.all()
         resource_name = 'makerscience/profiletaggeditem'
-        # authentication = AnonymousApiKeyAuthentication()
-        # authorization = DjangoAuthorization()
+        authentication = AnonymousApiKeyAuthentication()
+        authorization = DjangoAuthorization()
         default_format = "application/json"
         filtering = {
             "tag" : ALL_WITH_RELATIONS,
             "object_id" : ['exact', ],
             'tag_type' : ['exact', ]
         }
-        always_return_data = True
+        always_return_data = True\
+
+    def prepend_urls(self):
+        return [
+           url(r"^(?P<resource_name>%s)/(?P<content_type>\w+?)/(?P<object_id>\d+?)/(?P<tag_type>\w+?)%s$" % (self._meta.resource_name, trailing_slash()),
+               self.wrap_view('dispatch_list'),
+               name="api_dispatch_list"),
+            url(r"^(?P<resource_name>%s)/(?P<content_type>\w+?)/(?P<object_id>\d+?)/similars%s$" % (self._meta.resource_name, trailing_slash()),
+               self.wrap_view('get_similars'),
+               name="api_get_similars"),
+        ]
