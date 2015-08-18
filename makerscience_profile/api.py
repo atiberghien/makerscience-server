@@ -65,7 +65,8 @@ class MakerScienceProfileTaggedItemResource(TaggedItemResource):
             "object_id" : ['exact', ],
             'tag_type' : ['exact', ]
         }
-        always_return_data = True\
+        always_return_data = True
+        limit = 0
 
     def prepend_urls(self):
         return [
