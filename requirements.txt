@@ -1,4 +1,4 @@
--e git+https://github.com/UnissonCo/dataserver.git@develop#egg=dataserver-project
+-e git+https://github.com/UnissonCo/dataserver.git@makerscience#egg=dataserver-project
 -e git+https://github.com/django-notifications/django-notifications.git@master#egg=django_notifications_hq-master
 django-sekizai==0.8.1
 Whoosh==2.6.0
