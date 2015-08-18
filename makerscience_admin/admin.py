@@ -34,11 +34,15 @@ class MakerScienceStaticContentForm(forms.ModelForm):
 
 class MakerScienceStaticContentAdmin(SingletonModelAdmin):
     form = MakerScienceStaticContentForm
-
+    filter_horizontal = ("project_thematic_selection", 'resource_thematic_selection')
     fieldsets = (
-        ('About', {
-            'classes': ('collapse',),
+        ('A propos', {
+            'classes': ('grp-collapse grp-closed',),
             'fields': ('about', 'about_team', 'about_contact', 'about_faq', 'about_cgu')
+        }),
+        ('Sélections thématiques', {
+            'classes': ('grp-collapse grp-closed',),
+            'fields': ('project_thematic_selection', 'resource_thematic_selection')
         }),
     )
 
