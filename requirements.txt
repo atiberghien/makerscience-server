@@ -4,5 +4,5 @@ django-sekizai==0.8.1
 Whoosh==2.6.0
 django-wysiwyg-redactor==0.4.9
 django-solo
-django-grappelli==2.5.5
+django-grappelli==2.5.7
 django-ipware
