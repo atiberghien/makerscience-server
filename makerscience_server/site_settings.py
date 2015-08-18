@@ -50,7 +50,7 @@ AUTHENTICATED_USERS_PERMISSIONS = (
     'bucket.change_bucket',
     'bucket.view_bucket',
     'bucket.add_bucketfile',
-    'bucket.delete_bucketfile', 
+    'bucket.delete_bucketfile',
     'django_comments.add_comment',
     'django_comments.change_comment',
     'django_comments.delete_comment',
@@ -86,7 +86,32 @@ AUTHENTICATED_USERS_PERMISSIONS = (
     'starlet.add_vote',
     'starlet.change_vote',
     'starlet.delete_vote',
-    )
+)
+
+MS_AUTHENTICATED_USERS_PERMISSIONS = (
+    'makerscience_catalog.add_makerscienceproject',
+    'makerscience_catalog.view_makerscienceproject',
+    'makerscience_catalog.add_makerscienceresource',
+    'makerscience_catalog.view_makerscienceresource',
+    'makerscience_catalog.add_makerscienceprojecttaggeditem',
+    'makerscience_catalog.change_makerscienceprojecttaggeditem',
+    'makerscience_catalog.delete_makerscienceprojecttaggeditem',
+    'makerscience_catalog.add_makerscienceresourcetaggeditem',
+    'makerscience_catalog.change_makerscienceresourcetaggeditem',
+    'makerscience_catalog.delete_makerscienceresourcetaggeditem',
+
+    'makerscience_profile.change_makerscienceprofile',
+    'makerscience_profile.add_makerscienceprofiletaggeditem',
+    'makerscience_profile.change_makerscienceprofiletaggeditem',
+    'makerscience_profile.delete_makerscienceprofiletaggeditem',
+
+    'makerscience_forum.change_makersciencepost',
+    'makerscience_forum.add_makersciencepost',
+    'makerscience_forum.change_makersciencepost',
+    'makerscience_forum.delete_makersciencepost',
+
+    'notifications.change_notification',
+)
 
 API_LIMIT_PER_PAGE = 0
 

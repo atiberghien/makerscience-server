@@ -9,6 +9,7 @@ from taggit.models import TaggedItem
 from taggit.managers import TaggableManager
 from guardian.shortcuts import assign_perm
 from autoslug import AutoSlugField
+from django.conf import settings
 
 class MakerScienceProfileTaggedItem (TaggedItem):
     PROFILE_TAG_TYPE_CHOICES = (
@@ -44,36 +45,20 @@ def create_profile_on_user_signup(sender, created, instance, **kwargs):
 @receiver(post_save, sender=User)
 def allow_user_to_create_MS_resources_and_project(sender, instance, created, *args, **kwargs):
     """
-    We also need to assign all non MS-specific permissions for objects that come with MSResources/MSProjects:
-    - Project
-    - ProjectSheet
-    - Pro
-
+    Here we assign all newly created users to the group 'ma_authenticated_users'
+    If this group does not exists we create it and give permissions from settings
+    variable MS_AUTHENTICATED_USERS_PERMISSIONS
     """
     # Check if authenticated_user group exists, if not create it and add following perms
     group, created = Group.objects.get_or_create(name='ms_authenticated_users')
-    if created:
-        # assign perms to group
-        assign_perm('makerscience_catalog.add_makerscienceproject', group)
-        assign_perm('makerscience_catalog.view_makerscienceproject', group)
-        assign_perm('makerscience_catalog.add_makerscienceresource', group)
-        assign_perm('makerscience_catalog.view_makerscienceresource', group)
-        assign_perm('makerscience_catalog.add_makerscienceprojecttaggeditem', group)
-        assign_perm('makerscience_catalog.change_makerscienceprojecttaggeditem', group)
-        assign_perm('makerscience_catalog.delete_makerscienceprojecttaggeditem', group)
-        assign_perm('makerscience_catalog.add_makerscienceresourcetaggeditem', group)
-        assign_perm('makerscience_catalog.change_makerscienceresourcetaggeditem', group)
-        assign_perm('makerscience_catalog.delete_makerscienceresourcetaggeditem', group)
 
-        assign_perm('makerscience_profile.change_makerscienceprofile', group)
-        assign_perm('makerscience_profile.add_makerscienceprofiletaggeditem', group)
-        assign_perm('makerscience_profile.change_makerscienceprofiletaggeditem', group)
-        assign_perm('makerscience_profile.delete_makerscienceprofiletaggeditem', group)
-
-        assign_perm('makerscience_forum.change_makersciencepost', group)
-        assign_perm('makerscience_forum.add_makersciencepost', group)
-        assign_perm('makerscience_forum.change_makersciencepost', group)
-        assign_perm('makerscience_forum.delete_makersciencepost', group)
-
+    # assign perms to group
+    permissions = getattr(settings, 'MS_AUTHENTICATED_USERS_PERMISSIONS')
+    for permission in permissions:
+        try:
+            assign_perm(permission, group)
+        except:
+            print permission
+            return
     # assign user to group
     instance.groups.add(group)
