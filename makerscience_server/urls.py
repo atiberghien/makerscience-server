@@ -20,6 +20,7 @@ from makerscience_catalog.api import MakerScienceProjectResource, MakerScienceRe
 from makerscience_profile.api import MakerScienceProfileResource, MakerScienceProfileTaggedItemResource
 from makerscience_forum.api import MakerSciencePostResource
 from makerscience_admin.api import MakerScienceStaticContentResource
+from makerscience_notification.api import NotificationResource
 import bucket
 
 admin.autodiscover()
@@ -86,12 +87,15 @@ api.register(MakerSciencePostResource())
 #MakerScience Admin
 api.register(MakerScienceStaticContentResource())
 
+#Makerscience Notification
+api.register(NotificationResource())
+
 urlpatterns = patterns('',
     url(r'^grappelli/', include('grappelli.urls')),
     url(r'^redactor/', include('redactor.urls')),
     url(r'^admin/', include(admin.site.urls)),
     url(r'^api/', include(api.urls)),
-    url(r'^bucket/', include('bucket.urls'))
+    url(r'^bucket/', include('bucket.urls')),
 
 )
 

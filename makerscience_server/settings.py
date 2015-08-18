@@ -160,6 +160,7 @@ INSTALLED_APPS = (
     'elasticsearch',
     'solo',
     'redactor',
+    'notifications',
 
 # From dataserver
     'dataserver',
@@ -178,6 +179,7 @@ INSTALLED_APPS = (
     'makerscience_catalog',
     'makerscience_profile',
     'makerscience_forum',
+    'makerscience_notification',
 )
 
 LOGGING = {
