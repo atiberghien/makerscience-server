@@ -73,56 +73,9 @@ class MakerScienceCatalogResource(ModelResource, SearchableMakerScienceResource)
         URL override for permissions and search specials
         """
         return [
-            url(r"^(?P<resource_name>%s)/(?P<ms_id>\d+)/assign%s$" %
-                (self._meta.resource_name, trailing_slash()),
-                 self.wrap_view('ms_edit_assign'), name="api_edit_assign"),
-            url(r"^(?P<resource_name>%s)/(?P<ms_id>\d+)/check/(?P<user_id>\d+)%s$" %
-                (self._meta.resource_name, trailing_slash()),
-                 self.wrap_view('ms_check_edit_perm'), name="api_ms_check_edit_perm"),
             url(r"^(?P<resource_name>%s)/search%s$" % (self._meta.resource_name, trailing_slash()),
                 self.wrap_view('ms_search'), name="api_ms_search"),
         ]
-
-
-    #FIXME / DRY me out !
-    def ms_edit_assign(self, request, **kwargs):
-        """
-        Method to assign edit permissions for a MSResource or MSProject 'ms_id' to
-        a user with id passed as POST parameter 'user_id'
-        """
-        self.method_check(request, allowed=['post'])
-        self.throttle_check(request)
-        self.is_authenticated(request)
-
-        target_user_id = json.loads(request.body)['user_id']
-        target_user = get_object_or_404(User, pk=target_user_id)
-        target_object_id = kwargs['ms_id']
-        # FIXME : for better security, we should also check that request.user has edit rights on target object
-        # => which implies that change rigths are automatically given to creator of a sheet
-        target_object = get_object_or_404(self.Meta.object_class, pk=target_object_id)
-        change_perm_code = self.Meta.authorization.update_permission_code
-        assign_perm(change_perm_code, user_or_group=target_user, obj=target_object)
-
-        return self.create_response(request, {'msg' : 'Change rights assigned'})
-
-    def ms_check_edit_perm(self, request, **kwargs):
-        """
-        Method to check edit permissions for a given user_id
-        """
-        self.method_check(request, allowed=['get', 'post'])
-        self.throttle_check(request)
-        self.is_authenticated(request)
-
-        user_id = kwargs['user_id']
-        user = get_object_or_404(User, pk=user_id)
-
-        target_object_id = kwargs['ms_id']
-        target_object = get_object_or_404(self.Meta.object_class, pk=target_object_id)
-        change_perm_code = self.Meta.authorization.update_permission_code
-        if user.has_perm(change_perm_code, target_object):
-            return self.create_response(request, {'has_perm':True})
-        else:
-            return self.create_response(request, {'has_perm':False})
 
 class MakerScienceProjectAuthorization(MakerScienceAPIAuthorization):
     def __init__(self):
