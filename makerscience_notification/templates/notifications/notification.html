@@ -1,4 +1,4 @@
-{{notif.verb}}<a href="/u/{{notif.actor.slug}}">{{notif.actor.parent.get_full_name_or_username}}</a>
+<a href="/u/{{notif.actor.slug}}">{{notif.actor.parent.get_full_name_or_username}}</a>
 {% if notif.verb == 'tagged' %}
     a ajouté le tag <a href="/tag/{{notif.action_object.slug}}">{{notif.action_object.name}}</a>
     {% if notif.target_content_type.model == 'makerscienceproject'%}
