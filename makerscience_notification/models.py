@@ -8,10 +8,12 @@ from notifications import notify
 from accounts.models import ObjectProfileLink
 
 from makerscience_profile.models import MakerScienceProfile
+from makerscience_catalog.models import MakerScienceProject, MakerScienceResource
+from makerscience_forum.models import MakerSciencePost
 
 def create_notification(sender, instance, created, **kwargs):
     activity = instance
-    if created:
+    if sender == ObjectProfileLink and created:
         actor = MakerScienceProfile.objects.get(parent=activity.profile)
         if activity.level == 50:
             tag = activity.content_object.tag
@@ -25,15 +27,86 @@ def create_notification(sender, instance, created, **kwargs):
                             verb=u'tagged',
                             action_object=tag,
                             target=activity.content_object.content_object)
-        elif activity.level in [0, 10, 30]:
-            profile_ids = ObjectProfileLink.objects.filter(level=40,
-                                                        content_type=ContentType.objects.get_for_model(actor),
-                                                           object_id=actor.id).values_list('profile', flat=True)
-            for profile in MakerScienceProfile.objects.filter(parent__id__in=profile_ids):
-                notify.send(actor,
-                            recipient=profile.parent.user,
-                            action_object=activity.content_object,
-                            verb=u'created')
+        elif activity.level == 0:
+            if activity.isValidated == False: #someome ask to join project team
+                profile_ids = ObjectProfileLink.objects.filter(level=0,
+                                                               isValidated=True,
+                                                               content_type=ContentType.objects.get_for_model(activity.content_object),
+                                                               object_id=activity.content_object.id).values_list('profile', flat=True)
+                for profile in MakerScienceProfile.objects.filter(parent__id__in=profile_ids):
+                    notify.send(actor,
+                                recipient=profile.parent.user,
+                                target=activity.content_object,
+                                verb=u'team_requested')
+            else :#someone has created a project
+                profile_ids = ObjectProfileLink.objects.filter(level=40,
+                                                               content_type=ContentType.objects.get_for_model(actor),
+                                                               object_id=actor.id).values_list('profile', flat=True)
+                for profile in MakerScienceProfile.objects.filter(parent__id__in=profile_ids):
+                    notify.send(actor,
+                                recipient=profile.parent.user,
+                                action_object=activity.content_object,
+                                verb=u'created')
+        elif activity.level == 1:
+                profile_ids = ObjectProfileLink.objects.filter(level=0,
+                                                               isValidated=True,
+                                                               content_type=ContentType.objects.get_for_model(activity.content_object),
+                                                               object_id=activity.content_object.id).values_list('profile', flat=True)
+                for profile in MakerScienceProfile.objects.filter(parent__id__in=profile_ids):
+                    notify.send(actor,
+                                recipient=profile.parent.user,
+                                target=activity.content_object,
+                                verb=u'help_proposed')
+        elif activity.level == 10:
+            if activity.isValidated == False: #someome ask to join project team
+                profile_ids = ObjectProfileLink.objects.filter(level=10,
+                                                               isValidated=True,
+                                                               content_type=ContentType.objects.get_for_model(activity.content_object),
+                                                               object_id=activity.content_object.id).values_list('profile', flat=True)
+                for profile in MakerScienceProfile.objects.filter(parent__id__in=profile_ids):
+                    notify.send(actor,
+                                recipient=profile.parent.user,
+                                target=activity.content_object,
+                                verb=u'coauthor_requested')
+            else :#someone has created a project
+                profile_ids = ObjectProfileLink.objects.filter(level=40,
+                                                               content_type=ContentType.objects.get_for_model(actor),
+                                                               object_id=actor.id).values_list('profile', flat=True)
+                for profile in MakerScienceProfile.objects.filter(parent__id__in=profile_ids):
+                    notify.send(actor,
+                                recipient=profile.parent.user,
+                                action_object=activity.content_object,
+                                verb=u'created')
+        elif activity.level == 11:
+                profile_ids = ObjectProfileLink.objects.filter(level=10,
+                                                               isValidated=True,
+                                                               content_type=ContentType.objects.get_for_model(activity.content_object),
+                                                               object_id=activity.content_object.id).values_list('profile', flat=True)
+                for profile in MakerScienceProfile.objects.filter(parent__id__in=profile_ids):
+                    notify.send(actor,
+                                recipient=profile.parent.user,
+                                target=activity.content_object,
+                                verb=u'similars_shared')
+        elif activity.level == 5: #someone has been invited to join  a project team
+            notify.send(MakerScienceProfile.objects.get(slug=activity.detail),
+                        recipient=actor.parent.user,
+                        target=activity.content_object,
+                        verb=u'team_invited')
+        elif activity.level == 6: #someone has been invited to help  a project team
+            notify.send(MakerScienceProfile.objects.get(slug=activity.detail),
+                        recipient=actor.parent.user,
+                        target=activity.content_object,
+                        verb=u'help_invited')
+        elif activity.level == 15: #someone has been invited to join  co-author
+            notify.send(MakerScienceProfile.objects.get(slug=activity.detail),
+                        recipient=actor.parent.user,
+                        target=activity.content_object,
+                        verb=u'coauthor_invited')
+        elif activity.level == 16: #someone has been invited to shared his similar resource
+            notify.send(MakerScienceProfile.objects.get(slug=activity.detail),
+                        recipient=actor.parent.user,
+                        target=activity.content_object,
+                        verb=u'similar_resource_invited')
         elif activity.level in [2, 12, 33]: #liked content where the recipient is involved (creator, member)
             profile_ids = ObjectProfileLink.objects.filter(level__in=[0, 1, 10, 11, 30, 31]).distinct('profile').values_list('profile', flat=True)
             for profile in MakerScienceProfile.objects.filter(parent__id__in=profile_ids):
