@@ -35,12 +35,16 @@ class MakerScienceProfile(models.Model):
     contact_email = models.CharField(max_length=500, null=True, blank=True)
     website = models.CharField(max_length=500, null=True, blank=True)
 
+    def __unicode__(self):
+        return "Profil Makerscience de %s" % self.parent.get_full_name_or_username()
+
 
 @receiver(post_save, sender=Profile)
 def create_profile_on_user_signup(sender, created, instance, **kwargs):
     if created:
         location = Place.objects.create(address=PostalAddress.objects.create())
         MakerScienceProfile.objects.create(parent=instance, location=location)
+
 
 @receiver(post_save, sender=User)
 def allow_user_to_create_MS_resources_and_project(sender, instance, created, *args, **kwargs):
