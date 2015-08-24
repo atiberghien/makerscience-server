@@ -2,11 +2,16 @@
 
 from django.db import models
 from django.utils.translation import ugettext as _
+from django.db.models.signals import post_save, post_delete
+from django.dispatch.dispatcher import receiver
+
+from guardian.shortcuts import assign_perm, remove_perm
 from taggit.managers import TaggableManager
 from taggit.models import TaggedItem
 
 from scout.models  import Place, PostalAddress
 from projects.models import Project
+from accounts.models import ObjectProfileLink
 
 
 class MakerScienceProjectTaggedItem (TaggedItem):
@@ -63,3 +68,16 @@ class MakerScienceResource(models.Model):
 
     class Meta :
         ordering = ['parent__created_on',]
+
+
+@receiver(post_save, sender=ObjectProfileLink)
+def assign_permissions(sender, created, instance, **kwargs):
+    if instance.level in [0, 10] and instance.isValidated:
+        change_perm_code = "makerscience_catalog.change_%s" % instance.content_object._meta.model_name
+        assign_perm(change_perm_code, user_or_group=instance.profile.user, obj=instance.content_object)
+
+@receiver(post_delete, sender=ObjectProfileLink)
+def remove_permissions(sender, instance, **kwargs):
+    if instance.level in [0, 10]:
+        change_perm_code = "makerscience_catalog.change_%s" % instance.content_object._meta.model_name
+        remove_perm(change_perm_code, user_or_group=instance.profile.user, obj=instance.content_object)
