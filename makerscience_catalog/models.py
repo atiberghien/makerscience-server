@@ -79,5 +79,8 @@ def assign_permissions(sender, created, instance, **kwargs):
 @receiver(post_delete, sender=ObjectProfileLink)
 def remove_permissions(sender, instance, **kwargs):
     if instance.level in [0, 10]:
-        change_perm_code = "makerscience_catalog.change_%s" % instance.content_object._meta.model_name
-        remove_perm(change_perm_code, user_or_group=instance.profile.user, obj=instance.content_object)
+        try:
+            change_perm_code = "makerscience_catalog.change_%s" % instance.content_object._meta.model_name
+            remove_perm(change_perm_code, user_or_group=instance.profile.user, obj=instance.content_object)
+        except:
+            pass
