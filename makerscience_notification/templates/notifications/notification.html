@@ -1,3 +1,4 @@
+<!-- DEBUG - {{notif.verb}} -->
 <a href="/u/{{notif.actor.slug}}">{{notif.actor.parent.get_full_name_or_username}}</a>
 {% if notif.verb == 'tagged' %}
     a ajouté le tag <a href="/tag/{{notif.action_object.slug}}">{{notif.action_object.name}}</a>
@@ -37,10 +38,10 @@
         a commenté l'expérience <a href="/r/{{notif.action_object.parent.slug}}">{{notif.action_object.parent.title}}</a>
     {% endif %}
 {% elif notif.verb == 'scored' %}
-    {% if notif.action_object_content_type.model == 'makerscienceproject' %}
-        a noté le projet <a href="/p/{{notif.action_object.parent.slug}}">{{notif.action_object.parent.title}}</a>
-    {% elif notif.action_object_content_type.model == 'makerscienceresource' %}
-        a noté l'expérience <a href="/r/{{notif.action_object.parent.slug}}">{{notif.action_object.parent.title}}</a>
+    {% if notif.action_object.content_type.model == 'makerscienceproject' %}
+        a noté le projet <a href="/p/{{notif.action_object.parent.slug}}">{{notif.action_object.content_object.parent.title}}</a>
+    {% elif notif.action_object.content_type.model == 'makerscienceresource' %}
+        a noté l'expérience <a href="/r/{{notif.action_object.parent.slug}}">{{notif.action_object.content_object.parent.title}}</a>
     {% endif %}
 {% elif notif.verb == 'mentionned' %}
     vous a cité dans
