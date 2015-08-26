@@ -37,8 +37,14 @@ def clear_makerscience(sender, instance, **kwargs):
                                       object_id=instance.parent.id).delete()
         instance.parent.delete()
     if sender == MakerScienceProfile:
-        instance.location.address.delete()
-        instance.location.delete()
+        try:
+            instance.location.address.delete()
+        except:
+            pass
+        try:
+            instance.location.delete()
+        except:
+            pass
         instance.parent.user.delete()
 
 post_delete.connect(clear_makerscience, sender=MakerSciencePost)
