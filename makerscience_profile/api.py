@@ -1,8 +1,11 @@
 from datetime import datetime
 from django.conf.urls import url
 from django.core.urlresolvers import reverse
+from django.contrib.contenttypes.models import ContentType
+from django.template.loader import render_to_string
 
 from haystack.query import SearchQuerySet
+
 from tastypie.utils import trailing_slash
 from tastypie.resources import ModelResource
 from tastypie.authorization import DjangoAuthorization
@@ -10,12 +13,15 @@ from tastypie import fields
 from tastypie.constants import ALL_WITH_RELATIONS
 
 from dataserver.authentication import AnonymousApiKeyAuthentication
-from accounts.api import ProfileResource
+from accounts.api import ProfileResource, ObjectProfileLinkResource
+from accounts.models import ObjectProfileLink
 from scout.api import PlaceResource
 from graffiti.api import TaggedItemResource
 
 from makerscience_admin.api import SearchableMakerScienceResource
 from .models import MakerScienceProfile, MakerScienceProfileTaggedItem
+
+import json
 
 class MakerScienceProfileResource(ModelResource, SearchableMakerScienceResource):
     parent = fields.OneToOneField(ProfileResource, 'parent', full=True)
@@ -50,7 +56,53 @@ class MakerScienceProfileResource(ModelResource, SearchableMakerScienceResource)
     def prepend_urls(self):
         return [
             url(r"^(?P<resource_name>%s)/search%s$" % (self._meta.resource_name, trailing_slash()), self.wrap_view('ms_search'), name="api_ms_search"),
+            url(r"^(?P<resource_name>%s)/(?P<slug>[\w-]+)/activities%s$" % (self._meta.resource_name, trailing_slash()), self.wrap_view('get_profile_activities'), name="api_profile_activities"),
+            url(r"^(?P<resource_name>%s)/(?P<slug>[\w-]+)/contacts/activities%s$" % (self._meta.resource_name, trailing_slash()), self.wrap_view('get_contacts_activities'), name="api_contacts_activities"),
         ]
+
+    def get_profile_activities(self, request, **kwargs):
+        self.method_check(request, allowed=['get'])
+        self.throttle_check(request)
+        self.is_authenticated(request)
+
+        profile = MakerScienceProfile.objects.get(slug=kwargs["slug"])
+
+        activities = []
+        favoriteTags = {}
+        followedTags = []
+        for activity in ObjectProfileLink.objects.filter(profile=profile.parent, isValidated=True).order_by('created_on'):
+            obj = activity.content_object
+            if activity.content_type.model == 'taggeditem':
+                if obj.tag.slug in favoriteTags:
+                    favoriteTags[obj.tag.slug] += 1
+                else:
+                    favoriteTags[obj.tag.slug] = 1
+            elif activity.content_type == 'tag':
+                followedTags.push(obj)
+            else:
+                activities.append(render_to_string('notifications/activity.html', {'activity': activity, 'egocentric':True}))
+
+        return self.create_response(request, {
+            'objects': {'activities' : activities},
+        })
+
+    def get_contacts_activities(self, request, **kwargs):
+        self.method_check(request, allowed=['get'])
+        self.throttle_check(request)
+        self.is_authenticated(request)
+
+        profile = MakerScienceProfile.objects.get(slug=kwargs["slug"])
+
+        contact_ids = profile.parent.objectprofilelink_set.filter(level=40).values_list('object_id', flat=True) #Must return IDs of MakerScienceProfile
+        contact_ids = MakerScienceProfile.objects.filter(id__in=[int(i) for i in contact_ids]).values_list('parent__id', flat=True)
+
+        activities = []
+        for activity in ObjectProfileLink.objects.filter(profile__in=contact_ids, isValidated=True).order_by('-created_on'):
+            activities.append(render_to_string('notifications/activity.html', {'activity': activity, 'egocentric':False}))
+
+        return self.create_response(request, {
+            'objects': {'activities' : activities},
+        })
 
 class MakerScienceProfileTaggedItemResource(TaggedItemResource):
 

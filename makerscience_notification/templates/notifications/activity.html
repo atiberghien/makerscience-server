@@ -1,0 +1,157 @@
+{% load humanize %}
+{% if activity.level == 0 %}
+    {% if egocentric %}
+        {{activity.profile.user.first_name}}
+    {% else %}
+        <a href="/u/{{activity.profile.get_full_name_or_username|slugify}}">{{activity.profile.get_full_name_or_username}}</a>
+    {% endif %}
+    a créé le projet <a href="/p/{{activity.content_object.parent.slug}}">{{activity.content_object.parent.title}}</a>
+
+{% elif activity.level == 1 %}
+    {% if egocentric %}
+        {{activity.profile.user.first_name}}
+    {% else %}
+        <a href="/u/{{activity.profile.slug}}">{{activity.profile.get_full_name_or_username}}</a>
+    {% endif %}
+    a proposé son aide au projet <a href="/p/{{activity.content_object.parent.slug}}">{{activity.content_object.parent.title}}</a>
+
+{% elif activity.level == 2 %}
+    {% if egocentric %}
+        {{activity.profile.user.first_name}}
+    {% else %}
+        <a href="/u/{{activity.profile.slug}}">{{activity.profile.get_full_name_or_username}}</a>
+    {% endif %}
+    s'est abonné au projet <a href="/p/{{activity.content_object.parent.slug}}">{{activity.content_object.parent.title}}</a>
+
+{% elif activity.level == 3 %}
+    {% if egocentric %}
+        {{activity.profile.user.first_name}}
+    {% else %}
+        <a href="/u/{{activity.profile.slug}}">{{activity.profile.get_full_name_or_username}}</a>
+    {% endif %}
+    a commenté le projet <a href="/p/{{activity.content_object.parent.slug}}">{{activity.content_object.parent.title}}</a>
+
+{% elif activity.level == 4 %}
+    {% if egocentric %}
+        {{activity.profile.user.first_name}}
+    {% else %}
+        <a href="/u/{{activity.profile.slug}}">{{activity.profile.get_full_name_or_username}}</a>
+    {% endif %}
+    a noté le critère «{{activity.content_object.vote_type_label}}» du projet <a href="/p/{{activity.content_object.votedObj.parent.slug}}">{{activity.content_object.votedObj.parent.title}}</a>
+
+{% elif activity.level == 10 %}
+    {% if egocentric %}
+        {{activity.profile.user.first_name}}
+    {% else %}
+        <a href="/u/{{activity.profile.slug}}">{{activity.profile.get_full_name_or_username}}</a>
+    {% endif %}
+    a créé l'expérience <a href="/r/{{activity.content_object.parent.slug}}">{{activity.content_object.parent.title}}</a>
+
+{% elif activity.level == 11 %}
+    {% if egocentric %}
+        {{activity.profile.user.first_name}}
+    {% else %}
+        <a href="/u/{{activity.profile.slug}}">{{activity.profile.get_full_name_or_username}}</a>
+    {% endif %}
+    a une expérience similaire à <a href="/r/{{activity.content_object.parent.slug}}">{{activity.content_object.parent.title}}</a>
+
+{% elif activity.level == 12 %}
+    {% if egocentric %}
+        {{activity.profile.user.first_name}}
+    {% else %}
+        <a href="/u/{{activity.profile.slug}}">{{activity.profile.get_full_name_or_username}}</a>
+    {% endif %}
+     s'est abonné à l'expérience <a href="/r/{{activity.content_object.parent.slug}}">{{activity.content_object.parent.title}}</a>
+
+{% elif activity.level == 13 %}
+    {% if egocentric %}
+        {{activity.profile.user.first_name}}
+    {% else %}
+        <a href="/u/{{activity.profile.slug}}">{{activity.profile.get_full_name_or_username}}</a>
+    {% endif %}
+     a commenté l'expérience <a href="/r/{{activity.content_object.parent.slug}}">{{activity.content_object.parent.title}}</a>
+
+{% elif activity.level == 14 %}
+    {% if egocentric %}
+        {{activity.profile.user.first_name}}
+    {% else %}
+        <a href="/u/{{activity.profile.slug}}">{{activity.profile.get_full_name_or_username}}</a>
+    {% endif %}
+     a noté le critère «» de l'expérience <a href="/r/{{activity.content_object.parent.slug}}">{{activity.content_object.parent.title}}</a>
+
+{% elif activity.level == 30 %}
+    {% if egocentric %}
+        {{activity.profile.user.first_name}}
+    {% else %}
+        <a href="/u/{{activity.profile.slug}}">{{activity.profile.get_full_name_or_username}}</a>
+    {% endif %}
+     a créé la discussion
+    {% if activity.content_object.parent %}
+        <a href="/discussions/{{activity.content_object.parent.get_root.slug}}">{{activity.content_object.parent.get_root.title}}</a>
+    {% else %}
+    {# its a bug but ... anyway #}
+        <a href="/discussions/{{activity.content_object.slug}}">{{activity.content_object.title}}</a>
+    {% endif %}
+
+{% elif activity.level == 31 %}
+    {% if egocentric %}
+        {{activity.profile.user.first_name}}
+    {% else %}
+        <a href="/u/{{activity.profile.slug}}">{{activity.profile.get_full_name_or_username}}</a>
+    {% endif %}
+    a répondu à la discussion <a href="/discussions/{{activity.content_object.slug}}">{{activity.content_object.title}}</a>
+
+{% elif activity.level == 32 %}
+    {% if egocentric %}
+        {{activity.profile.user.first_name}}
+    {% else %}
+        <a href="/u/{{activity.profile.slug}}">{{activity.profile.get_full_name_or_username}}</a>
+    {% endif %}
+     s'est abonnée à la discussion <a href="/discussions/{{activity.content_object.parent.slug}}">{{activity.content_object.parent.title}}</a>
+
+{% elif activity.level == 33 %}
+    {% if egocentric %}
+        {{activity.profile.user.first_name}}
+    {% else %}
+        <a href="/u/{{activity.profile.slug}}">{{activity.profile.get_full_name_or_username}}</a>
+    {% endif %}
+     aime la discussion <a href="/discussions/{{activity.content_object.parent.slug}}">{{activity.content_object.parent.title}}</a>
+
+{% elif activity.level == 34 %}
+    {% if egocentric %}
+        {{activity.profile.user.first_name}}
+    {% else %}
+        <a href="/u/{{activity.profile.slug}}">{{activity.profile.get_full_name_or_username}}</a>
+    {% endif %}
+     aime une réponse de la discussion <a href="/discussions/{{activity.content_object.parent.slug}}">{{activity.content_object.parent.title}}</a>
+
+{% elif activity.level == 40 %}
+    {% if egocentric %}
+        {{activity.profile.user.first_name}}
+    {% else %}
+        <a href="/u/{{activity.profile.get_full_name_or_username|slugify}}">{{activity.profile.get_full_name_or_username}}</a>
+    {% endif %}
+     est maintenant en contact avec <a href="/u/{{activity.content_object.slug}}">{{activity.content_object.parent.get_full_name_or_username}}</a>
+
+{% elif activity.level == 41 %}
+    {% if egocentric %}
+        {{activity.profile.user.first_name}}
+    {% else %}
+        <a href="/u/{{activity.profile.slug}}">{{activity.profile.get_full_name_or_username}}</a>
+    {% endif %}
+    a cité <a href="/u/({activity.mentionnedProfile.slug}}">{{activity.mentionnedProfile.full_name}}</a> dans la discussion <a href="/discussions/{{activity.content_object.parent.slug}}">{{activity.content_object.parent.title}}</a>
+{% elif activity.level == 50 %}
+    {% if egocentric %}
+        {{activity.profile.user.first_name}}
+    {% else %}
+        <a href="/u/{{activity.profile.slug}}">{{activity.profile.get_full_name_or_username}}</a>
+    {% endif %}
+    a taggé
+    {% if activity.content_object.content_type.model == 'makerscienceresource' %}
+        l'expérience <a href="/r/{{activity.content_object.content_object.parent.slug}}">{{activity.content_object.content_object.parent.title}}</a>
+    {% elif activity.content_object.content_type.model == 'makerscienceproject' %}
+        le projet <a href="/p/{{activity.content_object.content_object.parent.slug}}">{{activity.content_object.content_object.parent.title}}</a>
+    {% endif %}
+    avec le tag «<a href="/tag/{{activity.content_object.tag.slug}}">{{activity.content_object.tag.slug}}</a>»
+{% endif %}
+<span>{{activity.created_on|timesince}}</span>
