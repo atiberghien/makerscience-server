@@ -95,6 +95,7 @@ class MakerScienceProjectResource(MakerScienceCatalogResource):
     def dehydrate_author(self, bundle):
         try:
             authoring_links = ObjectProfileLink.objects.filter(content_type=ContentType.objects.get_for_model(MakerScienceProject),
+                                                                        isValidated=True,
                                                                           object_id=bundle.obj.id,
                                                                           level=0).order_by('created_on')
             profile = authoring_links[0].profile.makerscienceprofile_set.all()[0]
@@ -142,7 +143,8 @@ class MakerScienceResourceResource(MakerScienceCatalogResource):
 
     def dehydrate_author(self, bundle):
         try:
-            authoring_links = ObjectProfileLink.objects.filter(content_type=ContentType.objects.get_for_model(MakerScienceProject),
+            authoring_links = ObjectProfileLink.objects.filter(content_type=ContentType.objects.get_for_model(MakerScienceResource),
+                                                                isValidated=True,
                                                                           object_id=bundle.obj.id,
                                                                           level=10).order_by('created_on')
             profile = authoring_links[0].profile.makerscienceprofile_set.all()[0]
