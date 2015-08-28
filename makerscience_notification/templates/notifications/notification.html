@@ -53,13 +53,13 @@
 {% elif notif.verb == 'friendship' %}
     vous a ajouté dans ses contacts
 {% elif notif.verb == 'team_invited' %}
-    vous a invité à rejoindre l'équipe du projet <a href="/p/{{notif.target.parent.slug}}">{{notif.target.parent.title}}</a>
+    vous propose de rejoindre l'équipe du projet <a href="/p/{{notif.target.parent.slug}}">{{notif.target.parent.title}}</a>
 {% elif notif.verb == 'team_requested' %}
     a demandé à rejoindre l'équipe du projet <a href="/p/{{notif.target.parent.slug}}">{{notif.target.parent.title}}</a>
 {% elif notif.verb == 'help_proposed' %}
     se propose d'apporter son aide au projet <a href="/p/{{notif.target.parent.slug}}">{{notif.target.parent.title}}</a>
 {% elif notif.verb == 'help_invited' %}
-    pense que vous pouvez aider le projet <a href="/p/{{notif.target.parent.slug}}">{{notif.target.parent.title}}</a>
+    vous propose de rejoindre les personnes ressources du projet <a href="/p/{{notif.target.parent.slug}}">{{notif.target.parent.title}}</a>
 {% elif notif.verb == 'coauthor_invited' %}
     vous a invité à rejoindre les co-autheurs de l'expérience <a href="/r/{{notif.target.parent.slug}}">{{notif.target.parent.title}}</a>
 {% elif notif.verb == 'coauthor_requested' %}
