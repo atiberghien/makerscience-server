@@ -67,10 +67,10 @@ class MakerScienceProfileResource(ModelResource, SearchableMakerScienceResource)
 
         profile = MakerScienceProfile.objects.get(slug=kwargs["slug"])
 
-        activities = {}
+        activities = []
         favoriteTags = {}
         followedTags = []
-        for activity in ObjectProfileLink.objects.filter(profile=profile.parent, isValidated=True).order_by('created_on'):
+        for activity in ObjectProfileLink.objects.filter(profile=profile.parent, isValidated=True).order_by('-created_on'):
             obj = activity.content_object
             if activity.content_type.model == 'taggeditem':
                 if obj.tag.slug in favoriteTags:
@@ -80,10 +80,10 @@ class MakerScienceProfileResource(ModelResource, SearchableMakerScienceResource)
             elif activity.content_type == 'tag':
                 followedTags.push(obj)
             else:
-                activities[activity.id] = {
+                activities.append({
                     'description' : render_to_string('notifications/activity.html', {'activity': activity, '-egocentric':True}),
                     'created_on' : activity.created_on
-                }
+                })
 
         return self.create_response(request, {
             'objects': {'activities' : activities},
@@ -99,12 +99,12 @@ class MakerScienceProfileResource(ModelResource, SearchableMakerScienceResource)
         contact_ids = profile.parent.objectprofilelink_set.filter(level=40).values_list('object_id', flat=True) #Must return IDs of MakerScienceProfile
         contact_ids = MakerScienceProfile.objects.filter(id__in=[int(i) for i in contact_ids]).values_list('parent__id', flat=True)
 
-        activities = {}
+        activities = []
         for activity in ObjectProfileLink.objects.filter(profile__in=contact_ids, isValidated=True).order_by('-created_on'):
-            activities[activity.id] = {
+            activities.append({
                 'description' : render_to_string('notifications/activity.html', {'activity': activity, 'egocentric':False}),
                 'created_on' : activity.created_on
-            }
+            })
 
         return self.create_response(request, {
             'objects': activities,
