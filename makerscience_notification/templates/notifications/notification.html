@@ -66,4 +66,6 @@
     a demandé à devenir co-autheur de l'expérence <a href="/r/{{notif.target.parent.slug}}">{{notif.target.parent.title}}</a>
 {% elif notif.verb == 'similars_shared' %}
     a signalé avoir une expérience similaires à l'expérience <a href="/r/{{notif.target.parent.slug}}">{{notif.target.parent.title}}</a>
+{% elif notif.verb == 'annonced' %}
+    a ajouté une actu au projet <a href="/p/{{notif.target.project.slug}}">{{notif.target.project.title}}</a>
 {% endif %}

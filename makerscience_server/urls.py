@@ -13,7 +13,7 @@ from ucomment.api import CommentResource
 from megafon.api   import PostResource
 from starlet.api import VoteResource
 
-from projects.api import ProjectResource, ProjectProgressResource, ProjectProgressRangeResource
+from projects.api import ProjectResource, ProjectProgressResource, ProjectProgressRangeResource, ProjectNewsResource
 from projectsheet.api import ProjectSheetResource, ProjectSheetTemplateResource, ProjectSheetQuestionAnswerResource, ProjectSheetQuestionResource
 
 from makerscience_catalog.api import MakerScienceProjectResource, MakerScienceResourceResource, MakerScienceProjectTaggedItemResource, MakerScienceResourceTaggedItemResource
@@ -69,6 +69,7 @@ api.register(ProjectSheetResource())
 api.register(ProjectSheetTemplateResource())
 api.register(ProjectSheetQuestionAnswerResource())
 api.register(ProjectSheetQuestionResource())
+api.register(ProjectNewsResource())
 
 # Megafon
 api.register(PostResource())

@@ -38,6 +38,13 @@
         <a href="/u/{{activity.profile.slug}}">{{activity.profile.get_full_name_or_username}}</a>
     {% endif %}
     a noté le critère «{{activity.content_object.vote_type_label}}» du projet <a href="/p/{{activity.content_object.votedObj.parent.slug}}">{{activity.content_object.votedObj.parent.title}}</a>
+{% elif activity.level == 7 %}
+    {% if egocentric %}
+        {{activity.profile.user.first_name}}
+    {% else %}
+        <a href="/u/{{activity.profile.slug}}">{{activity.profile.get_full_name_or_username}}</a>
+    {% endif %}
+    a ajouté une actu au projet <a href="/p/{{activity.content_object.project.slug}}">{{activity.content_object.project.title}}</a>
 
 {% elif activity.level == 10 %}
     {% if egocentric %}
@@ -159,5 +166,5 @@
     {% else %}
         <a href="/u/{{activity.profile.slug}}">{{activity.profile.get_full_name_or_username}}</a>
     {% endif %}
-    suit le tag «<a href="/tag/{{activity.content_object.tag.slug}}">{{activity.content_object.tag.slug}}</a>»
+    suit le tag «<a href="/tag/{{activity.content_object.slug}}">{{activity.content_object.slug}}</a>»
 {% endif %}

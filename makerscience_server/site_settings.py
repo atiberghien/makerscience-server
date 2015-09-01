@@ -127,6 +127,7 @@ OBJECTPROFILELINK_CHOICES = (
     (4, 'A noté le projet'),
     (5, "A invité à rejoindre l'équipe du projet"),
     (6, "A invité à aider le projet"),
+    (7, "A ajouté une news"),
 
     (10, "Auteur de l'expérience"),
     (11, "A une expérience similiaire"),

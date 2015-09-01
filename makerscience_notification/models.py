@@ -97,8 +97,15 @@ def create_notification(sender, instance, created, **kwargs):
                         recipient=actor.parent.user,
                         target=activity.content_object,
                         verb=u'help_invited')
+        elif activity.level == 7: #someone added a news to a project
+            profile_ids = ObjectProfileLink.objects.filter(level__in=[0, 1, 2]).distinct('profile').values_list('profile', flat=True)
+            for profile in MakerScienceProfile.objects.filter(parent__id__in=profile_ids):
+                notify.send(actor,
+                            recipient=actor.parent.user,
+                            target=activity.content_object,
+                            verb=u'annonced')
         elif activity.level == 15: #someone has been invited to join  co-author
-            notify.send(MakerScienceProfile.objects.get(slug=activity.detail),
+            notify.send(MakerScienceProfile.objects.get(slug=activity.profile),
                         recipient=actor.parent.user,
                         target=activity.content_object,
                         verb=u'coauthor_invited')

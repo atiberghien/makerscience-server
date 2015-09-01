@@ -10,8 +10,9 @@ from dataserver.authentication import AnonymousApiKeyAuthentication
 from datetime import datetime
 from graffiti.api import TaggedItemResource
 from guardian.shortcuts import assign_perm, get_objects_for_user
-from projects.api import ProjectResource
+from projects.api import ProjectResource, ProjectNewsResource
 from projectsheet.api import ProjectSheetResource
+from projects.models  import Project, ProjectNews
 
 
 from taggit.models import Tag
@@ -47,9 +48,14 @@ class MakerScienceCatalogResource(ModelResource, SearchableMakerScienceResource)
 
         bundle = self.dehydrate_author(bundle)
 
-        bundle.data["linked_post"] =[]
-        for post_id in bundle.obj.makersciencepost_set.values_list('id', flat=True):
-            bundle.data["linked_post"].append(post_id)
+        bundle.data["linked_makersciencepost"] = [int(x) for x in bundle.obj.makersciencepost_set.values_list('id', flat=True)]
+
+        bundle.data["news"] = []
+        for news in bundle.obj.parent.projectnews_set.all().order_by('-timestamp'):
+            news_resource = ProjectNewsResource()
+            news_bundle = news_resource.build_bundle(obj=news, request=bundle.request)
+            news_bundle = news_resource.full_dehydrate(news_bundle)
+            bundle.data["news"].append(news_bundle)
 
         return bundle
 
@@ -64,7 +70,24 @@ class MakerScienceCatalogResource(ModelResource, SearchableMakerScienceResource)
         return [
             url(r"^(?P<resource_name>%s)/search%s$" % (self._meta.resource_name, trailing_slash()),
                 self.wrap_view('ms_search'), name="api_ms_search"),
+            url(r"^(?P<resource_name>%s)/publish/news%s$" % (self._meta.resource_name, trailing_slash()),
+                self.wrap_view('publish_news'), name="publish_news"),
         ]
+
+    def publish_news(self, request, **kwargs):
+        self.method_check(request, allowed=['post'])
+        self.throttle_check(request)
+        self.is_authenticated(request)
+
+        news_data = json.loads(request.body)
+        news_data["author"] = Profile.objects.get(id=news_data["author"])
+        news_data["project"] = Project.objects.get(id=news_data["project"])
+
+        news = ProjectNews.objects.create(**news_data)
+        news_resource = ProjectNewsResource()
+        bundle = news_resource.build_bundle(obj=news, request=request)
+        bundle = news_resource.full_dehydrate(bundle)
+        return self.create_response(request, bundle)
 
 class MakerScienceProjectAuthorization(MakerScienceAPIAuthorization):
     def __init__(self):
