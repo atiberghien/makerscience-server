@@ -19,10 +19,10 @@ class MakerScienceStaticContent (SingletonModel):
     about_cgu = models.TextField(null=True, blank=True)
 
     project_thematic_selection = models.ManyToManyField(Tag, related_name='project_selection',
-                                    limit_choices_to={'id__in' : MakerScienceProjectTaggedItem.objects.filter(tag_type='th').distinct('tag').values_list('tag', flat=True)},
+                                    limit_choices_to={'id__in' : MakerScienceProjectTaggedItem.objects.all().distinct('tag').values_list('tag', flat=True)},
                                     null=True, blank=True)
     resource_thematic_selection = models.ManyToManyField(Tag, related_name='resource_selection',
-                                    limit_choices_to={'id__in' : MakerScienceResourceTaggedItem.objects.filter(tag_type='th').distinct('tag').values_list('tag', flat=True)},
+                                    limit_choices_to={'id__in' : MakerScienceResourceTaggedItem.objects.all().distinct('tag').values_list('tag', flat=True)},
                                     null=True, blank=True)
 
 
