@@ -48,7 +48,7 @@ class MakerScienceProfileResource(ModelResource, SearchableMakerScienceResource)
     def dehydrate(self, bundle):
         bundle.data["full_name"] = "%s %s" % (bundle.obj.parent.user.first_name, bundle.obj.parent.user.last_name)
 
-        change_perm_code = "makerscience_catalog.change_makerscienceprofile"
+        change_perm_code = "makerscience_profile.change_makerscienceprofile"
         bundle.data["can_edit"] = bundle.request.user.has_perm(change_perm_code, bundle.obj)
 
         return bundle
