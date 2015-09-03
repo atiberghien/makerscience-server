@@ -100,7 +100,6 @@ MS_AUTHENTICATED_USERS_PERMISSIONS = (
     'makerscience_catalog.change_makerscienceresourcetaggeditem',
     'makerscience_catalog.delete_makerscienceresourcetaggeditem',
 
-    'makerscience_profile.change_makerscienceprofile',
     'makerscience_profile.add_makerscienceprofiletaggeditem',
     'makerscience_profile.change_makerscienceprofiletaggeditem',
     'makerscience_profile.delete_makerscienceprofiletaggeditem',

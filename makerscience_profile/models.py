@@ -10,6 +10,7 @@ from taggit.managers import TaggableManager
 from guardian.shortcuts import assign_perm
 from autoslug import AutoSlugField
 from django.conf import settings
+from guardian.shortcuts import assign_perm
 
 class MakerScienceProfileTaggedItem (TaggedItem):
     PROFILE_TAG_TYPE_CHOICES = (
@@ -44,6 +45,11 @@ def create_profile_on_user_signup(sender, created, instance, **kwargs):
     if created:
         location = Place.objects.create(address=PostalAddress.objects.create())
         MakerScienceProfile.objects.create(parent=instance, location=location)
+
+@receiver(post_save, sender=MakerScienceProfile)
+def assign_profile_permissions(sender, created, instance, **kwargs):
+    change_perm_code = 'makerscience_profile.change_makerscienceprofile'
+    assign_perm('makerscience_profile.change_makerscienceprofile', user_or_group=instance.parent.user, obj=instance)
 
 
 @receiver(post_save, sender=User)
