@@ -22,6 +22,7 @@ from makerscience_admin.api import SearchableMakerScienceResource
 from .models import MakerScienceProfile, MakerScienceProfileTaggedItem
 
 import json
+import os
 
 class MakerScienceProfileResource(ModelResource, SearchableMakerScienceResource):
     parent = fields.OneToOneField(ProfileResource, 'parent', full=True)
@@ -60,9 +61,33 @@ class MakerScienceProfileResource(ModelResource, SearchableMakerScienceResource)
     def prepend_urls(self):
         return [
             url(r"^(?P<resource_name>%s)/search%s$" % (self._meta.resource_name, trailing_slash()), self.wrap_view('ms_search'), name="api_ms_search"),
+            url(r"^(?P<resource_name>%s)/(?P<slug>[\w-]+)/avatar/upload%s$" % (self._meta.resource_name, trailing_slash()), self.wrap_view('avatar_upload'), name="api_avatar_upload"),
             url(r"^(?P<resource_name>%s)/(?P<slug>[\w-]+)/activities%s$" % (self._meta.resource_name, trailing_slash()), self.wrap_view('get_profile_activities'), name="api_profile_activities"),
             url(r"^(?P<resource_name>%s)/(?P<slug>[\w-]+)/contacts/activities%s$" % (self._meta.resource_name, trailing_slash()), self.wrap_view('get_contacts_activities'), name="api_contacts_activities"),
         ]
+
+    def avatar_upload(self, request, **kwargs):
+        self.method_check(request, allowed=['post'])
+        self.throttle_check(request)
+        self.is_authenticated(request)
+
+        profile = MakerScienceProfile.objects.get(slug=kwargs["slug"])
+
+        if profile.parent.user != request.user:
+            return
+
+        file = request.FILES['file']
+
+        old_file_path = profile.parent.mugshot.path
+        profile.parent.mugshot = file
+        profile.parent.save()
+
+        if os.path.isfile(old_file_path):
+            os.remove(old_file_path)
+
+        return self.create_response(request, {
+            'avatar': profile.parent.mugshot.url,
+        })
 
     def get_profile_activities(self, request, **kwargs):
         self.method_check(request, allowed=['get'])

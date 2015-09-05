@@ -145,6 +145,7 @@ INSTALLED_APPS = (
 
     'sekizai',
 
+    'easy_thumbnails',
     'guardian',
     'userena',
 

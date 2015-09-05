@@ -178,3 +178,12 @@ VOTE_TYPE_CHOICES = (
     ("makerscienceresource_vote_2", "Récomfortant"),
     ("makerscienceresource_vote_3", "Utile"),
 )
+
+CACHES = {
+    'default': {
+        'BACKEND': 'django.core.cache.backends.filebased.FileBasedCache',
+        'LOCATION': '/tmp/django_cache',
+    }
+}
+
+USERENA_MUGSHOT_SIZE = 150
