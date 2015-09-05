@@ -85,7 +85,7 @@ class MakerScienceProfileResource(ModelResource, SearchableMakerScienceResource)
                 followedTags.push(obj)
             else:
                 activities.append({
-                    'description' : render_to_string('notifications/activity.html', {'activity': activity, '-egocentric':True}),
+                    'description' : render_to_string('notifications/activity.html', {'activity': activity, 'egocentric':True}),
                     'created_on' : activity.created_on
                 })
 
