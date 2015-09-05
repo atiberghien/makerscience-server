@@ -28,6 +28,7 @@ from makerscience_server.authorizations  import  MakerScienceAPIAuthorization
 from accounts.models import ObjectProfileLink, Profile
 from projectsheet.models import ProjectSheet
 from starlet.models import Vote
+from bucket.api import BucketFileResource
 
 class MakerScienceCatalogResource(ModelResource, SearchableMakerScienceResource):
     parent = fields.ToOneField(ProjectResource, 'parent', full=True)
@@ -35,8 +36,27 @@ class MakerScienceCatalogResource(ModelResource, SearchableMakerScienceResource)
     linked_resources = fields.ToManyField('makerscience_catalog.api.MakerScienceResourceResource', 'linked_resources', full=True,null=True)
 
     def dehydrate_author(self, bundle):
-        """Author is not a resource field. It must be add in bundle data. The entry must be called 'by' """
-        raise Exception("Must be implemented by sub class")
+        try:
+            authoring_links = ObjectProfileLink.objects.filter(content_type=ContentType.objects.get_for_model(self._meta.object_class),
+                                                                        isValidated=True,
+                                                                          object_id=bundle.obj.id,
+                                                                          level=self._meta.object_profile_link_level).order_by('created_on')
+            profile = authoring_links[0].profile.makerscienceprofile_set.all()[0]
+
+            bundle.data["by"] = {
+                'profile_slug' : profile.slug,
+                'profile_id' : profile.id,
+                'profile_email' : profile.parent.user.email,
+                'full_name' : profile.parent.get_full_name_or_username()
+            }
+        except :
+            bundle.data["by"] = {
+                'profile_slug' : "",
+                'profile_id' : "",
+                'profile_email' : "",
+                'full_name' : ""
+            }
+        return bundle
 
     def dehydrate(self, bundle):
 
@@ -98,11 +118,50 @@ class MakerScienceProjectAuthorization(MakerScienceAPIAuthorization):
             delete_permission_code="makerscience_catalog.delete_makerscienceproject"
         )
 
+class MakerScienceProjectResourceLight(MakerScienceCatalogResource):
+    slug = fields.CharField('parent__slug')
+    title = fields.CharField('parent__title')
+    baseline = fields.CharField('parent__title', null=True)
+    cover = fields.CharField('parent__projectsheet__cover__thumbnail_url', null=True)
+
+    class Meta:
+        object_class = MakerScienceProject
+        object_profile_link_level = 0
+        queryset = MakerScienceProject.objects.all()
+        allowed_methods = ['get']
+        resource_name = 'makerscience/projectlight'
+        always_return_data = True
+        excludes = ["parent", "base_projectsheet", "question_answers", "linked_resources"]
+        limit = 6
+
+    def dehydrate(self, bundle):
+        return self.dehydrate_author(bundle)
+
+class MakerScienceResourceResourceLight(MakerScienceCatalogResource):
+    slug = fields.CharField('parent__slug')
+    title = fields.CharField('parent__title')
+    baseline = fields.CharField('parent__title', null=True)
+    cover = fields.CharField('parent__projectsheet__cover__thumbnail_url', null=True)
+
+    class Meta:
+        object_class = MakerScienceResource
+        object_profile_link_level = 10
+        queryset = MakerScienceResource.objects.all()
+        allowed_methods = ['get']
+        resource_name = 'makerscience/resourcelight'
+        always_return_data = True
+        excludes = ["parent", "base_projectsheet", "question_answers", "linked_resources"]
+        limit = 6
+
+    def dehydrate(self, bundle):
+        return self.dehydrate_author(bundle)
+
 class MakerScienceProjectResource(MakerScienceCatalogResource):
     tags = fields.ToManyField('makerscience_catalog.api.MakerScienceProjectTaggedItemResource', 'tagged_items', full=True, null=True, readonly=True)
 
     class Meta:
         object_class = MakerScienceProject
+        object_profile_link_level = 0
         queryset = MakerScienceProject.objects.all()
         allowed_methods = ['get', 'post', 'put', 'patch']
         resource_name = 'makerscience/project'
@@ -114,29 +173,6 @@ class MakerScienceProjectResource(MakerScienceCatalogResource):
             'featured' : ['exact'],
         }
         limit = 6
-
-    def dehydrate_author(self, bundle):
-        try:
-            authoring_links = ObjectProfileLink.objects.filter(content_type=ContentType.objects.get_for_model(MakerScienceProject),
-                                                                        isValidated=True,
-                                                                          object_id=bundle.obj.id,
-                                                                          level=0).order_by('created_on')
-            profile = authoring_links[0].profile.makerscienceprofile_set.all()[0]
-
-            bundle.data["by"] = {
-                'profile_slug' : profile.slug,
-                'profile_id' : profile.id,
-                'profile_email' : profile.parent.user.email,
-                'full_name' : profile.parent.get_full_name_or_username()
-            }
-        except :
-            bundle.data["by"] = {
-                'profile_slug' : "",
-                'profile_id' : "",
-                'profile_email' : "",
-                'full_name' : ""
-            }
-        return bundle
 
 class MakerScienceResourceAuthorization(MakerScienceAPIAuthorization):
     def __init__(self):
@@ -152,6 +188,7 @@ class MakerScienceResourceResource(MakerScienceCatalogResource):
 
     class Meta:
         object_class = MakerScienceResource
+        object_profile_link_level = 10
         queryset = MakerScienceResource.objects.all()
         allowed_methods = ['get', 'post', 'put', 'patch']
         resource_name = 'makerscience/resource'
@@ -163,29 +200,6 @@ class MakerScienceResourceResource(MakerScienceCatalogResource):
             'featured' : ['exact'],
         }
         limit = 6
-
-    def dehydrate_author(self, bundle):
-        try:
-            authoring_links = ObjectProfileLink.objects.filter(content_type=ContentType.objects.get_for_model(MakerScienceResource),
-                                                                isValidated=True,
-                                                                          object_id=bundle.obj.id,
-                                                                          level=10).order_by('created_on')
-            profile = authoring_links[0].profile.makerscienceprofile_set.all()[0]
-
-            bundle.data["by"] = {
-                'profile_slug' : profile.slug,
-                'profile_id' : profile.id,
-                'profile_email' : profile.parent.user.email,
-                'full_name' : profile.parent.get_full_name_or_username()
-            }
-        except :
-            bundle.data["by"] = {
-                'profile_slug' : "",
-                'profile_id' : "",
-                'profile_email' : "",
-                'full_name' : ""
-            }
-        return bundle
 
 class MakerScienceProjectTaggedItemResource(TaggedItemResource):
 

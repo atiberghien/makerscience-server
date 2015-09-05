@@ -16,7 +16,7 @@ from starlet.api import VoteResource
 from projects.api import ProjectResource, ProjectProgressResource, ProjectProgressRangeResource, ProjectNewsResource
 from projectsheet.api import ProjectSheetResource, ProjectSheetTemplateResource, ProjectSheetQuestionAnswerResource, ProjectSheetQuestionResource
 
-from makerscience_catalog.api import MakerScienceProjectResource, MakerScienceResourceResource, MakerScienceProjectTaggedItemResource, MakerScienceResourceTaggedItemResource
+from makerscience_catalog.api import MakerScienceProjectResource, MakerScienceResourceResource, MakerScienceProjectTaggedItemResource, MakerScienceResourceTaggedItemResource, MakerScienceProjectResourceLight, MakerScienceResourceResourceLight
 from makerscience_profile.api import MakerScienceProfileResource, MakerScienceProfileTaggedItemResource
 from makerscience_forum.api import MakerSciencePostResource
 from makerscience_admin.api import MakerScienceStaticContentResource
@@ -76,6 +76,8 @@ api.register(PostResource())
 
 #MakerScience Catalog
 api.register(MakerScienceProjectResource())
+api.register(MakerScienceProjectResourceLight())
+api.register(MakerScienceResourceResourceLight())
 api.register(MakerScienceResourceResource())
 api.register(MakerScienceProjectTaggedItemResource())
 api.register(MakerScienceResourceTaggedItemResource())

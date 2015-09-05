@@ -13,7 +13,7 @@ from dataserver.authentication import AnonymousApiKeyAuthentication
 from megafon.api  import PostResource
 
 from makerscience_admin.api import SearchableMakerScienceResource
-from makerscience_catalog.api import MakerScienceProjectResource, MakerScienceResourceResource
+from makerscience_catalog.api import MakerScienceProjectResourceLight, MakerScienceResourceResourceLight
 from makerscience_server.authorizations import MakerScienceAPIAuthorization
 from .models import MakerSciencePost
 
@@ -30,8 +30,8 @@ class MakerSciencePostAuthorization(MakerScienceAPIAuthorization):
 class MakerSciencePostResource(ModelResource, SearchableMakerScienceResource):
     parent = fields.ToOneField(PostResource, 'parent', full=True)
 
-    linked_projects = fields.ToManyField(MakerScienceProjectResource, 'linked_projects', full=True,null=True)
-    linked_resources = fields.ToManyField(MakerScienceResourceResource, 'linked_resources', full=True,null=True)
+    linked_projects = fields.ToManyField(MakerScienceProjectResourceLight, 'linked_projects', full=True,null=True)
+    linked_resources = fields.ToManyField(MakerScienceResourceResourceLight, 'linked_resources', full=True,null=True)
 
     class Meta:
         queryset = MakerSciencePost.objects.all()
