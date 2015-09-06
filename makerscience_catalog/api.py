@@ -33,6 +33,7 @@ from bucket.api import BucketFileResource
 class MakerScienceCatalogResource(ModelResource, SearchableMakerScienceResource):
     parent = fields.ToOneField(ProjectResource, 'parent', full=True)
     base_projectsheet = fields.ToOneField(ProjectSheetResource, 'parent__projectsheet', null=True, full=True)
+    #CAN NOT BE a "LIGHT" resource BECAUSE "LIGHT" model doesn't exist
     linked_resources = fields.ToManyField('makerscience_catalog.api.MakerScienceResourceResource', 'linked_resources', full=True,null=True)
 
     def dehydrate_author(self, bundle):
