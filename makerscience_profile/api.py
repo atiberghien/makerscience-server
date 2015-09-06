@@ -26,6 +26,7 @@ import os
 
 
 class MakerScienceProfileResourceLight(ModelResource, SearchableMakerScienceResource):
+    parent_id = fields.IntegerField('parent__id')
     first_name = fields.CharField('parent__user__first_name')
     last_name = fields.CharField('parent__user__last_name')
     address_locality = fields.CharField('location__address__address_locality', null=True)
@@ -43,7 +44,9 @@ class MakerScienceProfileResourceLight(ModelResource, SearchableMakerScienceReso
         excludes=["bio", "facebook", "linkedin", "twitter", "website"]
         filtering = {
             'id' : ['exact',],
+            'parent_id' : ['exact',],
             'slug' : ['exact',]
+
         }
         limit = 6
 
