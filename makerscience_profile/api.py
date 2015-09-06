@@ -24,6 +24,35 @@ from .models import MakerScienceProfile, MakerScienceProfileTaggedItem
 import json
 import os
 
+
+class MakerScienceProfileResourceLight(ModelResource, SearchableMakerScienceResource):
+    first_name = fields.CharField('parent__user__first_name')
+    last_name = fields.CharField('parent__user__last_name')
+    address_locality = fields.CharField('location__address__address_locality', null=True)
+    avatar = fields.FileField("parent__mugshot", null=True, blank=True)
+    date_joined = fields.DateField("parent__user__date_joined")
+
+    class Meta:
+        queryset = MakerScienceProfile.objects.all()
+        allowed_methods = ['get']
+        resource_name = 'makerscience/profilelight'
+        authentication = AnonymousApiKeyAuthentication()
+        authorization = DjangoAuthorization()
+        always_return_data = True
+        detail_uri_name = 'slug'
+        excludes=["bio", "facebook", "linkedin", "twitter", "website"]
+        filtering = {
+            'id' : ['exact',],
+            'slug' : ['exact',]
+        }
+        limit = 6
+
+    def prepend_urls(self):
+        return [
+            url(r"^(?P<resource_name>%s)/search%s$" % (self._meta.resource_name, trailing_slash()), self.wrap_view('ms_search'), name="api_ms_search"),
+        ]
+
+
 class MakerScienceProfileResource(ModelResource, SearchableMakerScienceResource):
     parent = fields.OneToOneField(ProfileResource, 'parent', full=True)
     location = fields.ToOneField(PlaceResource, 'location', null=True, blank=True, full=True)

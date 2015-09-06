@@ -17,7 +17,7 @@ from projects.api import ProjectResource, ProjectProgressResource, ProjectProgre
 from projectsheet.api import ProjectSheetResource, ProjectSheetTemplateResource, ProjectSheetQuestionAnswerResource, ProjectSheetQuestionResource
 
 from makerscience_catalog.api import MakerScienceProjectResource, MakerScienceResourceResource, MakerScienceProjectTaggedItemResource, MakerScienceResourceTaggedItemResource, MakerScienceProjectResourceLight, MakerScienceResourceResourceLight
-from makerscience_profile.api import MakerScienceProfileResource, MakerScienceProfileTaggedItemResource
+from makerscience_profile.api import MakerScienceProfileResource, MakerScienceProfileResourceLight, MakerScienceProfileTaggedItemResource
 from makerscience_forum.api import MakerSciencePostResource
 from makerscience_admin.api import MakerScienceStaticContentResource
 from makerscience_notification.api import NotificationResource
@@ -83,6 +83,7 @@ api.register(MakerScienceProjectTaggedItemResource())
 api.register(MakerScienceResourceTaggedItemResource())
 #MakerScience Profile
 api.register(MakerScienceProfileResource())
+api.register(MakerScienceProfileResourceLight())
 api.register(MakerScienceProfileTaggedItemResource())
 #Makerscience Forum
 api.register(MakerSciencePostResource())
