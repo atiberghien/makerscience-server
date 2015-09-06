@@ -120,6 +120,7 @@ class MakerScienceProjectAuthorization(MakerScienceAPIAuthorization):
         )
 
 class MakerScienceProjectResourceLight(MakerScienceCatalogResource):
+    parent_id = fields.IntegerField('parent__id')
     slug = fields.CharField('parent__slug')
     title = fields.CharField('parent__title')
     baseline = fields.CharField('parent__title', null=True)
@@ -133,12 +134,16 @@ class MakerScienceProjectResourceLight(MakerScienceCatalogResource):
         resource_name = 'makerscience/projectlight'
         always_return_data = True
         excludes = ["parent", "base_projectsheet", "question_answers", "linked_resources"]
-        limit = 6
+        filtering = {
+            'parent_id' : ['exact'],
+            'id' : ['exact'],
+        }
 
     def dehydrate(self, bundle):
         return self.dehydrate_author(bundle)
 
 class MakerScienceResourceResourceLight(MakerScienceCatalogResource):
+    parent_id = fields.IntegerField('parent__id')
     slug = fields.CharField('parent__slug')
     title = fields.CharField('parent__title')
     baseline = fields.CharField('parent__title', null=True)
@@ -152,7 +157,10 @@ class MakerScienceResourceResourceLight(MakerScienceCatalogResource):
         resource_name = 'makerscience/resourcelight'
         always_return_data = True
         excludes = ["parent", "base_projectsheet", "question_answers", "linked_resources"]
-        limit = 6
+        filtering = {
+            'parent_id' : ['exact'],
+            'id' : ['exact'],
+        }
 
     def dehydrate(self, bundle):
         return self.dehydrate_author(bundle)
