@@ -106,7 +106,7 @@
     {% else %}
         <a href="/u/{{activity.profile.slug}}">{{activity.profile.get_full_name_or_username}}</a>
     {% endif %}
-    a répondu à la discussion <a href="/discussions/{{activity.content_object.slug}}">{{activity.content_object.title}}</a>
+    a répondu à la discussion <a href="/discussions/{{activity.content_object.get_root.slug}}">{{activity.content_object.get_root.title}}</a>
 
 {% elif activity.level == 32 %}
     {% if egocentric %}
@@ -114,7 +114,7 @@
     {% else %}
         <a href="/u/{{activity.profile.slug}}">{{activity.profile.get_full_name_or_username}}</a>
     {% endif %}
-     s'est abonnée à la discussion <a href="/discussions/{{activity.content_object.parent.slug}}">{{activity.content_object.parent.title}}</a>
+     s'est abonné à la discussion <a href="/discussions/{{activity.content_object.slug}}">{{activity.content_object.title}}</a>
 
 {% elif activity.level == 33 %}
     {% if egocentric %}
@@ -122,7 +122,7 @@
     {% else %}
         <a href="/u/{{activity.profile.slug}}">{{activity.profile.get_full_name_or_username}}</a>
     {% endif %}
-     aime la discussion <a href="/discussions/{{activity.content_object.parent.slug}}">{{activity.content_object.parent.title}}</a>
+     aime la discussion <a href="/discussions/{{activity.content_object.slug}}">{{activity.content_object.title}}</a>
 
 {% elif activity.level == 34 %}
     {% if egocentric %}
@@ -130,7 +130,7 @@
     {% else %}
         <a href="/u/{{activity.profile.slug}}">{{activity.profile.get_full_name_or_username}}</a>
     {% endif %}
-     aime une réponse de la discussion <a href="/discussions/{{activity.content_object.parent.slug}}">{{activity.content_object.parent.title}}</a>
+     aime une réponse de la discussion <a href="/discussions/{{activity.content_object.slug}}">{{activity.content_object.title}}</a>
 
 {% elif activity.level == 40 %}
     {% if egocentric %}
@@ -146,7 +146,7 @@
     {% else %}
         <a href="/u/{{activity.profile.slug}}">{{activity.profile.get_full_name_or_username}}</a>
     {% endif %}
-    a cité <a href="/u/{{activity.detail}}">{{activity.detail}}</a> dans la discussion <a href="/discussions/{{activity.content_object.parent.slug}}">{{activity.content_object.parent.title}}</a>
+    a cité <a href="/u/{{activity.detail}}">{{activity.detail}}</a> dans la discussion <a href="/discussions/{{activity.content_object.slug}}">{{activity.content_object.title}}</a>
 {% elif activity.level == 50 %}
     {% if egocentric %}
         {{activity.profile.user.first_name}}
