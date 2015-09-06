@@ -16,6 +16,7 @@ from makerscience_admin.api import SearchableMakerScienceResource
 from makerscience_catalog.api import MakerScienceProjectResourceLight, MakerScienceResourceResourceLight
 from makerscience_server.authorizations import MakerScienceAPIAuthorization
 from .models import MakerSciencePost
+from graffiti.api import TaggedItemResource
 
 
 class MakerSciencePostAuthorization(MakerScienceAPIAuthorization):
@@ -26,6 +27,33 @@ class MakerSciencePostAuthorization(MakerScienceAPIAuthorization):
             update_permission_code="makerscience_forum.change_makersciencepost",
             delete_permission_code="makerscience_forum.delete_makersciencepost"
         )
+
+class MakerSciencePostResourceLight(ModelResource, SearchableMakerScienceResource):
+    slug = fields.CharField('parent__slug')
+    parent_id = fields.IntegerField('parent__id')
+    updated_on = fields.DateField('parent__updated_on')
+    title = fields.CharField('parent__title')
+    answers_count = fields.IntegerField('parent__answers_count')
+    tags = fields.ToManyField(TaggedItemResource, 'parent__tagged_items', full=True, null=True)
+
+    class Meta:
+        queryset = MakerSciencePost.objects.all()
+        allowed_methods = ['get']
+        resource_name = 'makerscience/postlight'
+        authentication = AnonymousApiKeyAuthentication()
+        authorization = MakerSciencePostAuthorization()
+        always_return_data = True
+        filtering = {
+            'post_type' : ['exact'],
+            'parent_id' : ['exact'],
+            'id' : ['exact'],
+        }
+
+    def prepend_urls(self):
+        return [
+           url(r"^(?P<resource_name>%s)/search%s$" % (self._meta.resource_name, trailing_slash()), self.wrap_view('ms_search'), name="api_ms_search"),
+        ]
+
 
 class MakerSciencePostResource(ModelResource, SearchableMakerScienceResource):
     parent = fields.ToOneField(PostResource, 'parent', full=True)

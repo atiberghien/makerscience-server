@@ -18,7 +18,7 @@ from projectsheet.api import ProjectSheetResource, ProjectSheetTemplateResource,
 
 from makerscience_catalog.api import MakerScienceProjectResource, MakerScienceResourceResource, MakerScienceProjectTaggedItemResource, MakerScienceResourceTaggedItemResource, MakerScienceProjectResourceLight, MakerScienceResourceResourceLight
 from makerscience_profile.api import MakerScienceProfileResource, MakerScienceProfileResourceLight, MakerScienceProfileTaggedItemResource
-from makerscience_forum.api import MakerSciencePostResource
+from makerscience_forum.api import MakerSciencePostResource, MakerSciencePostResourceLight
 from makerscience_admin.api import MakerScienceStaticContentResource
 from makerscience_notification.api import NotificationResource
 import bucket
@@ -87,7 +87,7 @@ api.register(MakerScienceProfileResourceLight())
 api.register(MakerScienceProfileTaggedItemResource())
 #Makerscience Forum
 api.register(MakerSciencePostResource())
-
+api.register(MakerSciencePostResourceLight())
 #MakerScience Admin
 api.register(MakerScienceStaticContentResource())
 
