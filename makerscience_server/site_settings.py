@@ -153,6 +153,8 @@ OBJECTPROFILELINK_CHOICES = (
 GOOGLE_CLIENT_ID = "255067193649-5s7fan8nsch2cqft32fka9n36jcd37qg.apps.googleusercontent.com"
 GOOGLE_CLIENT_SECRET = "cBbOGD00G7vJKtZRVRbgZjp1"
 
+GOOGLE_RECAPTCHA_SECRET = "6LfrjQwTAAAAAETHPjmsU1IpkyZLBH-nkSyFMNup"
+
 FACEBOOK_CLIENT_ID = "724284684343376"
 FACEBOOK_CLIENT_SECRET = "c52b4201756a5da6f6808a5c9e1f5a98"
 
@@ -187,3 +189,11 @@ CACHES = {
 }
 
 USERENA_MUGSHOT_SIZE = 150
+
+EMAIL_HOST = 'localhost'
+EMAIL_PORT = 587
+# EMAIL_HOST_USER = 'someone@someorg.com'
+# EMAIL_HOST_PASSWORD = 'thepassword'
+
+EMAIL_BACKEND = 'django.core.mail.backends.console.EmailBackend'
+# EMAIL_BACKEND = 'django.core.mail.backends.smtp.EmailBackend'
