@@ -105,16 +105,16 @@ class MakerScienceProfileResource(ModelResource, SearchableMakerScienceResource)
 
         profile = MakerScienceProfile.objects.get(slug=kwargs["slug"])
 
-        if profile.parent.user != request.user:
-            return
-
         file = request.FILES['file']
 
-        old_file_path = profile.parent.mugshot.path
+        old_file_path = None
+        if profile.parent.mugshot :
+            old_file_path = profile.parent.mugshot.path
+
         profile.parent.mugshot = file
         profile.parent.save()
 
-        if os.path.isfile(old_file_path):
+        if old_file_path and os.path.isfile(old_file_path):
             os.remove(old_file_path)
 
         return self.create_response(request, {
