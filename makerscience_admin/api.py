@@ -35,9 +35,12 @@ class SearchableMakerScienceResource(object):
         objects = []
         for result in paginator.page()['objects']:
             if result:
-                bundle = self.build_bundle(obj=result.object, request=request)
-                bundle = self.full_dehydrate(bundle)
-                objects.append(bundle)
+                try:
+                    bundle = self.build_bundle(obj=result.object, request=request)
+                    bundle = self.full_dehydrate(bundle)
+                    objects.append(bundle)
+                except:
+                    pass
         return {
             'meta': paginator.page()['meta'],
             'objects': objects,
