@@ -116,7 +116,7 @@ class SearchableMakerScienceResource(object):
             del get_params["q"]
         if selected_facets:
             del get_params["facet"]
-        if ordering:
+        if ordering or ordering == '':
             del get_params["ordering"]
 
         filtering = {}
