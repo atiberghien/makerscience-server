@@ -1,4 +1,3 @@
-{{ object.parent.username }}
 {{ object.parent.user.last_name }}
 {{ object.parent.user.first_name }}
 {{ object.bio }}
