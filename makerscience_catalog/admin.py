@@ -4,10 +4,12 @@ from django.contrib.admin.options import ModelAdmin
 from guardian.admin import GuardedModelAdmin
 
 class MakerScienceProjectAdmin(GuardedModelAdmin):
-    pass
+    list_display = ('parent', 'featured')
+    list_editable = ('featured', )
 
 class MakerScienceResourceAdmin(GuardedModelAdmin):
-    pass
-    
+    list_display = ('parent', 'featured')
+    list_editable = ('featured', )
+
 admin.site.register(MakerScienceProject, MakerScienceProjectAdmin)
 admin.site.register(MakerScienceResource, MakerScienceResourceAdmin)
