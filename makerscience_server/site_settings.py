@@ -13,7 +13,7 @@ ADMINS = (
 
 # Hosts/domain names that are valid for this site; required if DEBUG is False
 # See https://docs.djangoproject.com/en/1.5/ref/settings/#allowed-hosts
-ALLOWED_HOSTS = ['*', ]
+ALLOWED_HOSTS = ['data.makerscience.fr', ]
 
 DATABASES = {
     'default':
@@ -150,24 +150,19 @@ OBJECTPROFILELINK_CHOICES = (
 )
 
 
-GOOGLE_CLIENT_ID = "255067193649-5s7fan8nsch2cqft32fka9n36jcd37qg.apps.googleusercontent.com"
-GOOGLE_CLIENT_SECRET = "cBbOGD00G7vJKtZRVRbgZjp1"
+GOOGLE_CLIENT_ID = "CHANGE_ME"
+GOOGLE_CLIENT_SECRET = "CHANGE_ME"
 
-GOOGLE_RECAPTCHA_SECRET = "6LfrjQwTAAAAAETHPjmsU1IpkyZLBH-nkSyFMNup"
+GOOGLE_RECAPTCHA_SECRET = "CHANGE_ME"
 
-FACEBOOK_CLIENT_ID = "724284684343376"
-FACEBOOK_CLIENT_SECRET = "c52b4201756a5da6f6808a5c9e1f5a98"
+FACEBOOK_CLIENT_ID = "CHANGE_ME"
+FACEBOOK_CLIENT_SECRET = "CHANGE_ME"
 
-TWITTER_CLIENT_ID = "RXz5fy5X4M1LewAeNliME2gbM"
-TWITTER_CLIENT_SECRET = "nCz6RzDXYJAfxDw5ZNJx9ZMw1dg5RK5jDt3fr9imLqtLNtXSjx"
+TWITTER_CLIENT_ID = "CHANGE_ME"
+TWITTER_CLIENT_SECRET = "CHANGE_ME"
 
 CORS_ORIGIN_WHITELIST = (
-        'localhost:8001',
-        '127.0.0.1:8001',
-        '127.0.0.1:8002',
-        'https://api.twitter.com',
-        'http://localhost:8001',
-        'makerscience.nonetype.net'
+        'makerscience.fr'
 )
 
 MEDIA_URL = '/media/'
