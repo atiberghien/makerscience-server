@@ -90,9 +90,7 @@ AUTHENTICATED_USERS_PERMISSIONS = (
 
 MS_AUTHENTICATED_USERS_PERMISSIONS = (
     'makerscience_catalog.add_makerscienceproject',
-    'makerscience_catalog.view_makerscienceproject',
     'makerscience_catalog.add_makerscienceresource',
-    'makerscience_catalog.view_makerscienceresource',
     'makerscience_catalog.add_makerscienceprojecttaggeditem',
     'makerscience_catalog.change_makerscienceprojecttaggeditem',
     'makerscience_catalog.delete_makerscienceprojecttaggeditem',
