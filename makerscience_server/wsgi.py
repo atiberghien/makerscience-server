@@ -2,11 +2,11 @@ import os
 import sys
 import site
 
-ENV_PATH = "TO_COMPLETE"
-APP_NAME = "makerscience_server"
+ENV_PATH = "/home/www/makerscience.fr/server"
+APP_NAME = "makerscience-server"
 MAIN_MODULE = "makerscience_server"
 
-site.addsitedir('%s/lib/python2.6/site-packages' % ENV_PATH)
+site.addsitedir('%s/lib/python2.7/site-packages' % ENV_PATH)
 
 os.environ.setdefault("DJANGO_SETTINGS_MODULE", "%s.settings" % MAIN_MODULE)
 
