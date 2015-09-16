@@ -163,6 +163,7 @@ TWITTER_CLIENT_SECRET = "CHANGE_ME"
 
 CORS_ORIGIN_WHITELIST = (
         'makerscience.fr'
+	'www.makerscience.fr'
 )
 
 MEDIA_URL = '/media/'
