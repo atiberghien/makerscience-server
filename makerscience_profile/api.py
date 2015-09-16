@@ -19,6 +19,7 @@ from scout.api import PlaceResource
 from graffiti.api import TaggedItemResource
 
 from makerscience_admin.api import SearchableMakerScienceResource
+from makerscience_server.authorizations  import  MakerScienceAPIAuthorization
 from .models import MakerScienceProfile, MakerScienceProfileTaggedItem
 
 import json
@@ -56,6 +57,15 @@ class MakerScienceProfileResourceLight(ModelResource, SearchableMakerScienceReso
         ]
 
 
+class MakerScienceProfileAuthorization(MakerScienceAPIAuthorization):
+    def __init__(self):
+        super(MakerScienceProfileAuthorization, self).__init__(
+            create_permission_code="makerscience_profile.add_makerscienceprofile",
+            view_permission_code="makerscience_profile.view_makerscienceprofile",
+            update_permission_code="makerscience_profile.change_makerscienceprofile",
+            delete_permission_code="makerscience_profile.delete_makerscienceprofile"
+        )
+
 class MakerScienceProfileResource(ModelResource, SearchableMakerScienceResource):
     parent = fields.OneToOneField(ProfileResource, 'parent', full=True)
     location = fields.ToOneField(PlaceResource, 'location', null=True, blank=True, full=True)
@@ -67,7 +77,7 @@ class MakerScienceProfileResource(ModelResource, SearchableMakerScienceResource)
         allowed_methods = ['get', 'post', 'put', 'patch', 'delete']
         resource_name = 'makerscience/profile'
         authentication = AnonymousApiKeyAuthentication()
-        authorization = DjangoAuthorization()
+        authorization = MakerScienceProfileAuthorization()
         always_return_data = True
         detail_uri_name = 'slug'
         filtering = {
