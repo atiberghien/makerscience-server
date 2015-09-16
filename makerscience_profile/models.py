@@ -69,6 +69,5 @@ def allow_user_to_create_MS_resources_and_project(sender, instance, created, *ar
             assign_perm(permission, group)
         except:
             print permission
-            return
     # assign user to group
     instance.groups.add(group)
