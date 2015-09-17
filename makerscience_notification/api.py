@@ -13,6 +13,8 @@ from notifications.views import live_unread_notification_count, live_unread_noti
 from accounts.api import UserResource
 from dataserver.authentication import AnonymousApiKeyAuthentication
 
+from makerscience_profile.models import MakerScienceProfile
+
 class NotificationResource(ModelResource):
     actor_content_type = fields.CharField(attribute='actor_content_type__model', null=True)
     target_content_type = fields.CharField(attribute='target_content_type__model', null=True)
@@ -32,6 +34,10 @@ class NotificationResource(ModelResource):
         filtering = {
             'recipient_id' : ['exact']
         }
+        ordering = ['-timestamp',]
 
     def dehydrate_description(self, bundle):
         return render_to_string('notifications/notification.html', {'notif': bundle.obj})
+
+    def apply_filters(self, request, applicable_filters):
+        return self.get_object_list(request).filter(**applicable_filters).exclude(actor_object_id=MakerScienceProfile.objects.get(parent__user=request.user).id)
