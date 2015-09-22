@@ -50,6 +50,7 @@ def create_profile_on_user_signup(sender, created, instance, **kwargs):
 def assign_profile_permissions(sender, created, instance, **kwargs):
     change_perm_code = 'makerscience_profile.change_makerscienceprofile'
     assign_perm('makerscience_profile.change_makerscienceprofile', user_or_group=instance.parent.user, obj=instance)
+    assign_perm('auth.change_user', user_or_group=instance.parent.user, obj=instance.parent.user)
 
 
 @receiver(post_save, sender=User)
