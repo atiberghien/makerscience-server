@@ -21,6 +21,7 @@ class MakerScienceProfileTaggedItem (TaggedItem):
 
 class MakerScienceProfile(models.Model):
     slug = AutoSlugField(always_update=True,
+                         unique=True,
                          populate_from=lambda instance: instance.parent.get_full_name_or_username())
     parent = models.ForeignKey(Profile)
     activity = models.CharField(max_length=255)
