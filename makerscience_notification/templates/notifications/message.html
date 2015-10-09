@@ -522,7 +522,7 @@
         }
 
 }</style></head>
-    <body>
+    <body style="min-width:600px; max-width:600px;">
         <center>
             <table align="center" border="0" cellpadding="0" cellspacing="0" height="100%" width="100%" id="bodyTable">
                 <tr>
@@ -604,7 +604,7 @@
                                             </tr>
                                         </tbody>
                                     </table>
-                                    <table class="mcnButtonBlock" border="0" cellpadding="0" cellspacing="0" width="100%">
+                                    <table class="mcnButtonBlock" border="0" cellpadding="0" cellspacing="0" width="100%" style="min-width:600px; max-width:600px;">
                                         <tbody class="mcnButtonBlockOuter">
                                             <tr>
                                                 <td style="padding-top:0; padding-right:18px; padding-bottom:18px; padding-left:18px;" class="mcnButtonBlockInner" align="center" valign="top">
@@ -642,11 +642,11 @@
                                 <tbody><tr>
                                     <td style="color: #F2F2F2;font-family: Helvetica;font-size: 14px;font-weight: normal;line-height: 18px;text-align: center;" class="mcnTextContent" valign="top">
                                         Coordonnées du contact :<br>
-Nom : {{sender.parent.get_full_name_or_username}}<br>
-Email : <a href="mailto:{{sender.parent.user.email}}" target="_blank">{{sender.parent.user.email}}</a><br>
-<br>
-Ce message vous a été envoyé depuis Makerscience.fr.<br>
-La personne qui vous a contacté ne connaîtra pas votre email tant que vous ne lui aurez pas répondu.
+                                        Nom : {{sender.parent.get_full_name_or_username}}<br>
+                                        Email : <a href="mailto:{{sender.parent.user.email}}" target="_blank">{{sender.parent.user.email}}</a><br>
+                                        <br>
+                                        Ce message vous a été envoyé depuis Makerscience.fr.<br>
+                                        La personne qui vous a contacté ne connaîtra pas votre email tant que vous ne lui aurez pas répondu.
                                     </td>
                                 </tr>
                             </tbody></table>
