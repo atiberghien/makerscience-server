@@ -1,8 +1,11 @@
-from datetime import datetime
+# -*- coding: utf-8 -*-
+
 from django.conf.urls import url
+from django.conf import settings
 from django.core.urlresolvers import reverse
 from django.contrib.contenttypes.models import ContentType
 from django.template.loader import render_to_string
+from django.core.mail import send_mail
 
 from haystack.query import SearchQuerySet
 
@@ -24,7 +27,13 @@ from .models import MakerScienceProfile, MakerScienceProfileTaggedItem
 
 import json
 import os
+import requests
 
+from datetime import datetime
+from Crypto.Cipher import AES
+from Crypto.Hash import MD5
+
+from base64 import b64decode, b64encode
 
 class MakerScienceProfileResourceLight(ModelResource, SearchableMakerScienceResource):
     parent_id = fields.IntegerField('parent__id')
@@ -106,7 +115,92 @@ class MakerScienceProfileResource(ModelResource, SearchableMakerScienceResource)
             url(r"^(?P<resource_name>%s)/(?P<slug>[\w-]+)/avatar/upload%s$" % (self._meta.resource_name, trailing_slash()), self.wrap_view('avatar_upload'), name="api_avatar_upload"),
             url(r"^(?P<resource_name>%s)/(?P<slug>[\w-]+)/activities%s$" % (self._meta.resource_name, trailing_slash()), self.wrap_view('get_profile_activities'), name="api_profile_activities"),
             url(r"^(?P<resource_name>%s)/(?P<slug>[\w-]+)/contacts/activities%s$" % (self._meta.resource_name, trailing_slash()), self.wrap_view('get_contacts_activities'), name="api_contacts_activities"),
+            url(r"^(?P<resource_name>%s)/(?P<slug>[\w-]+)/change/password%s$" % (self._meta.resource_name, trailing_slash()), self.wrap_view('change_password'), name="api_change_password"),
+            url(r"^(?P<resource_name>%s)/reset/password%s$" % (self._meta.resource_name, trailing_slash()), self.wrap_view('reset_password'), name="api_reset_password"),
+            url(r'^(?P<resource_name>%s)/(?P<slug>[\w-]+)/send/message%s$' % (self._meta.resource_name, trailing_slash()), self.wrap_view('send_message'), name='api_send_message'),
         ]
+
+    def send_message(self, request, **kwargs):
+        self.method_check(request, allowed=['post'])
+        self.is_authenticated(request)
+        self.throttle_check(request)
+
+        data = self.deserialize(request, request.body, format=request.META.get('CONTENT_TYPE', 'application/json'))
+
+        sender_profile = MakerScienceProfile.objects.get(parent__user__id=request.user.id)
+        recipient_profile = MakerScienceProfile.objects.get(slug=kwargs["slug"])
+
+        payload = dict(secret=settings.GOOGLE_RECAPTCHA_SECRET,
+                       response=data['recaptcha_response'])
+
+        r = requests.post("https://www.google.com/recaptcha/api/siteverify", data=payload)
+        resp = json.loads(r.text)
+        if resp["success"]:
+            try:
+                send_mail("Message Makerscience de %s" % sender_profile.parent.get_full_name_or_username(),
+                        render_to_string('notifications/message.html', {'recipient' : recipient_profile, 'body' : data["body"]}),
+                        sender_profile.parent.user.email,
+                        [recipient_profile.parent.user.email],
+                        fail_silently=False)
+            except:
+                return self.create_response(request, {'success': False, 'reason' : 'EMAIL_SENDING_FAIL'})
+            return self.create_response(request, {'success': True})
+        else:
+            return self.create_response(request, {'success': False, 'reason' : 'RECAPTCHA_ERROR'})
+
+    def reset_password(self, request, **kwargs):
+        self.method_check(request, allowed=['get'])
+
+        aes = AES.new(settings.AES_KEY, AES.MODE_CFB, settings.AES_IV)
+
+        email = request.GET.get('email', None)
+        hash = request.GET.get('hash', None)
+        password = request.GET.get('password', None)
+
+        try :
+            profile = MakerScienceProfile.objects.get(parent__user__email=email)
+
+            if hash and password :
+                encrypted_email = b64decode(hash)
+                decrypted_email = aes.decrypt(encrypted_email)
+
+                if decrypted_email == email:
+                    profile.parent.user.set_password(password)
+                    profile.parent.user.save()
+                    return self.create_response(request, {'success': True, 'error' : 'EMAIL_RESETED'})
+                else:
+                    return self.create_response(request, {'success': False, 'error' : 'EMAIL_MISSMATCH'})
+            else:
+                password_reset_url = u"%s/%s/?email=%s" % (settings.RESET_PASSWORD_URL, b64encode(aes.encrypt(email)), email.encode('utf-8'))
+                try:
+                    send_mail("Ré-initialisation de votre mot de passe sur Makerscience",
+                            render_to_string('notifications/message.html', {'password_reset_url' : password_reset_url }),
+                            'no-reply@makerscience.fr',
+                            [profile.parent.user.email],
+                            fail_silently=False)
+                except:
+                    return self.create_response(request, {'success': False, 'reason' : 'EMAIL_SENDING_FAIL'})
+                return self.create_response(request, {'success': True, 'error' : 'EMAIL_SENT'})
+
+        except MakerScienceProfile.DoesNotExist :
+            return self.create_response(request, {'success': False, 'error' : 'UNKNOWN_PROFILE'})
+
+
+    def change_password(self, request, **kwargs):
+        self.method_check(request, allowed=['post'])
+        self.is_authenticated(request)
+        self.throttle_check(request)
+
+        profile = MakerScienceProfile.objects.get(slug=kwargs["slug"])
+
+        if profile.parent.user.id != request.user.id:
+            return self.create_response(request, {'success': False}, HttpUnauthorized)
+
+        data = self.deserialize(request, request.body, format=request.META.get('CONTENT_TYPE', 'application/json'))
+        profile.parent.user.set_password(data['password'])
+        profile.parent.user.save()
+
+        return self.create_response(request, {'success': True, 'msg' : 'password reseted'})
 
     def avatar_upload(self, request, **kwargs):
         self.method_check(request, allowed=['post'])
