@@ -6,3 +6,4 @@ django-wysiwyg-redactor==0.4.9
 django-solo
 django-grappelli==2.5.7
 django-ipware
+pycrypto==2.6.1
