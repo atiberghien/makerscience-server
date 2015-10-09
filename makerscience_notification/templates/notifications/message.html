@@ -551,7 +551,7 @@
                                                                 <td class="mcnTextContent" style="padding: 9px 18px;color: #080808;font-family: Helvetica;font-size: 14px;font-weight: normal;line-height: 18px;text-align: center;" valign="top" width="546"><br>
                                                                     <span style="font-size:24px"><strong>
                                                                         <a href="http://makerscience.nonetype.net/u/{{profile.slug}}">
-                                                                            <span style="font-size:20px">{{profile.parent.get_full_name_or_username}}</span>
+                                                                            <span style="font-size:20px">{{sender.parent.get_full_name_or_username}}</span>
                                                                         </a>
                                                                         <span style="font-size:20px"> vous a envoyé un message : </span></strong></span><br>
                                                                     &nbsp;
@@ -642,8 +642,8 @@
                                 <tbody><tr>
                                     <td style="color: #F2F2F2;font-family: Helvetica;font-size: 14px;font-weight: normal;line-height: 18px;text-align: center;" class="mcnTextContent" valign="top">
                                         Coordonnées du contact :<br>
-Nom : Audrey Bardon<br>
-Email : <a href="mailto:audrey.bardon@gmail.com" target="_blank">audrey.bardon@gmail.com</a><br>
+Nom : {{sender.parent.get_full_name_or_username}}<br>
+Email : <a href="mailto:{{sender.parent.user.email}}" target="_blank">{{sender.parent.user.email}}</a><br>
 <br>
 Ce message vous a été envoyé depuis Makerscience.fr.<br>
 La personne qui vous a contacté ne connaîtra pas votre email tant que vous ne lui aurez pas répondu.

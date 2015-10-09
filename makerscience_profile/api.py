@@ -5,7 +5,7 @@ from django.conf import settings
 from django.core.urlresolvers import reverse
 from django.contrib.contenttypes.models import ContentType
 from django.template.loader import render_to_string
-from django.core.mail import send_mail
+from django.core.mail import EmailMultiAlternatives
 
 from haystack.query import SearchQuerySet
 
@@ -137,11 +137,14 @@ class MakerScienceProfileResource(ModelResource, SearchableMakerScienceResource)
         resp = json.loads(r.text)
         if resp["success"]:
             try:
-                send_mail("Message Makerscience de %s" % sender_profile.parent.get_full_name_or_username(),
-                        render_to_string('notifications/message.html', {'recipient' : recipient_profile, 'body' : data["body"]}),
-                        sender_profile.parent.user.email,
-                        [recipient_profile.parent.user.email],
-                        fail_silently=False)
+                subject = "Message de %s sur Makerscience" % sender_profile.parent.get_full_name_or_username()
+                from_email = sender_profile.parent.user.email
+                to = recipient_profile.parent.user.email
+                text_content = render_to_string('notifications/message.txt', {'sender' : sender_profile, 'body' : data["body"]})
+                html_content = render_to_string('notifications/message.html', {'sender' : sender_profile, 'body' : data["body"]})
+                msg = EmailMultiAlternatives(subject, text_content, from_email, [to])
+                msg.attach_alternative(html_content, "text/html")
+                msg.send()
             except:
                 return self.create_response(request, {'success': False, 'reason' : 'EMAIL_SENDING_FAIL'})
             return self.create_response(request, {'success': True})
@@ -172,12 +175,15 @@ class MakerScienceProfileResource(ModelResource, SearchableMakerScienceResource)
                     return self.create_response(request, {'success': False, 'error' : 'EMAIL_MISSMATCH'})
             else:
                 password_reset_url = u"%s/%s/?email=%s" % (settings.RESET_PASSWORD_URL, b64encode(aes.encrypt(email)), email.encode('utf-8'))
-                try:
-                    send_mail("Ré-initialisation de votre mot de passe sur Makerscience",
-                            render_to_string('notifications/message.html', {'password_reset_url' : password_reset_url }),
-                            'no-reply@makerscience.fr',
-                            [profile.parent.user.email],
-                            fail_silently=False)
+                try:)
+                    subject = "Ré-initialisation de votre mot de passe sur Makerscience"
+                    from_email = 'Makerscience <no-reply@makerscience.fr>'
+                    to = profile.parent.user.email
+                    text_content = render_to_string('notifications/reset_password.txt', {'password_reset_url' : password_reset_url })
+                    html_content = render_to_string('notifications/reset_password.html', {'password_reset_url' : password_reset_url })
+                    msg = EmailMultiAlternatives(subject, text_content, from_email, [to])
+                    msg.attach_alternative(html_content, "text/html")
+                    msg.send()
                 except:
                     return self.create_response(request, {'success': False, 'reason' : 'EMAIL_SENDING_FAIL'})
                 return self.create_response(request, {'success': True, 'error' : 'EMAIL_SENT'})
