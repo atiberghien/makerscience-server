@@ -196,3 +196,6 @@ EMAIL_USE_TLS = True
 
 EMAIL_BACKEND = 'django.core.mail.backends.console.EmailBackend'
 # EMAIL_BACKEND = 'django.core.mail.backends.smtp.EmailBackend'
+RESET_PASSWORD_URL = 'http://data.nonetype.fr/reset/password' #without trailing slash
+AES_KEY =  'CHANGE_ME'
+AES_IV = 'CHANGE_ME'
