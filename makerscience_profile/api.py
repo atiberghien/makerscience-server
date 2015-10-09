@@ -175,7 +175,7 @@ class MakerScienceProfileResource(ModelResource, SearchableMakerScienceResource)
                     return self.create_response(request, {'success': False, 'error' : 'EMAIL_MISSMATCH'})
             else:
                 password_reset_url = u"%s/%s/?email=%s" % (settings.RESET_PASSWORD_URL, b64encode(aes.encrypt(email)), email.encode('utf-8'))
-                try:)
+                try:
                     subject = "Ré-initialisation de votre mot de passe sur Makerscience"
                     from_email = 'Makerscience <no-reply@makerscience.fr>'
                     to = profile.parent.user.email
