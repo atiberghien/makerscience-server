@@ -175,8 +175,8 @@ def send_notifications_by_mail(frequency):
             subject = "Notifications Makerscience"
             from_email = 'no-reply@makerscience.fr'
             to = profile.parent.user.email
-            text_content = render_to_string('notifications/notif_multiple.txt', {'notifs' : notifs})
-            html_content = render_to_string('notifications/notif_multiple.html', {'notifs' : notifs})
+            text_content = render_to_string('notifications/notif_multiple.txt', {'frequency' : frequency, 'notifs' : notifs})
+            html_content = render_to_string('notifications/notif_multiple.html', {'frequency' : frequency, 'notifs' : notifs})
             msg = EmailMultiAlternatives(subject, text_content, from_email, [to])
             msg.attach_alternative(html_content, "text/html")
             msg.send()
