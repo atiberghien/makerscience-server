@@ -8,7 +8,6 @@ from django.core.mail import EmailMultiAlternatives
 
 from notifications import notify
 from notifications.models import Notification
-from multiselectfield import MultiSelectField
 
 from accounts.models import ObjectProfileLink
 
