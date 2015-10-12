@@ -1,0 +1,19 @@
+
+Vos dernières notifications
+{%if frequency == 'DAILY' %}
+(récapitulatif quotidien)
+{% elif frequency == 'WEEKLY' %}
+(récapitulatif hebdomadaire)
+{% endif%}
+
+{% for notif in notifs %}
+- {{ notif.description }}
+{% endfor %}
+
+==============================================================================
+
+Cet e-mail a été envoyé automatiquement (préférences de votre compte). Merci de ne pas y répondre.
+
+Vous ne souhaitez pas recevoir les notifications d'activité ou modifier vos préférences ? >Rendez-vous dans votre espace personnel.
+
+Pour des demandes générales, obtenir de l'aide ou signaler un abus, merci de laisser un message à l'équipe sur contact@makerscience.fr.

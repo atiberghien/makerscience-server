@@ -31,6 +31,14 @@ class MakerScienceProfile(models.Model):
 
     tags = TaggableManager(through=MakerScienceProfileTaggedItem, blank=True)
 
+    NOTIF_SUB_FREQ_CHOICES = (
+        ('NONE', 'Aucune'),
+        ('DAILY', 'Quotidien'),
+        ('WEEKLY', 'Hebdomadaire'),
+    )
+
+    notif_subcription_freq = models.CharField(max_length=6, choices=NOTIF_SUB_FREQ_CHOICES, default='NONE')
+
     facebook = models.CharField(max_length=500, null=True, blank=True)
     twitter = models.CharField(max_length=500, null=True, blank=True)
     linkedin = models.CharField(max_length=500, null=True, blank=True)

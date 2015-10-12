@@ -1,15 +1,22 @@
 # -*- coding: utf-8 -*-
 from django.db import models
 from django.db.models.signals import post_save
+from django.template.loader import render_to_string
 from django.contrib.contenttypes.models import ContentType
+from django.conf import settings
+from django.core.mail import EmailMultiAlternatives
 
 from notifications import notify
+from notifications.models import Notification
+from multiselectfield import MultiSelectField
 
 from accounts.models import ObjectProfileLink
 
 from makerscience_profile.models import MakerScienceProfile
 from makerscience_catalog.models import MakerScienceProject, MakerScienceResource
 from makerscience_forum.models import MakerSciencePost
+
+from datetime import datetime, timedelta
 
 def create_notification(sender, instance, created, **kwargs):
     activity = instance
@@ -154,3 +161,23 @@ def generate_notif_description(sender, instance, created, **kwargs):
         instance.save()
 
 post_save.connect(generate_notif_description, sender=Notification)
+
+
+def send_notifications_by_mail(frequency):
+    for profile in MakerScienceProfile.objects.all():
+        notifs = profile.parent.user.notifications.all()
+        if profile.notif_subcription_freq == frequency:
+            if frequency == 'DAILY':
+                time_threshold = datetime.now() - timedelta(hours=24)
+            elif frequency == 'WEEKLY':
+                time_threshold = datetime.now() - timedelta(weeks=1)
+            notifs = notifs.filter(timestamp__gte=time_threshold)
+
+            subject = "Notifications Makerscience"
+            from_email = 'no-reply@makerscience.fr'
+            to = profile.parent.user.email
+            text_content = render_to_string('notifications/notif_multiple.txt', {'notifs' : notifs})
+            html_content = render_to_string('notifications/notif_multiple.html', {'notifs' : notifs})
+            msg = EmailMultiAlternatives(subject, text_content, from_email, [to])
+            msg.attach_alternative(html_content, "text/html")
+            msg.send()
