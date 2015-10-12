@@ -577,7 +577,7 @@
 
                             <ul>
                             {% for notif in notifs %}
-                                <li>{{ notif.data.description }}</li>
+                                <li>{{ notif.data.description|safe }}</li>
                             {% endfor %}
                             </ul>
 
