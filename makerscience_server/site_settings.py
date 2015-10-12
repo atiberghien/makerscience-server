@@ -189,6 +189,7 @@ CACHES = {
 USERENA_MUGSHOT_SIZE = 150
 
 EMAIL_HOST = 'smtp.gmail.com'
+MAKERSCIENCE_BASE_URL = "CHANGE_ME"
 EMAIL_PORT = 587
 # EMAIL_HOST_PASSWORD = 'thepassword'
 EMAIL_HOST_USER = 'makerscience@gmail.com'

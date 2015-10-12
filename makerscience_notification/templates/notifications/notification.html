@@ -1,71 +1,71 @@
 <!-- DEBUG - {{notif.verb}} -->
-<a href="/u/{{notif.actor.slug}}">{{notif.actor.parent.get_full_name_or_username}}</a>
+<a href="{{base_url}}/u/{{notif.actor.slug}}">{{notif.actor.parent.get_full_name_or_username}}</a>
 {% if notif.verb == 'tagged' %}
-    a ajouté le tag <a href="/tag/{{notif.action_object.slug}}">{{notif.action_object.name}}</a>
+    a ajouté le tag <a href="{{base_url}}/tag/{{notif.action_object.slug}}">{{notif.action_object.name}}</a>
     {% if notif.target_content_type.model == 'makerscienceproject'%}
-        sur le projet <a href="/p/{{notif.target.parent.slug}}">{{notif.target.parent.title}}</a>
+        sur le projet <a href="{{base_url}}/p/{{notif.target.parent.slug}}">{{notif.target.parent.title}}</a>
     {% elif notif.target_content_type == 'makerscienceresource'%}
-        sur l'expérience <a href="/r/{{notif.target.parent.slug}}">{{notif.target.parent.title}}</a>
+        sur l'expérience <a href="{{base_url}}/r/{{notif.target.parent.slug}}">{{notif.target.parent.title}}</a>
     {% elif notif.target_content_type.model == 'makersciencepost' %}
-        sur la discussion <a href="/discussions/{{notif.target.parent.slug}}">{{notif.target.parent.title}}</a>
+        sur la discussion <a href="{{base_url}}/discussions/{{notif.target.parent.slug}}">{{notif.target.parent.title}}</a>
     {% elif notif.target_content_type.model == 'makerscienceprofile'%}
         sur son profil
     {% endif %}
 {% elif notif.verb == 'created' %}
     {% if notif.action_object_content_type.model == 'makerscienceproject' %}
-        a crée le projet <a href="/p/{{notif.action_object.parent.slug}}">{{notif.action_object.parent.title}}</a>
+        a crée le projet <a href="{{base_url}}/p/{{notif.action_object.parent.slug}}">{{notif.action_object.parent.title}}</a>
     {% elif notif.action_object_content_type.model == 'makerscienceresource' %}
-        a partagé l'expérience <a href="/r/{{notif.action_object.parent.slug}}">{{notif.action_object.parent.title}}</a>
+        a partagé l'expérience <a href="{{base_url}}/r/{{notif.action_object.parent.slug}}">{{notif.action_object.parent.title}}</a>
     {% elif notif.action_object_content_type.model == 'makersciencepost' %}
-        a ouvert la discussion <a href="/discussions/{{notif.action_object.parent.slug}}">{{notif.action_object.parent.title}}</a>
+        a ouvert la discussion <a href="{{base_url}}/discussions/{{notif.action_object.parent.slug}}">{{notif.action_object.parent.title}}</a>
     {% elif notif.action_object_content_type.model == 'post' %}
-        a répondu à la discussion <a href="/discussions/{{notif.action_object.parent.get_root.slug}}">{{notif.action_object.parent.get_root.title}}</a>
+        a répondu à la discussion <a href="{{base_url}}/discussions/{{notif.action_object.parent.get_root.slug}}">{{notif.action_object.parent.get_root.title}}</a>
     {% endif %}
 {% elif notif.verb == 'liked' %}
     {% if notif.action_object_content_type.model == 'makerscienceproject' %}
-        aime le projet <a href="/p/{{notif.action_object.parent.slug}}">{{notif.action_object.parent.title}}</a>
+        aime le projet <a href="{{base_url}}/p/{{notif.action_object.parent.slug}}">{{notif.action_object.parent.title}}</a>
     {% elif notif.action_object_content_type.model == 'makerscienceresource' %}
-        aime l'expérience <a href="/r/{{notif.action_object.parent.slug}}">{{notif.action_object.parent.title}}</a>
+        aime l'expérience <a href="{{base_url}}/r/{{notif.action_object.parent.slug}}">{{notif.action_object.parent.title}}</a>
     {% elif notif.action_object_content_type.model == 'makersciencepost' %}
-        aime la discussion <a href="/discussions/{{notif.action_object.parent.slug}}">{{notif.action_object.parent.title}}</a>
+        aime la discussion <a href="{{base_url}}/discussions/{{notif.action_object.parent.slug}}">{{notif.action_object.parent.title}}</a>
     {% elif notif.action_object_content_type.model == 'post' %}
-        aime la discussion <a href="/discussions/{{notif.action_object.get_root.slug}}">{{notif.action_object.get_root.title}}</a>
+        aime la discussion <a href="{{base_url}}/discussions/{{notif.action_object.get_root.slug}}">{{notif.action_object.get_root.title}}</a>
     {% endif %}
 {% elif notif.verb == 'commented' %}
     {% if notif.action_object_content_type.model == 'makerscienceproject' %}
-        a commenté le projet <a href="/p/{{notif.action_object.parent.slug}}">{{notif.action_object.parent.title}}</a>
+        a commenté le projet <a href="{{base_url}}/p/{{notif.action_object.parent.slug}}">{{notif.action_object.parent.title}}</a>
     {% elif notif.action_object_content_type.model == 'makerscienceresource' %}
-        a commenté l'expérience <a href="/r/{{notif.action_object.parent.slug}}">{{notif.action_object.parent.title}}</a>
+        a commenté l'expérience <a href="{{base_url}}/r/{{notif.action_object.parent.slug}}">{{notif.action_object.parent.title}}</a>
     {% endif %}
 {% elif notif.verb == 'scored' %}
     {% if notif.action_object.content_type.model == 'makerscienceproject' %}
-        a noté le projet <a href="/p/{{notif.action_object.parent.slug}}">{{notif.action_object.content_object.parent.title}}</a>
+        a noté le projet <a href="{{base_url}}/p/{{notif.action_object.parent.slug}}">{{notif.action_object.content_object.parent.title}}</a>
     {% elif notif.action_object.content_type.model == 'makerscienceresource' %}
-        a noté l'expérience <a href="/r/{{notif.action_object.parent.slug}}">{{notif.action_object.content_object.parent.title}}</a>
+        a noté l'expérience <a href="{{base_url}}/r/{{notif.action_object.parent.slug}}">{{notif.action_object.content_object.parent.title}}</a>
     {% endif %}
 {% elif notif.verb == 'mentionned' %}
     vous a cité dans
     {% if notif.target_content_type.model == 'makersciencepost' %}
-        sur la discussion <a href="/discussions/{{notif.target.parent.slug}}">{{notif.target.parent.title}}</a>
+        sur la discussion <a href="{{base_url}}/discussions/{{notif.target.parent.slug}}">{{notif.target.parent.title}}</a>
     {% elif notif.target_content_type.model == 'post' %}
-        une réponse à la discussion <a href="/discussions/{{notif.target.parent.get_root.slug}}">{{notif.target.parent.get_root.title}}</a>
+        une réponse à la discussion <a href="{{base_url}}/discussions/{{notif.target.parent.get_root.slug}}">{{notif.target.parent.get_root.title}}</a>
     {% endif %}
 {% elif notif.verb == 'friendship' %}
     vous a ajouté dans ses contacts
 {% elif notif.verb == 'team_invited' %}
-    vous propose de rejoindre l'équipe du projet <a href="/p/{{notif.target.parent.slug}}">{{notif.target.parent.title}}</a>
+    vous propose de rejoindre l'équipe du projet <a href="{{base_url}}/p/{{notif.target.parent.slug}}">{{notif.target.parent.title}}</a>
 {% elif notif.verb == 'team_requested' %}
-    a demandé à rejoindre l'équipe du projet <a href="/p/{{notif.target.parent.slug}}">{{notif.target.parent.title}}</a>
+    a demandé à rejoindre l'équipe du projet <a href="{{base_url}}/p/{{notif.target.parent.slug}}">{{notif.target.parent.title}}</a>
 {% elif notif.verb == 'help_proposed' %}
-    se propose d'apporter son aide au projet <a href="/p/{{notif.target.parent.slug}}">{{notif.target.parent.title}}</a>
+    se propose d'apporter son aide au projet <a href="{{base_url}}/p/{{notif.target.parent.slug}}">{{notif.target.parent.title}}</a>
 {% elif notif.verb == 'help_invited' %}
-    vous propose de rejoindre les personnes ressources du projet <a href="/p/{{notif.target.parent.slug}}">{{notif.target.parent.title}}</a>
+    vous propose de rejoindre les personnes ressources du projet <a href="{{base_url}}/p/{{notif.target.parent.slug}}">{{notif.target.parent.title}}</a>
 {% elif notif.verb == 'coauthor_invited' %}
-    vous a invité à rejoindre les co-autheurs de l'expérience <a href="/r/{{notif.target.parent.slug}}">{{notif.target.parent.title}}</a>
+    vous a invité à rejoindre les co-autheurs de l'expérience <a href="{{base_url}}/r/{{notif.target.parent.slug}}">{{notif.target.parent.title}}</a>
 {% elif notif.verb == 'coauthor_requested' %}
-    a demandé à devenir co-autheur de l'expérence <a href="/r/{{notif.target.parent.slug}}">{{notif.target.parent.title}}</a>
+    a demandé à devenir co-autheur de l'expérence <a href="{{base_url}}/r/{{notif.target.parent.slug}}">{{notif.target.parent.title}}</a>
 {% elif notif.verb == 'similars_shared' %}
-    a signalé avoir une expérience similaires à l'expérience <a href="/r/{{notif.target.parent.slug}}">{{notif.target.parent.title}}</a>
+    a signalé avoir une expérience similaires à l'expérience <a href="{{base_url}}/r/{{notif.target.parent.slug}}">{{notif.target.parent.title}}</a>
 {% elif notif.verb == 'annonced' %}
-    a ajouté une actu au projet <a href="/p/{{notif.target.project.slug}}">{{notif.target.project.title}}</a>
+    a ajouté une actu au projet <a href="{{base_url}}/p/{{notif.target.project.slug}}">{{notif.target.project.title}}</a>
 {% endif %}
