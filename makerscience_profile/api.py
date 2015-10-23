@@ -33,7 +33,7 @@ from datetime import datetime
 from Crypto.Cipher import AES
 from Crypto.Hash import MD5
 
-from base64 import b64decode, b64encode
+from base64 import urlsafe_b64encode, urlsafe_b64decode
 
 class MakerScienceProfileResourceLight(ModelResource, SearchableMakerScienceResource):
     parent_id = fields.IntegerField('parent__id')
@@ -164,7 +164,7 @@ class MakerScienceProfileResource(ModelResource, SearchableMakerScienceResource)
             profile = MakerScienceProfile.objects.get(parent__user__email=email)
 
             if hash and password :
-                encrypted_email = b64decode(hash)
+                encrypted_email = urlsafe_b64decode(hash)
                 decrypted_email = aes.decrypt(encrypted_email)
 
                 if decrypted_email == email:
@@ -174,7 +174,7 @@ class MakerScienceProfileResource(ModelResource, SearchableMakerScienceResource)
                 else:
                     return self.create_response(request, {'success': False, 'error' : 'EMAIL_MISSMATCH'})
             else:
-                password_reset_url = u"%s/%s/?email=%s" % (settings.RESET_PASSWORD_URL, b64encode(aes.encrypt(email)), email.encode('utf-8'))
+                password_reset_url = u"%s/%s/?email=%s" % (settings.RESET_PASSWORD_URL, urlsafe_b64encode(aes.encrypt(email), altchars=""), email.encode('utf-8'))
                 try:
                     subject = "Ré-initialisation de votre mot de passe sur Makerscience"
                     from_email = 'Makerscience <no-reply@makerscience.fr>'
