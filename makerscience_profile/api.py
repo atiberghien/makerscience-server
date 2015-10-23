@@ -164,8 +164,8 @@ class MakerScienceProfileResource(ModelResource, SearchableMakerScienceResource)
             profile = MakerScienceProfile.objects.get(parent__user__email=email)
 
             if hash and password :
-                encrypted_email = urlsafe_b64decode(hash)
-                decrypted_email = aes.decrypt(encrypted_email)
+                decoded_email = urlsafe_b64decode(str(hash))
+                decrypted_email = aes.decrypt(decoded_email)
 
                 if decrypted_email == email:
                     profile.parent.user.set_password(password)
