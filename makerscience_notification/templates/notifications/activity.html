@@ -138,7 +138,7 @@
     {% else %}
         <a href="/u/{{activity.profile.get_full_name_or_username|slugify}}">{{activity.profile.get_full_name_or_username}}</a>
     {% endif %}
-     est maintenant en contact avec <a href="/u/{{activity.content_object.slug}}">{{activity.content_object.parent.get_full_name_or_username}}</a>
+     s’est abonné à <a href="/u/{{activity.content_object.slug}}">{{activity.content_object.parent.get_full_name_or_username}}</a>
 
 {% elif activity.level == 41 %}
     {% if egocentric %}

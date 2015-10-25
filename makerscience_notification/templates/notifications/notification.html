@@ -51,7 +51,7 @@
         une réponse à la discussion <a href="{{base_url}}/discussions/{{notif.target.parent.get_root.slug}}">{{notif.target.parent.get_root.title}}</a>
     {% endif %}
 {% elif notif.verb == 'friendship' %}
-    vous a ajouté dans ses contacts
+    vous suit maintenant.
 {% elif notif.verb == 'team_invited' %}
     vous propose de rejoindre l'équipe du projet <a href="{{base_url}}/p/{{notif.target.parent.slug}}">{{notif.target.parent.title}}</a>
 {% elif notif.verb == 'team_requested' %}
