@@ -68,7 +68,7 @@ class ObjectProfileLinkAdmin(admin.ModelAdmin):
 
     def display_content_object(self, obj):
         if obj.content_type.model == 'makerscienceproject' and MakerScienceProject.objects.filter(parent=obj.content_object).exists():
-            return 'Projet : %s' % obj.content_object.title
+            return 'Projet : %s' % obj.content_object.parent.title
         if obj.content_type.model == 'makerscienceproject' and MakerScienceProject.objects.filter(id=obj.content_object.id).exists():
             return 'Projet : %s' % obj.content_object.parent.title
         elif obj.content_type.model == 'makerscienceresource' and MakerScienceResource.objects.filter(parent=obj.content_object).exists():
