@@ -236,28 +236,26 @@ class MakerScienceProfileResource(ModelResource, SearchableMakerScienceResource)
         self.throttle_check(request)
         self.is_authenticated(request)
 
+        limit = request.GET.get('limit', None)
+
         profile = MakerScienceProfile.objects.get(slug=kwargs["slug"])
 
         activities = []
-        favoriteTags = {}
-        followedTags = []
-        for activity in ObjectProfileLink.objects.filter(profile=profile.parent, isValidated=True).order_by('-created_on'):
-            obj = activity.content_object
-            if activity.content_type.model == 'taggeditem':
-                if obj.tag.slug in favoriteTags:
-                    favoriteTags[obj.tag.slug] += 1
-                else:
-                    favoriteTags[obj.tag.slug] = 1
-            elif activity.content_type == 'tag':
-                followedTags.push(obj)
-            else:
-                activities.append({
-                    'description' : render_to_string('notifications/activity.html', {'activity': activity, 'egocentric':True}),
-                    'created_on' : activity.created_on
-                })
+        all_activities = ObjectProfileLink.objects.filter(profile=profile.parent, isValidated=True).order_by('-created_on')
+        for activity in all_activities:
+            activities.append({
+                'description' : render_to_string('notifications/activity.html', {'activity': activity, 'egocentric':True}),
+                'created_on' : activity.created_on
+            })
+            if limit and len(activities) == int(limit):
+                break
 
         return self.create_response(request, {
-            'objects': {'activities' : activities},
+            'metadata' : {
+                'limit' : int(limit),
+                'total_count' : all_activities.count()
+            },
+            'objects': activities,
         })
 
     def get_contacts_activities(self, request, **kwargs):
@@ -265,19 +263,28 @@ class MakerScienceProfileResource(ModelResource, SearchableMakerScienceResource)
         self.throttle_check(request)
         self.is_authenticated(request)
 
+        limit = request.GET.get('limit', None)
+
         profile = MakerScienceProfile.objects.get(slug=kwargs["slug"])
 
         contact_ids = profile.parent.objectprofilelink_set.filter(level=40).values_list('object_id', flat=True) #Must return IDs of MakerScienceProfile
         contact_ids = MakerScienceProfile.objects.filter(id__in=[int(i) for i in contact_ids]).values_list('parent__id', flat=True)
 
         activities = []
-        for activity in ObjectProfileLink.objects.filter(profile__in=contact_ids, isValidated=True).order_by('-created_on'):
+        all_activities = ObjectProfileLink.objects.filter(profile__in=contact_ids, isValidated=True).order_by('-created_on')
+        for activity in all_activities:
             activities.append({
                 'description' : render_to_string('notifications/activity.html', {'activity': activity, 'egocentric':False}),
                 'created_on' : activity.created_on
             })
+            if limit and len(activities) == int(limit):
+                break
 
         return self.create_response(request, {
+            'metadata' : {
+                'limit' : int(limit),
+                'total_count' : all_activities.count()
+            },
             'objects': activities,
         })
 
