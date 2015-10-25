@@ -66,6 +66,10 @@ class ObjectProfileLinkAdmin(admin.ModelAdmin):
         return dict(settings.OBJECTPROFILELINK_CHOICES)[obj.level]
     display_level.short_description = 'Type de relation'
 
+    def display_profile(self, obj):
+        return "%s (#%s)" % (obj.profile.get_full_name_or_username().title(), obj.profile.id)
+    display_profile.short_description = 'Profile'
+
     def display_content_object(self, obj):
         if obj.content_type.model == 'makerscienceproject' and MakerScienceProject.objects.filter(parent=obj.content_object).exists():
             return 'Projet : %s' % obj.content_object.parent.title
@@ -76,7 +80,7 @@ class ObjectProfileLinkAdmin(admin.ModelAdmin):
         elif obj.content_type.model == 'makersciencepost' and MakerSciencePost.objects.filter(parent=obj.content_object).exists():
             return "Discussion : %s" % obj.content_object.title
         elif obj.content_type.model == 'makerscienceprofile' and MakerScienceProfile.objects.filter(id=obj.content_object.id).exists():
-            return "Profile %s" % obj.content_object.parent.get_full_name_or_username()
+            return "%s (#%s)" % (obj.content_object.parent.get_full_name_or_username().title(), obj.object_id)
         elif obj.content_type.model == 'tag' and Tag.objects.filter(id=obj.content_object.id).exists():
             return "Tag %s" % obj.content_object.slug
         elif obj.content_type.model == 'taggeditem' and TaggedItem.objects.filter(id=obj.content_object.id).exists():
@@ -84,7 +88,7 @@ class ObjectProfileLinkAdmin(admin.ModelAdmin):
         return "Inconnu : %s %s" % (obj.content_type, obj.object_id)
     display_content_object.short_description = 'Contenu lié'
 
-    list_display = ('profile', 'display_level', 'display_content_object', 'isValidated')
+    list_display = ('id', 'display_profile', 'display_level', 'display_content_object', 'isValidated')
     list_filter = (ObjectProfileLinkLevelFilter, 'isValidated')
     list_editable = ('isValidated', )
 
