@@ -21,13 +21,16 @@ def create_notification(sender, instance, created, **kwargs):
     activity = instance
     if sender == ObjectProfileLink and created:
         actor = MakerScienceProfile.objects.get(parent=activity.profile)
+
+        is_not_actor = lambda x: x is not actor.parent.id
+
         if activity.level == 50:
             tag = activity.content_object.tag
             profile_ids = ObjectProfileLink.objects.filter(level=51,
                                                    content_type=ContentType.objects.get_for_model(tag),
                                                    object_id=tag.id).values_list('profile', flat=True)
 
-            for profile in MakerScienceProfile.objects.filter(parent__id__in=profile_ids):
+            for profile in MakerScienceProfile.objects.filter(parent__id__in=filter(is_not_actor, profile_ids)):
                 notify.send(actor,
                             recipient=profile.parent.user,
                             verb=u'tagged',
@@ -39,7 +42,8 @@ def create_notification(sender, instance, created, **kwargs):
                                                                isValidated=True,
                                                                content_type=ContentType.objects.get_for_model(activity.content_object),
                                                                object_id=activity.content_object.id).values_list('profile', flat=True)
-                for profile in MakerScienceProfile.objects.filter(parent__id__in=profile_ids):
+
+                for profile in MakerScienceProfile.objects.filter(parent__id__in=filter(is_not_actor, profile_ids)):
                     notify.send(actor,
                                 recipient=profile.parent.user,
                                 target=activity.content_object,
@@ -48,7 +52,8 @@ def create_notification(sender, instance, created, **kwargs):
                 profile_ids = ObjectProfileLink.objects.filter(level=40,
                                                                content_type=ContentType.objects.get_for_model(actor),
                                                                object_id=actor.id).values_list('profile', flat=True)
-                for profile in MakerScienceProfile.objects.filter(parent__id__in=profile_ids):
+
+                for profile in MakerScienceProfile.objects.filter(parent__id__in=filter(is_not_actor, profile_ids)):
                     notify.send(actor,
                                 recipient=profile.parent.user,
                                 action_object=activity.content_object,
@@ -58,7 +63,8 @@ def create_notification(sender, instance, created, **kwargs):
                                                                isValidated=True,
                                                                content_type=ContentType.objects.get_for_model(activity.content_object),
                                                                object_id=activity.content_object.id).values_list('profile', flat=True)
-                for profile in MakerScienceProfile.objects.filter(parent__id__in=profile_ids):
+
+                for profile in MakerScienceProfile.objects.filter(parent__id__in=filter(is_not_actor, profile_ids)):
                     notify.send(actor,
                                 recipient=profile.parent.user,
                                 target=activity.content_object,
@@ -69,7 +75,8 @@ def create_notification(sender, instance, created, **kwargs):
                                                                isValidated=True,
                                                                content_type=ContentType.objects.get_for_model(activity.content_object),
                                                                object_id=activity.content_object.id).values_list('profile', flat=True)
-                for profile in MakerScienceProfile.objects.filter(parent__id__in=profile_ids):
+
+                for profile in MakerScienceProfile.objects.filter(parent__id__in=filter(is_not_actor, profile_ids)):
                     notify.send(actor,
                                 recipient=profile.parent.user,
                                 target=activity.content_object,
@@ -78,7 +85,8 @@ def create_notification(sender, instance, created, **kwargs):
                 profile_ids = ObjectProfileLink.objects.filter(level=40,
                                                                content_type=ContentType.objects.get_for_model(actor),
                                                                object_id=actor.id).values_list('profile', flat=True)
-                for profile in MakerScienceProfile.objects.filter(parent__id__in=profile_ids):
+
+                for profile in MakerScienceProfile.objects.filter(parent__id__in=filter(is_not_actor, profile_ids)):
                     notify.send(actor,
                                 recipient=profile.parent.user,
                                 action_object=activity.content_object,
@@ -88,7 +96,8 @@ def create_notification(sender, instance, created, **kwargs):
                                                                isValidated=True,
                                                                content_type=ContentType.objects.get_for_model(activity.content_object),
                                                                object_id=activity.content_object.id).values_list('profile', flat=True)
-                for profile in MakerScienceProfile.objects.filter(parent__id__in=profile_ids):
+
+                for profile in MakerScienceProfile.objects.filter(parent__id__in=filter(is_not_actor, profile_ids)):
                     notify.send(actor,
                                 recipient=profile.parent.user,
                                 target=activity.content_object,
@@ -105,7 +114,8 @@ def create_notification(sender, instance, created, **kwargs):
                         verb=u'help_invited')
         elif activity.level == 7: #someone added a news to a project
             profile_ids = ObjectProfileLink.objects.filter(level__in=[0, 1, 2]).distinct('profile').values_list('profile', flat=True)
-            for profile in MakerScienceProfile.objects.filter(parent__id__in=profile_ids):
+
+            for profile in MakerScienceProfile.objects.filter(parent__id__in=filter(is_not_actor, profile_ids)):
                 notify.send(actor,
                             recipient=actor.parent.user,
                             target=activity.content_object,
@@ -122,21 +132,24 @@ def create_notification(sender, instance, created, **kwargs):
                         verb=u'similar_resource_invited')
         elif activity.level in [2, 12, 33]: #liked content where the recipient is involved (creator, member)
             profile_ids = ObjectProfileLink.objects.filter(level__in=[0, 1, 10, 11, 30, 31]).distinct('profile').values_list('profile', flat=True)
-            for profile in MakerScienceProfile.objects.filter(parent__id__in=profile_ids):
+
+            for profile in MakerScienceProfile.objects.filter(parent__id__in=filter(is_not_actor, profile_ids)):
                 notify.send(actor,
                             recipient=profile.parent.user,
                             action_object=activity.content_object,
                             verb=u'liked')
         elif activity.level in [3, 13]: #commented content where the recipient is involved (creator, member)
             profile_ids = ObjectProfileLink.objects.filter(level__in=[0, 1, 10, 11]).distinct('profile').values_list('profile', flat=True)
-            for profile in MakerScienceProfile.objects.filter(parent__id__in=profile_ids):
+
+            for profile in MakerScienceProfile.objects.filter(parent__id__in=filter(is_not_actor, profile_ids)):
                 notify.send(actor,
                             recipient=profile.parent.user,
                             action_object=activity.content_object,
                             verb=u'commented')
         elif activity.level in [4, 14]: #scored content where the recipient is involved (creator, member)
             profile_ids = ObjectProfileLink.objects.filter(level__in=[0, 1, 10, 11]).distinct('profile').values_list('profile', flat=True)
-            for profile in MakerScienceProfile.objects.filter(parent__id__in=profile_ids):
+
+            for profile in MakerScienceProfile.objects.filter(parent__id__in=filter(is_not_actor, profile_ids)):
                 notify.send(actor,
                             recipient=profile.parent.user,
                             action_object=activity.content_object,
