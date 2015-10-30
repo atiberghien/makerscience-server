@@ -30,6 +30,7 @@ class MakerScienceStaticContentForm(forms.ModelForm):
             'about_contact': RedactorEditor(),
             'about_faq': RedactorEditor(),
             'about_cgu': RedactorEditor(),
+            'mentions': RedactorEditor(),
         }
 
 class MakerScienceStaticContentAdmin(SingletonModelAdmin):
@@ -38,11 +39,15 @@ class MakerScienceStaticContentAdmin(SingletonModelAdmin):
     fieldsets = (
         ('A propos', {
             'classes': ('grp-collapse grp-closed',),
-            'fields': ('about', 'about_team', 'about_contact', 'about_faq', 'about_cgu')
+            'fields': ('about', 'about_team', 'about_contact', 'about_faq', 'about_cgu', "mentions")
         }),
         ('Sélections thématiques', {
             'classes': ('grp-collapse grp-closed',),
             'fields': ('project_thematic_selection', 'resource_thematic_selection')
+        }),
+        ('Réseaux sociaux', {
+            'classes': ('grp-collapse grp-closed',),
+            'fields': ('facebook', 'twitter', 'linkedin', 'youtube')
         }),
     )
 
