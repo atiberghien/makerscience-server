@@ -26,6 +26,7 @@ class MakerScienceStaticContentForm(forms.ModelForm):
         model = MakerScienceStaticContent
         widgets = {
             'about': RedactorEditor(),
+            'about_howitworks': RedactorEditor(),
             'about_team': RedactorEditor(),
             'about_contact': RedactorEditor(),
             'about_faq': RedactorEditor(),
