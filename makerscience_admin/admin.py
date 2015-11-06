@@ -39,7 +39,7 @@ class MakerScienceStaticContentAdmin(SingletonModelAdmin):
     fieldsets = (
         ('A propos', {
             'classes': ('grp-collapse grp-closed',),
-            'fields': ('about', 'about_team', 'about_contact', 'about_faq', 'about_cgu', "mentions")
+            'fields': ('about', 'about_howitworks', 'about_team', 'about_contact', 'about_faq', 'about_cgu', "mentions")
         }),
         ('Sélections thématiques', {
             'classes': ('grp-collapse grp-closed',),

@@ -13,6 +13,7 @@ from makerscience_catalog.models import  MakerScienceProjectTaggedItem, MakerSci
 
 class MakerScienceStaticContent (SingletonModel):
     about = models.TextField(null=True, blank=True)
+    about_howitworks = models.TextField(null=True, blank=True)
     about_team = models.TextField(null=True, blank=True)
     about_contact = models.TextField(null=True, blank=True)
     about_faq = models.TextField(null=True, blank=True)
