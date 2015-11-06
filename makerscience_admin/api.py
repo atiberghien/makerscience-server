@@ -63,7 +63,6 @@ class SearchableMakerScienceResource(object):
 
         if get_params['searchIn'] in ['all', 'titles']:
             for term in allWords:
-                print "allWords filter", term
                 sqs = sqs.filter_and(text=term.strip())
 
             for term in exactExpressions:
