@@ -37,7 +37,10 @@ class NotificationResource(ModelResource):
         ordering = ['-timestamp',]
 
     def dehydrate_description(self, bundle):
-        return render_to_string('notifications/notification.html', {'notif': bundle.obj})
+        return bundle.obj.data['description']
 
     def apply_filters(self, request, applicable_filters):
+        if request.user.is_anonymous():
+            return ModelResource.apply_filters(self, request, applicable_filters)
+
         return self.get_object_list(request).filter(**applicable_filters).exclude(actor_object_id=MakerScienceProfile.objects.get(parent__user=request.user).id)

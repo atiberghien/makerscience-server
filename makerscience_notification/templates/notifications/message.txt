@@ -1,0 +1,20 @@
+{{sender.parent.get_full_name_or_username}} vous a envoyé un message :
+
+==============================================================================
+
+{{body}}
+
+==============================================================================
+
+Coordonnées du contact :
+Nom : {{sender.parent.get_full_name_or_username}}
+Email : {{sender.parent.user.email}}
+
+Ce message vous a été envoyé depuis Makerscience.fr.
+La personne qui vous a contacté ne connaîtra pas votre email tant que vous ne lui aurez pas répondu.
+
+==============================================================================
+
+Vous ne souhaitez pas recevoir les notifications d'activité ou modifier vos préférences ? >Rendez-vous dans votre espace personnel.
+
+Pour des demandes générales, obtenir de l'aide ou signaler un abus, merci de laisser un message à l'équipe sur contact@makerscience.fr.

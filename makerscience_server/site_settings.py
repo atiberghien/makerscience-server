@@ -140,7 +140,7 @@ OBJECTPROFILELINK_CHOICES = (
     (33, 'Fan de la discussion'),
     (34, "Fan d'une réponse à la discussion"),
 
-    (40, 'Contact'),
+    (40, 'suit le membre'),
     (41, 'A mentionné'),
 
     (50, 'A taggé'),
@@ -185,6 +185,7 @@ CACHES = {
 USERENA_MUGSHOT_SIZE = 150
 
 EMAIL_HOST = 'smtp.gmail.com'
+MAKERSCIENCE_BASE_URL = "CHANGE_ME"
 EMAIL_PORT = 587
 # EMAIL_HOST_PASSWORD = 'thepassword'
 EMAIL_HOST_USER = 'makerscience@gmail.com'
@@ -192,3 +193,6 @@ EMAIL_USE_TLS = True
 
 EMAIL_BACKEND = 'django.core.mail.backends.console.EmailBackend'
 # EMAIL_BACKEND = 'django.core.mail.backends.smtp.EmailBackend'
+RESET_PASSWORD_URL = 'http://data.nonetype.fr/reset/password' #without trailing slash
+AES_KEY =  'CHANGE_ME'
+AES_IV = 'CHANGE_ME'

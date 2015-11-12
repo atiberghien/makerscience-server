@@ -1,8 +1,11 @@
-from datetime import datetime
+# -*- coding: utf-8 -*-
+
 from django.conf.urls import url
+from django.conf import settings
 from django.core.urlresolvers import reverse
 from django.contrib.contenttypes.models import ContentType
 from django.template.loader import render_to_string
+from django.core.mail import EmailMultiAlternatives
 
 from haystack.query import SearchQuerySet
 
@@ -24,7 +27,13 @@ from .models import MakerScienceProfile, MakerScienceProfileTaggedItem
 
 import json
 import os
+import requests
 
+from datetime import datetime
+from Crypto.Cipher import AES
+from Crypto.Hash import MD5
+
+from base64 import urlsafe_b64encode, urlsafe_b64decode
 
 class MakerScienceProfileResourceLight(ModelResource, SearchableMakerScienceResource):
     parent_id = fields.IntegerField('parent__id')
@@ -106,7 +115,98 @@ class MakerScienceProfileResource(ModelResource, SearchableMakerScienceResource)
             url(r"^(?P<resource_name>%s)/(?P<slug>[\w-]+)/avatar/upload%s$" % (self._meta.resource_name, trailing_slash()), self.wrap_view('avatar_upload'), name="api_avatar_upload"),
             url(r"^(?P<resource_name>%s)/(?P<slug>[\w-]+)/activities%s$" % (self._meta.resource_name, trailing_slash()), self.wrap_view('get_profile_activities'), name="api_profile_activities"),
             url(r"^(?P<resource_name>%s)/(?P<slug>[\w-]+)/contacts/activities%s$" % (self._meta.resource_name, trailing_slash()), self.wrap_view('get_contacts_activities'), name="api_contacts_activities"),
+            url(r"^(?P<resource_name>%s)/(?P<slug>[\w-]+)/change/password%s$" % (self._meta.resource_name, trailing_slash()), self.wrap_view('change_password'), name="api_change_password"),
+            url(r"^(?P<resource_name>%s)/reset/password%s$" % (self._meta.resource_name, trailing_slash()), self.wrap_view('reset_password'), name="api_reset_password"),
+            url(r'^(?P<resource_name>%s)/(?P<slug>[\w-]+)/send/message%s$' % (self._meta.resource_name, trailing_slash()), self.wrap_view('send_message'), name='api_send_message'),
         ]
+
+    def send_message(self, request, **kwargs):
+        self.method_check(request, allowed=['post'])
+        self.is_authenticated(request)
+        self.throttle_check(request)
+
+        data = self.deserialize(request, request.body, format=request.META.get('CONTENT_TYPE', 'application/json'))
+
+        sender_profile = MakerScienceProfile.objects.get(parent__user__id=request.user.id)
+        recipient_profile = MakerScienceProfile.objects.get(slug=kwargs["slug"])
+
+        payload = dict(secret=settings.GOOGLE_RECAPTCHA_SECRET,
+                       response=data['recaptcha_response'])
+
+        r = requests.post("https://www.google.com/recaptcha/api/siteverify", data=payload)
+        resp = json.loads(r.text)
+        if resp["success"]:
+            try:
+                subject = "Message de %s sur Makerscience" % sender_profile.parent.get_full_name_or_username()
+                from_email = sender_profile.parent.user.email
+                to = recipient_profile.parent.user.email
+                text_content = render_to_string('notifications/message.txt', {'sender' : sender_profile, 'body' : data["body"]})
+                html_content = render_to_string('notifications/message.html', {'sender' : sender_profile, 'body' : data["body"]})
+                msg = EmailMultiAlternatives(subject, text_content, from_email, [to])
+                msg.attach_alternative(html_content, "text/html")
+                msg.send()
+            except:
+                return self.create_response(request, {'success': False, 'reason' : 'EMAIL_SENDING_FAIL'})
+            return self.create_response(request, {'success': True})
+        else:
+            return self.create_response(request, {'success': False, 'reason' : 'RECAPTCHA_ERROR'})
+
+    def reset_password(self, request, **kwargs):
+        self.method_check(request, allowed=['get'])
+
+        aes = AES.new(settings.AES_KEY, AES.MODE_CFB, settings.AES_IV)
+
+        email = request.GET.get('email', None)
+        hash = request.GET.get('hash', None)
+        password = request.GET.get('password', None)
+
+        try :
+            profile = MakerScienceProfile.objects.get(parent__user__email=email)
+
+            if hash and password :
+                decoded_email = urlsafe_b64decode(str(hash))
+                decrypted_email = aes.decrypt(decoded_email)
+
+                if decrypted_email == email:
+                    profile.parent.user.set_password(password)
+                    profile.parent.user.save()
+                    return self.create_response(request, {'success': True, 'error' : 'EMAIL_RESETED'})
+                else:
+                    return self.create_response(request, {'success': False, 'error' : 'EMAIL_MISSMATCH'})
+            else:
+                password_reset_url = u"%s/%s/?email=%s" % (settings.RESET_PASSWORD_URL, urlsafe_b64encode(aes.encrypt(email)), email.encode('utf-8'))
+                try:
+                    subject = "Ré-initialisation de votre mot de passe sur Makerscience"
+                    from_email = 'Makerscience <no-reply@makerscience.fr>'
+                    to = profile.parent.user.email
+                    text_content = render_to_string('notifications/reset_password.txt', {'password_reset_url' : password_reset_url })
+                    html_content = render_to_string('notifications/reset_password.html', {'password_reset_url' : password_reset_url })
+                    msg = EmailMultiAlternatives(subject, text_content, from_email, [to])
+                    msg.attach_alternative(html_content, "text/html")
+                    msg.send()
+                except:
+                    return self.create_response(request, {'success': False, 'reason' : 'EMAIL_SENDING_FAIL'})
+                return self.create_response(request, {'success': True, 'error' : 'EMAIL_SENT'})
+
+        except MakerScienceProfile.DoesNotExist :
+            return self.create_response(request, {'success': False, 'error' : 'UNKNOWN_PROFILE'})
+
+
+    def change_password(self, request, **kwargs):
+        self.method_check(request, allowed=['post'])
+        self.is_authenticated(request)
+        self.throttle_check(request)
+
+        profile = MakerScienceProfile.objects.get(slug=kwargs["slug"])
+
+        if profile.parent.user.id != request.user.id:
+            return self.create_response(request, {'success': False}, HttpUnauthorized)
+
+        data = self.deserialize(request, request.body, format=request.META.get('CONTENT_TYPE', 'application/json'))
+        profile.parent.user.set_password(data['password'])
+        profile.parent.user.save()
+
+        return self.create_response(request, {'success': True, 'msg' : 'password reseted'})
 
     def avatar_upload(self, request, **kwargs):
         self.method_check(request, allowed=['post'])
@@ -136,28 +236,26 @@ class MakerScienceProfileResource(ModelResource, SearchableMakerScienceResource)
         self.throttle_check(request)
         self.is_authenticated(request)
 
+        limit = request.GET.get('limit', None)
+
         profile = MakerScienceProfile.objects.get(slug=kwargs["slug"])
 
         activities = []
-        favoriteTags = {}
-        followedTags = []
-        for activity in ObjectProfileLink.objects.filter(profile=profile.parent, isValidated=True).order_by('-created_on'):
-            obj = activity.content_object
-            if activity.content_type.model == 'taggeditem':
-                if obj.tag.slug in favoriteTags:
-                    favoriteTags[obj.tag.slug] += 1
-                else:
-                    favoriteTags[obj.tag.slug] = 1
-            elif activity.content_type == 'tag':
-                followedTags.push(obj)
-            else:
-                activities.append({
-                    'description' : render_to_string('notifications/activity.html', {'activity': activity, 'egocentric':True}),
-                    'created_on' : activity.created_on
-                })
+        all_activities = ObjectProfileLink.objects.filter(profile=profile.parent, isValidated=True).order_by('-created_on')
+        for activity in all_activities:
+            activities.append({
+                'description' : render_to_string('notifications/activity.html', {'activity': activity, 'egocentric':True}),
+                'created_on' : activity.created_on
+            })
+            if limit and len(activities) == int(limit):
+                break
 
         return self.create_response(request, {
-            'objects': {'activities' : activities},
+            'metadata' : {
+                'limit' : int(limit),
+                'total_count' : all_activities.count()
+            },
+            'objects': activities,
         })
 
     def get_contacts_activities(self, request, **kwargs):
@@ -165,19 +263,28 @@ class MakerScienceProfileResource(ModelResource, SearchableMakerScienceResource)
         self.throttle_check(request)
         self.is_authenticated(request)
 
+        limit = request.GET.get('limit', None)
+
         profile = MakerScienceProfile.objects.get(slug=kwargs["slug"])
 
         contact_ids = profile.parent.objectprofilelink_set.filter(level=40).values_list('object_id', flat=True) #Must return IDs of MakerScienceProfile
         contact_ids = MakerScienceProfile.objects.filter(id__in=[int(i) for i in contact_ids]).values_list('parent__id', flat=True)
 
         activities = []
-        for activity in ObjectProfileLink.objects.filter(profile__in=contact_ids, isValidated=True).order_by('-created_on'):
+        all_activities = ObjectProfileLink.objects.filter(profile__in=contact_ids, isValidated=True).order_by('-created_on')
+        for activity in all_activities:
             activities.append({
                 'description' : render_to_string('notifications/activity.html', {'activity': activity, 'egocentric':False}),
                 'created_on' : activity.created_on
             })
+            if limit and len(activities) == int(limit):
+                break
 
         return self.create_response(request, {
+            'metadata' : {
+                'limit' : int(limit),
+                'total_count' : all_activities.count()
+            },
             'objects': activities,
         })
 

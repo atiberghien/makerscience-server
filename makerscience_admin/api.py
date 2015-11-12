@@ -60,14 +60,9 @@ class SearchableMakerScienceResource(object):
         exactExpressions = [] if exactExpressions == [''] else exactExpressions
         noneWord = [] if noneWord == [''] else noneWord
 
-        print allWords
-        print exactExpressions
-        print noneWord
-
 
         if get_params['searchIn'] in ['all', 'titles']:
             for term in allWords:
-                print "allWords filter", term
                 sqs = sqs.filter_and(text=term.strip())
 
             for term in exactExpressions:
@@ -101,23 +96,20 @@ class SearchableMakerScienceResource(object):
         if "advanced" in get_params:
             return self.ms_advanced_search(request, **kwargs)
 
-
         # Query params
         query = get_params.get('q', None)
         selected_facets = [item for sublist in [f.split(',') for f in get_params.getlist('facet', "")] for item in sublist]
+        selected_facets = None if selected_facets == [''] else selected_facets
+
         ordering = get_params.get('ordering', None)
         limit = get_params.get('limit', self._meta.limit)
 
-        for word in ["format", 'limit', 'offset']:
+        for word in ["q", "facet", "ordering", "format", 'limit', 'offset']:
             if word in get_params.keys():
-                del get_params[word]
-
-        if query or query == '':
-            del get_params["q"]
-        if selected_facets:
-            del get_params["facet"]
-        if ordering or ordering == '':
-            del get_params["ordering"]
+                try:
+                    del get_params[word]
+                except KeyError:
+                    print word, "not in request"
 
         filtering = {}
         for key, val in get_params.iteritems():

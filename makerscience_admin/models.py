@@ -13,10 +13,12 @@ from makerscience_catalog.models import  MakerScienceProjectTaggedItem, MakerSci
 
 class MakerScienceStaticContent (SingletonModel):
     about = models.TextField(null=True, blank=True)
+    about_howitworks = models.TextField(null=True, blank=True)
     about_team = models.TextField(null=True, blank=True)
     about_contact = models.TextField(null=True, blank=True)
     about_faq = models.TextField(null=True, blank=True)
     about_cgu = models.TextField(null=True, blank=True)
+    mentions = models.TextField(null=True, blank=True)
 
     project_thematic_selection = models.ManyToManyField(Tag, related_name='project_selection',
                                     limit_choices_to={'id__in' : MakerScienceProjectTaggedItem.objects.all().distinct('tag').values_list('tag', flat=True)},
@@ -24,6 +26,11 @@ class MakerScienceStaticContent (SingletonModel):
     resource_thematic_selection = models.ManyToManyField(Tag, related_name='resource_selection',
                                     limit_choices_to={'id__in' : MakerScienceResourceTaggedItem.objects.all().distinct('tag').values_list('tag', flat=True)},
                                     null=True, blank=True)
+
+    facebook = models.URLField(null=True, blank=True)
+    twitter = models.URLField(null=True, blank=True)
+    linkedin = models.URLField(null=True, blank=True)
+    youtube = models.URLField(null=True, blank=True)
 
 
 class PageViews(models.Model):
