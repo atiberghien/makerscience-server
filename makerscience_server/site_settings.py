@@ -22,7 +22,7 @@ DATABASES = {
                 'UNISSON_DATA_SERVER_DATABASE',
 
                 # default value for database is `dataserver` × 3
-                'postgis://dataserver:dataserver@localhost/dataserver')
+                'postgis://makerscience:Draj4Odbiad@localhost/makerscience')
         )
 }
 
@@ -148,10 +148,10 @@ OBJECTPROFILELINK_CHOICES = (
 )
 
 
-GOOGLE_CLIENT_ID = "CHANGE_ME"
-GOOGLE_CLIENT_SECRET = "CHANGE_ME"
+GOOGLE_CLIENT_ID = "192384401460-ntng78ie8hs2to1t1e0i9foi63rss5gr.apps.googleusercontent.com"
+GOOGLE_CLIENT_SECRET = "pjTWobVGq_U1qmUF9dklOXJG"
 
-GOOGLE_RECAPTCHA_SECRET = "CHANGE_ME"
+GOOGLE_RECAPTCHA_SECRET = "6LdX-gwTAAAAAFhO13hPt2ll54yFy20EBfqkBB55"
 
 FACEBOOK_CLIENT_ID = "CHANGE_ME"
 FACEBOOK_CLIENT_SECRET = "CHANGE_ME"
@@ -171,7 +171,7 @@ VOTE_TYPE_CHOICES = (
     ("makerscienceproject_vote_2", "Fun"),
     ("makerscienceproject_vote_3", "Prometteur"),
     ("makerscienceresource_vote_1", "Inspirant"),
-    ("makerscienceresource_vote_2", "Récomfortant"),
+    ("makerscienceresource_vote_2", "Réconfortant"),
     ("makerscienceresource_vote_3", "Utile"),
 )
 
@@ -184,15 +184,8 @@ CACHES = {
 
 USERENA_MUGSHOT_SIZE = 150
 
-EMAIL_HOST = 'smtp.gmail.com'
-MAKERSCIENCE_BASE_URL = "CHANGE_ME"
-EMAIL_PORT = 587
-# EMAIL_HOST_PASSWORD = 'thepassword'
-EMAIL_HOST_USER = 'makerscience@gmail.com'
-EMAIL_USE_TLS = True
+EMAIL_HOST = '127.0.0.1'
+EMAIL_PORT = 25
 
-EMAIL_BACKEND = 'django.core.mail.backends.console.EmailBackend'
-# EMAIL_BACKEND = 'django.core.mail.backends.smtp.EmailBackend'
-RESET_PASSWORD_URL = 'http://data.nonetype.fr/reset/password' #without trailing slash
-AES_KEY =  'CHANGE_ME'
-AES_IV = 'CHANGE_ME'
+#EMAIL_BACKEND = 'django.core.mail.backends.console.EmailBackend'
+EMAIL_BACKEND = 'django.core.mail.backends.smtp.EmailBackend'
