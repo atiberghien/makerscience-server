@@ -121,7 +121,7 @@ def create_notification(sender, instance, created, **kwargs):
                             target=activity.content_object,
                             verb=u'annonced')
         elif activity.level == 15: #someone has been invited to join  co-author
-            notify.send(MakerScienceProfile.objects.get(slug=activity.profile),
+            notify.send(MakerScienceProfile.objects.get(slug=activity.detail),
                         recipient=actor.parent.user,
                         target=activity.content_object,
                         verb=u'coauthor_invited')
