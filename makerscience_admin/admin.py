@@ -82,7 +82,7 @@ class ObjectProfileLinkAdmin(admin.ModelAdmin):
         if obj.content_type.model == 'makerscienceproject' and MakerScienceProject.objects.filter(id=obj.content_object.id).exists():
             return 'Projet : %s' % obj.content_object.parent.title
         elif obj.content_type.model == 'makerscienceresource' and MakerScienceResource.objects.filter(parent=obj.content_object).exists():
-            return 'Experience : %s' % obj.content_object.title
+            return 'Experience : %s' % obj.content_object.parent.title
         elif obj.content_type.model == 'makersciencepost' and MakerSciencePost.objects.filter(parent=obj.content_object).exists():
             return "Discussion : %s" % obj.content_object.title
         elif obj.content_type.model == 'makerscienceprofile' and MakerScienceProfile.objects.filter(id=obj.content_object.id).exists():

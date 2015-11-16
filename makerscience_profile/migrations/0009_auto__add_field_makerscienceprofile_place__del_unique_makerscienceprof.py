@@ -9,7 +9,7 @@ class Migration(SchemaMigration):
 
     def forwards(self, orm):
         # Removing unique constraint on 'MakerScienceProfile', fields ['slug']
-        db.delete_unique(u'makerscience_profile_makerscienceprofile', ['slug'])
+        # db.delete_unique(u'makerscience_profile_makerscienceprofile', ['slug'])
 
         # Adding field 'MakerScienceProfile.place'
         db.add_column(u'makerscience_profile_makerscienceprofile', 'place',
