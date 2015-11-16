@@ -64,6 +64,8 @@ AUTHENTICATED_USERS_PERMISSIONS = (
     'projects.add_projectprogressrange',
     'projects.change_projectprogressrange',
     'projects.delete_projectprogressrange',
+    'projects.change_projectnews',
+    'projects.delete_projectnews',
     'projectsheet.add_projectsheet',
     'projectsheet.change_projectsheet',
     'projectsheet.add_projectsheetquestion',
