@@ -37,14 +37,14 @@ class MakerScienceProfile(models.Model):
         ('WEEKLY', 'Hebdomadaire'),
     )
 
-    notif_subcription_freq = models.CharField(max_length=6, choices=NOTIF_SUB_FREQ_CHOICES, default='NONE')
+    notif_subcription_freq = models.CharField(max_length=6, choices=NOTIF_SUB_FREQ_CHOICES, default='WEEKLY')
 
     AUTHORIZED_CONTACT_CHOICES = (
         ('NONE', 'Personne'),
         ('ALL', 'Tous'),
         ('FOLLOWED', 'Les membres suivis'),
     )
-    authorized_contact = models.CharField(max_length=8, choices=AUTHORIZED_CONTACT_CHOICES, default='NONE')
+    authorized_contact = models.CharField(max_length=8, choices=AUTHORIZED_CONTACT_CHOICES, default='ALL')
 
     facebook = models.CharField(max_length=500, null=True, blank=True)
     twitter = models.CharField(max_length=500, null=True, blank=True)
