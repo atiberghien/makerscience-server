@@ -138,7 +138,7 @@ class MakerScienceProfileResource(ModelResource, SearchableMakerScienceResource)
         if resp["success"]:
             try:
                 subject = "Message de %s sur Makerscience" % sender_profile.parent.get_full_name_or_username()
-                from_email = sender_profile.parent.user.email
+                from_email = 'Makerscience <no-reply@makerscience.fr>'
                 to = recipient_profile.parent.user.email
                 text_content = render_to_string('notifications/message.txt', {'sender' : sender_profile, 'body' : data["body"]})
                 html_content = render_to_string('notifications/message.html', {'sender' : sender_profile, 'body' : data["body"]})
