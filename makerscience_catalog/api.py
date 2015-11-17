@@ -35,6 +35,7 @@ class MakerScienceCatalogResource(ModelResource, SearchableMakerScienceResource)
     base_projectsheet = fields.ToOneField(ProjectSheetResource, 'parent__projectsheet', null=True, full=True)
     #CAN NOT BE a "LIGHT" resource BECAUSE "LIGHT" model doesn't exist
     linked_resources = fields.ToManyField('makerscience_catalog.api.MakerScienceResourceResource', 'linked_resources', full=True,null=True)
+    linked_makersciencepost = fields.ToManyField('makerscience_forum.api.MakerSciencePostResourceLight', 'makersciencepost_set', full=True,null=True)
 
     def dehydrate_author(self, bundle):
         try:
@@ -68,8 +69,6 @@ class MakerScienceCatalogResource(ModelResource, SearchableMakerScienceResource)
         bundle.data["total_score"] = votes.aggregate(Sum('score'))['score__sum'] or 0
 
         bundle = self.dehydrate_author(bundle)
-
-        bundle.data["linked_makersciencepost"] = [int(x) for x in bundle.obj.makersciencepost_set.values_list('id', flat=True)]
 
         bundle.data["news"] = []
         for news in bundle.obj.parent.projectnews_set.all().order_by('-timestamp'):
