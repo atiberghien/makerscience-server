@@ -123,7 +123,7 @@ class MakerScienceProjectResourceLight(MakerScienceCatalogResource):
     parent_id = fields.IntegerField('parent__id')
     slug = fields.CharField('parent__slug')
     title = fields.CharField('parent__title')
-    baseline = fields.CharField('parent__title', null=True)
+    baseline = fields.CharField('parent__baseline', null=True)
     cover = fields.CharField('parent__projectsheet__cover__thumbnail_url', null=True)
 
     class Meta:
@@ -146,7 +146,7 @@ class MakerScienceResourceResourceLight(MakerScienceCatalogResource):
     parent_id = fields.IntegerField('parent__id')
     slug = fields.CharField('parent__slug')
     title = fields.CharField('parent__title')
-    baseline = fields.CharField('parent__title', null=True)
+    baseline = fields.CharField('parent__baseline', null=True)
     cover = fields.CharField('parent__projectsheet__cover__thumbnail_url', null=True)
 
     class Meta:
