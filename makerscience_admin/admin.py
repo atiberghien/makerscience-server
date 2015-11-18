@@ -100,16 +100,14 @@ class ObjectProfileLinkAdmin(admin.ModelAdmin):
     list_display = ('id', 'display_profile', 'display_level', 'display_content_object', 'isValidated', 'created_on')
     list_filter = (ObjectProfileLinkLevelFilter, 'isValidated')
     list_editable = ('isValidated', )
-
+    readonly_fields = ('created_on',)
     related_lookup_fields = {
         'generic': [['content_type', 'object_id']],
     }
 
     fieldsets = (
         (None, {
-            'fields': (('content_type', 'object_id'),
-                       ("profile", 'detail'),
-                       ('level', 'isValidated', 'created_on'))
+            'fields': (('content_type', 'object_id'), ("profile", 'detail'),  ('level', 'isValidated', 'created_on'))
         }),
     )
 
