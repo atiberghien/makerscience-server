@@ -97,7 +97,7 @@ class ObjectProfileLinkAdmin(admin.ModelAdmin):
         return "Inconnu : %s %s" % (obj.content_type, obj.object_id)
     display_content_object.short_description = 'Contenu lié'
 
-    list_display = ('id', 'display_profile', 'display_level', 'display_content_object', 'isValidated')
+    list_display = ('id', 'display_profile', 'display_level', 'display_content_object', 'isValidated', 'created_on')
     list_filter = (ObjectProfileLinkLevelFilter, 'isValidated')
     list_editable = ('isValidated', )
 
@@ -109,7 +109,7 @@ class ObjectProfileLinkAdmin(admin.ModelAdmin):
         (None, {
             'fields': (('content_type', 'object_id'),
                        ("profile", 'detail'),
-                       ('level', 'isValidated'))
+                       ('level', 'isValidated', 'created_on'))
         }),
     )
 
