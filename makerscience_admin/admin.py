@@ -108,7 +108,7 @@ class ObjectProfileLinkAdmin(admin.ModelAdmin):
     fieldsets = (
         (None, {
             'fields': (('content_type', 'object_id'),
-                       ("profile"),
+                       ("profile", 'detail'),
                        ('level', 'isValidated'))
         }),
     )
