@@ -70,7 +70,7 @@ class ObjectProfileLinkLevelFilter(SimpleListFilter):
 
 class ObjectProfileLinkAdmin(admin.ModelAdmin):
     def display_level(self, obj):
-        return dict(settings.OBJECTPROFILELINK_CHOICES)[obj.level]
+        return "%s - %s" % (obj.level, dict(settings.OBJECTPROFILELINK_CHOICES)[obj.level])
     display_level.short_description = 'Type de relation'
 
     def display_profile(self, obj):
