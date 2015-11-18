@@ -119,34 +119,34 @@ PAGEVIEWS_FILTER = (
 )
 
 OBJECTPROFILELINK_CHOICES = (
-    (0, "A rejoint l'équipe du projet"),
-    (1, 'Apporte son aide au projet'),
-    (2, 'Suit le projet'),
-    (3, 'Commentateur du projet'),
-    (4, 'A noté le projet'),
-    (5, "A invité à rejoindre l'équipe du projet"),
-    (6, "A invité à aider le projet"),
-    (7, "A ajouté une news"),
+    (0, "membre de l'équipe du projet"),
+    (1, 'apporte son aide au projet'),
+    (2, 'suit le projet'),
+    (3, 'commentateur du projet'),
+    (4, 'notation du projet'),
+    (5, "invitation à rejoindre l'équipe du projet"),
+    (6, "invitation à aider le projet"),
+    (7, "auteur d'un une news"),
 
-    (10, "Auteur de l'expérience"),
-    (11, "A une expérience similiaire"),
-    (12, "Fan de l'expérience"),
-    (13, "Commentateur d'expérience"),
-    (14, "A noté pour l'expérience"),
-    (15, "A invité à rejoindre les co-auteurs"),
-    (16, "A invité à partager son expérience similaires"),
+    (10, "(co)-auteur de l'expérience"),
+    (11, "a une expérience similiaire"),
+    (12, "suit l'expérience"),
+    (13, "commentateur de l'expérience"),
+    (14, "notation de l'expérience"),
+    (15, "invitation à rejoindre les co-auteurs"),
+    (16, "invitation à partager son expérience similaires"),
 
-    (30, 'Auteur de la discussion'),
-    (31, 'Contributeur à la discussions'),
-    (32, 'Suiveur de la discussion'),
-    (33, 'Fan de la discussion'),
-    (34, "Fan d'une réponse à la discussion"),
+    (30, 'auteur du post'),
+    (31, 'contributeur à la discussions'),
+    (32, 'suit la discussion'),
+    (33, 'aime la discussion'),
+    (34, "aime une réponse à la discussion"),
 
     (40, 'suit le membre'),
-    (41, 'A mentionné'),
+    (41, 'a mentionné'),
 
-    (50, 'A taggé'),
-    (51, 'Suit un tag'),
+    (50, 'a taggé'),
+    (51, 'suit un tag'),
 )
 
 
@@ -177,7 +177,7 @@ VOTE_TYPE_CHOICES = (
     ("makerscienceproject_vote_2", "Fun"),
     ("makerscienceproject_vote_3", "Prometteur"),
     ("makerscienceresource_vote_1", "Inspirant"),
-    ("makerscienceresource_vote_2", "Récomfortant"),
+    ("makerscienceresource_vote_2", "Réconfortant"),
     ("makerscienceresource_vote_3", "Utile"),
 )
 
