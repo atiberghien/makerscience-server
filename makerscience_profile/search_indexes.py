@@ -16,7 +16,7 @@ class MakerScienceProfileIndex(indexes.SearchIndex, indexes.Indexable):
       return MakerScienceProfile
 
     def prepare_tags(self, obj):
-      return [tag.name for tag in obj.tags.all()]
+      return [tag.slug for tag in obj.tags.all()]
 
     def prepare_activity_score(self, obj):
         return obj.parent.objectprofilelink_set.all().count()

@@ -1,5 +1,5 @@
 from django.core.urlresolvers import reverse
-
+from django.utils.text import slugify
 from tastypie.resources import ModelResource
 from tastypie import fields
 from tastypie.paginator import Paginator
@@ -66,22 +66,20 @@ class SearchableMakerScienceResource(object):
                 sqs = sqs.filter_and(text=term.strip())
 
             for term in exactExpressions:
-                print "exactExpression filter", term
                 sqs = sqs.filter_and(text=term.strip())
 
             for term in noneWord:
-                print "noneWord filter", term
                 sqs = sqs.exclude(text=term.strip())
 
         elif get_params['searchIn'] == 'tags':
             for term in allWords:
-                sqs = sqs.filter_and(tags=term.strip())
+                sqs = sqs.filter_and(tags=slugify(term.strip()))
 
             for term in exactExpressions:
-                sqs = sqs.filter_and(tags=term.strip())
+                sqs = sqs.filter_and(tags=slugify(term.strip()))
 
             for term in noneWord:
-                sqs = sqs.exclude(tags=term.strip())
+                sqs = sqs.exclude(tags=slugify(term.strip()))
 
         self.log_throttled_access(request)
         return self.create_response(request, self.prepare_result(request, sqs, limit))
@@ -120,7 +118,7 @@ class SearchableMakerScienceResource(object):
         if selected_facets:
             first_narrow_succes = False
             for i, facet in enumerate(selected_facets):
-                tmp_sqs = sqs.narrow('tags:%s' % (facet))
+                tmp_sqs = sqs.narrow('tags_exact:%s' % slugify(facet))
                 if len(tmp_sqs) :
                     first_narrow_succes = True
                 if first_narrow_succes or i == len(selected_facets) - 1:

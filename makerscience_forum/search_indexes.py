@@ -15,4 +15,4 @@ class MakerSciencePostIndex(indexes.SearchIndex, indexes.Indexable):
       return MakerSciencePost
 
   def prepare_tags(self, obj):
-      return [tag.name for tag in obj.parent.tags.all()]
+      return [tag.slug for tag in obj.parent.tags.all()]
