@@ -22,7 +22,7 @@ class MakerScienceProjectIndex(indexes.SearchIndex, indexes.Indexable):
       return MakerScienceProject
 
     def prepare_tags(self, obj):
-        return [tag.name for tag in obj.tags.all()]
+        return [tag.slug for tag in obj.tags.all()]
 
     def prepare_total_score(self, obj):
         votes = Vote.objects.filter(content_type=ContentType.objects.get_for_model(self.get_model()),
