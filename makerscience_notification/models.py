@@ -186,12 +186,13 @@ def send_notifications_by_mail(frequency):
             notifs = notifs.filter(timestamp__gte=time_threshold)
 
             subject = "Notifications Makerscience"
-            from_email = 'no-reply@makerscience.fr'
+            from_email = 'Makerscience <no-reply@makerscience.fr>'
             to = profile.parent.user.email
             context = {
                 'frequency' : frequency,
                 'notifs' : notifs,
-                'base_url' : settings.MAKERSCIENCE_BASE_URL
+                'base_url' : settings.MAKERSCIENCE_BASE_URL,
+                'recipient' : profile
             }
 
             text_content = render_to_string('notifications/notif_multiple.txt', context)
