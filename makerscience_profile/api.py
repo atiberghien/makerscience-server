@@ -140,8 +140,8 @@ class MakerScienceProfileResource(ModelResource, SearchableMakerScienceResource)
                 subject = "Message de %s sur Makerscience" % sender_profile.parent.get_full_name_or_username()
                 from_email = 'Makerscience <no-reply@makerscience.fr>'
                 to = recipient_profile.parent.user.email
-                text_content = render_to_string('notifications/message.txt', {'sender' : sender_profile, 'body' : data["body"]})
-                html_content = render_to_string('notifications/message.html', {'sender' : sender_profile, 'body' : data["body"]})
+                text_content = render_to_string('notifications/message.txt', {'sender' : sender_profile, 'body' : data["body"], 'recipient' : recipient_profile})
+                html_content = render_to_string('notifications/message.html', {'sender' : sender_profile, 'body' : data["body"], 'recipient' : recipient_profile})
                 msg = EmailMultiAlternatives(subject, text_content, from_email, [to])
                 msg.attach_alternative(html_content, "text/html")
                 msg.send()
@@ -179,8 +179,8 @@ class MakerScienceProfileResource(ModelResource, SearchableMakerScienceResource)
                     subject = "Ré-initialisation de votre mot de passe sur Makerscience"
                     from_email = 'Makerscience <no-reply@makerscience.fr>'
                     to = profile.parent.user.email
-                    text_content = render_to_string('notifications/reset_password.txt', {'password_reset_url' : password_reset_url })
-                    html_content = render_to_string('notifications/reset_password.html', {'password_reset_url' : password_reset_url })
+                    text_content = render_to_string('notifications/reset_password.txt', {'password_reset_url' : password_reset_url, 'recipient' : profile })
+                    html_content = render_to_string('notifications/reset_password.html', {'password_reset_url' : password_reset_url, 'recipient' : profile })
                     msg = EmailMultiAlternatives(subject, text_content, from_email, [to])
                     msg.attach_alternative(html_content, "text/html")
                     msg.send()
