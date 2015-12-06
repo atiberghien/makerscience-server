@@ -6,6 +6,7 @@ from django.contrib.admin.options import ModelAdmin
 from django.conf import settings
 from django import forms
 
+from mptt.admin import MPTTModelAdmin
 from solo.admin import SingletonModelAdmin
 from redactor.widgets import RedactorEditor
 from taggit.models import Tag, TaggedItem
@@ -118,3 +119,9 @@ class PageViewsAdmin(admin.ModelAdmin):
     list_display = ('client', 'resource_uri')
 
 admin.site.register(PageViews, PageViewsAdmin)
+
+
+class PostAdmin(MPTTModelAdmin):
+    list_display = ('id', 'title')
+
+admin.site.register(Post, PostAdmin)
