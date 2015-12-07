@@ -11,6 +11,6 @@ class Command(BaseCommand):
 
         #in some obscure cases, content_object become None and crash
         for o in ObjectProfileLink.objects.all():
-            if o.content_object == None:
-                print "Clearing : %s (%s) - %s " % (o.profile.get_full_name_or_username(), o.profile.user.email, o.get_level_display())
+            if o.content_object == None or o.profile == None:
+                print "Clearing : %s (%s) - %s " % (o.profile.get_full_name_or_username(), o.profile.user.email, o.level)
                 o.delete()
