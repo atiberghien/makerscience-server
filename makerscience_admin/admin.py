@@ -122,6 +122,23 @@ admin.site.register(PageViews, PageViewsAdmin)
 
 
 class PostAdmin(MPTTModelAdmin):
-    list_display = ('id', 'title')
+    def display_smart_title(self, obj):
+        if obj.is_root_node():
+            return obj.title
+        else:
+            try:
+                author = ObjectProfileLink.objects.get(content_type__model='post', object_id=obj.id, level=30).profile
+                if obj.level == 1:
+                    return "-- Réponse de : %s" % author
+                elif obj.level == 2:
+                    return "---- Commentaire de : %s" % author
+            except:
+                pass
+        return ""
+
+    display_smart_title.short_description = 'Titre'
+
+    list_display = ('id', 'display_smart_title', 'text')
+
 
 admin.site.register(Post, PostAdmin)
