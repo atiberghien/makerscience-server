@@ -170,7 +170,7 @@ def create_notification(sender, instance, created, **kwargs):
 
 post_save.connect(create_notification, sender=ObjectProfileLink)
 
-def generate_notif_description(sender, instance, created, **kwargs):
+def generate_notif_description(sender, instance, **kwargs):
     instance.data = {'description' : render_to_string('notifications/notification.html', {'notif': instance})}
 
 pre_save.connect(generate_notif_description, sender=Notification)
