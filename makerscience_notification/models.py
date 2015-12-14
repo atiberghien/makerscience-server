@@ -117,7 +117,7 @@ def create_notification(sender, instance, created, **kwargs):
 
             for profile in MakerScienceProfile.objects.filter(parent__id__in=filter(is_not_actor, profile_ids)):
                 notify.send(actor,
-                            recipient=actor.parent.user,
+                            recipient=profile.parent.user,
                             target=activity.content_object,
                             verb=u'annonced')
         elif activity.level == 15: #someone has been invited to join  co-author
