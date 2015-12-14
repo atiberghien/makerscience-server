@@ -1,6 +1,6 @@
 # -*- coding: utf-8 -*-
 from django.db import models
-from django.db.models.signals import post_save
+from django.db.models.signals import pre_save, post_save
 from django.template.loader import render_to_string
 from django.contrib.contenttypes.models import ContentType
 from django.conf import settings
@@ -172,9 +172,8 @@ post_save.connect(create_notification, sender=ObjectProfileLink)
 
 def generate_notif_description(sender, instance, created, **kwargs):
     instance.data = {'description' : render_to_string('notifications/notification.html', {'notif': instance})}
-    instance.save()
 
-post_save.connect(generate_notif_description, sender=Notification)
+pre_save.connect(generate_notif_description, sender=Notification)
 
 
 def send_notifications_by_mail(frequency):
