@@ -139,7 +139,10 @@ def create_notification(sender, instance, created, **kwargs):
                             action_object=activity.content_object,
                             verb=u'liked')
         elif activity.level in [3, 13]: #commented content where the recipient is involved (creator, member)
-            profile_ids = ObjectProfileLink.objects.filter(level__in=[0, 1, 10, 11]).distinct('profile').values_list('profile', flat=True)
+
+            target_level = 0 if activity.level  == 3 else 10
+
+            profile_ids = ObjectProfileLink.objects.filter(level=target_level).distinct('profile').values_list('profile', flat=True)
 
             for profile in MakerScienceProfile.objects.filter(parent__id__in=filter(is_not_actor, profile_ids)):
                 notify.send(actor,
