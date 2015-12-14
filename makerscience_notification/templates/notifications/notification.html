@@ -39,9 +39,9 @@
     {% endif %}
 {% elif notif.verb == 'scored' %}
     {% if notif.action_object.content_type.model == 'makerscienceproject' %}
-        a noté le projet <a href="{{base_url}}/p/{{notif.action_object.parent.slug}}">{{notif.action_object.content_object.parent.title}}</a>
+        a noté le projet <a href="{{base_url}}/p/{{notif.action_object.content_object.parent.slug}}">{{notif.action_object.content_object.parent.title}}</a>
     {% elif notif.action_object.content_type.model == 'makerscienceresource' %}
-        a noté l'expérience <a href="{{base_url}}/r/{{notif.action_object.parent.slug}}">{{notif.action_object.content_object.parent.title}}</a>
+        a noté l'expérience <a href="{{base_url}}/r/{{notif.action_object.content_object.parent.slug}}">{{notif.action_object.content_object.parent.title}}</a>
     {% endif %}
 {% elif notif.verb == 'mentionned' %}
     vous a cité dans
