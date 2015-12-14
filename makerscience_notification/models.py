@@ -171,9 +171,8 @@ def create_notification(sender, instance, created, **kwargs):
 post_save.connect(create_notification, sender=ObjectProfileLink)
 
 def generate_notif_description(sender, instance, created, **kwargs):
-    if created or instance.data == None:
-        instance.data = {'description' : render_to_string('notifications/notification.html', {'notif': instance})}
-        instance.save()
+    instance.data = {'description' : render_to_string('notifications/notification.html', {'notif': instance})}
+    instance.save()
 
 post_save.connect(generate_notif_description, sender=Notification)
 
