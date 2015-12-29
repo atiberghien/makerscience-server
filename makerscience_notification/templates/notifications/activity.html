@@ -148,7 +148,7 @@
     {% else %}
         <a href="/u/{{activity.profile.slug}}">{{activity.profile.get_full_name_or_username}}</a>
     {% endif %}
-    a cité <a href="/u/{{activity.detail}}">{% get_profile_for_slug(activity.detail).parent.get_full_name_or_username() %}</a> dans la discussion <a href="/discussions/{{activity.content_object.parent.slug}}">{{activity.content_object.parent.title}}</a>
+    a cité <a href="/u/{{activity.detail}}">{% get_profile_name_for_slug activity.detail %}</a> dans la discussion <a href="/discussions/{{activity.content_object.parent.slug}}">{{activity.content_object.parent.title}}</a>
 {% elif activity.level == 50 %}
     {% if egocentric %}
         {{activity.profile.user.first_name}}
