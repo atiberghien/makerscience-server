@@ -191,7 +191,7 @@ pre_save.connect(generate_notif_description, sender=Notification)
 def send_notifications_by_mail(frequency):
     for profile in MakerScienceProfile.objects.all():
         notifs = profile.parent.user.notifications.all()
-        if profile.notif_subcription_freq == frequency:
+        if notifs.count() > 0 and profile.notif_subcription_freq == frequency:
             if frequency == 'DAILY':
                 time_threshold = datetime.now() - timedelta(hours=24)
             elif frequency == 'WEEKLY':
