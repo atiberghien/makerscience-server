@@ -22,7 +22,7 @@ DATABASES = {
                 'UNISSON_DATA_SERVER_DATABASE',
 
                 # default value for database is `dataserver` × 3
-                'postgis://dataserver:dataserver@localhost/dataserver')
+                'postgis://makerscience:plop@localhost/makerscience')
         )
 }
 
@@ -126,7 +126,7 @@ OBJECTPROFILELINK_CHOICES = (
     (4, 'notation du projet'),
     (5, "invitation à rejoindre l'équipe du projet"),
     (6, "invitation à aider le projet"),
-    (7, "auteur d'un une news"),
+    (7, "auteur d'une actu"),
 
     (10, "(co)-auteur de l'expérience"),
     (11, "a une expérience similiaire"),
@@ -168,6 +168,9 @@ CORS_ORIGIN_WHITELIST = (
         'https://api.twitter.com',
         'http://localhost:8001',
         'makerscience.nonetype.net'
+        'makerscience.fr'
+        'www.makerscience.fr'
+        'http://localhost:8001/'
 )
 
 MEDIA_URL = '/media/'

@@ -134,7 +134,12 @@ def create_notification(sender, instance, created, **kwargs):
                         target=activity.content_object,
                         verb=u'similar_resource_invited')
         elif activity.level in [2, 12, 33]: #liked content where the recipient is involved (creator, member)
-            profile_ids = ObjectProfileLink.objects.filter(level__in=[0, 1, 10, 11, 30, 31],
+            target_levels = {
+                2 : [0, 1],
+                12 : [10, 11],
+                33 : [30, 31]
+            }
+            profile_ids = ObjectProfileLink.objects.filter(level__in=target_levels[activity.level],
                                                            isValidated=True,
                                                            content_type=ContentType.objects.get_for_model(activity.content_object),
                                                            object_id=activity.content_object.id).distinct('profile').values_list('profile', flat=True)
@@ -145,9 +150,7 @@ def create_notification(sender, instance, created, **kwargs):
                             action_object=activity.content_object,
                             verb=u'liked')
         elif activity.level in [3, 13]: #commented content where the recipient is involved (creator, member)
-
-            target_level = 0 if activity.level  == 3 else 10
-
+            target_level = 0 if activity.level == 3 else 10
             profile_ids = ObjectProfileLink.objects.filter(level=target_level,
                                                            isValidated=True,
                                                            content_type=ContentType.objects.get_for_model(activity.content_object),
@@ -159,7 +162,8 @@ def create_notification(sender, instance, created, **kwargs):
                             action_object=activity.content_object,
                             verb=u'commented')
         elif activity.level in [4, 14]: #scored content where the recipient is involved (creator, member)
-            profile_ids = ObjectProfileLink.objects.filter(level__in=[0, 1, 10, 11],
+            target_level = 0 if activity.level == 4 else 10
+            profile_ids = ObjectProfileLink.objects.filter(level=target_level,
                                                            isValidated=True,
                                                            content_type=ContentType.objects.get_for_model(activity.content_object),
                                                            object_id=activity.content_object.id).distinct('profile').values_list('profile', flat=True)

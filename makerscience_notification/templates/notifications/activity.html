@@ -3,7 +3,7 @@
 
 {% if activity.level == 0 %}
     {% if egocentric %}
-        {{activity.profile.user.first_name}}
+        {{activity.profile.user.first_name|capfirst}}
     {% else %}
         <a href="/u/{{activity.profile.get_full_name_or_username|slugify}}">{{activity.profile.get_full_name_or_username}}</a>
     {% endif %}
@@ -11,7 +11,7 @@
 
 {% elif activity.level == 1 %}
     {% if egocentric %}
-        {{activity.profile.user.first_name}}
+        {{activity.profile.user.first_name|capfirst}}
     {% else %}
         <a href="/u/{{activity.profile.slug}}">{{activity.profile.get_full_name_or_username}}</a>
     {% endif %}
@@ -19,7 +19,7 @@
 
 {% elif activity.level == 2 %}
     {% if egocentric %}
-        {{activity.profile.user.first_name}}
+        {{activity.profile.user.first_name|capfirst}}
     {% else %}
         <a href="/u/{{activity.profile.slug}}">{{activity.profile.get_full_name_or_username}}</a>
     {% endif %}
@@ -27,7 +27,7 @@
 
 {% elif activity.level == 3 %}
     {% if egocentric %}
-        {{activity.profile.user.first_name}}
+        {{activity.profile.user.first_name|capfirst}}
     {% else %}
         <a href="/u/{{activity.profile.slug}}">{{activity.profile.get_full_name_or_username}}</a>
     {% endif %}
@@ -35,14 +35,14 @@
 
 {% elif activity.level == 4 %}
     {% if egocentric %}
-        {{activity.profile.user.first_name}}
+        {{activity.profile.user.first_name|capfirst}}
     {% else %}
         <a href="/u/{{activity.profile.slug}}">{{activity.profile.get_full_name_or_username}}</a>
     {% endif %}
     a noté le critère «{{activity.content_object.get_vote_type_display}}» du projet <a href="/p/{{activity.content_object.content_object.parent.slug}}">{{activity.content_object.content_object.parent.title}}</a>
 {% elif activity.level == 7 %}
     {% if egocentric %}
-        {{activity.profile.user.first_name}}
+        {{activity.profile.user.first_name|capfirst|capfirst}}
     {% else %}
         <a href="/u/{{activity.profile.slug}}">{{activity.profile.get_full_name_or_username}}</a>
     {% endif %}
@@ -50,7 +50,7 @@
 
 {% elif activity.level == 10 %}
     {% if egocentric %}
-        {{activity.profile.user.first_name}}
+        {{activity.profile.user.first_name|capfirst}}
     {% else %}
         <a href="/u/{{activity.profile.slug}}">{{activity.profile.get_full_name_or_username}}</a>
     {% endif %}
@@ -58,7 +58,7 @@
 
 {% elif activity.level == 11 %}
     {% if egocentric %}
-        {{activity.profile.user.first_name}}
+        {{activity.profile.user.first_name|capfirst}}
     {% else %}
         <a href="/u/{{activity.profile.slug}}">{{activity.profile.get_full_name_or_username}}</a>
     {% endif %}
@@ -66,7 +66,7 @@
 
 {% elif activity.level == 12 %}
     {% if egocentric %}
-        {{activity.profile.user.first_name}}
+        {{activity.profile.user.first_name|capfirst}}
     {% else %}
         <a href="/u/{{activity.profile.slug}}">{{activity.profile.get_full_name_or_username}}</a>
     {% endif %}
@@ -74,7 +74,7 @@
 
 {% elif activity.level == 13 %}
     {% if egocentric %}
-        {{activity.profile.user.first_name}}
+        {{activity.profile.user.first_name|capfirst}}
     {% else %}
         <a href="/u/{{activity.profile.slug}}">{{activity.profile.get_full_name_or_username}}</a>
     {% endif %}
@@ -82,7 +82,7 @@
 
 {% elif activity.level == 14 %}
     {% if egocentric %}
-        {{activity.profile.user.first_name}}
+        {{activity.profile.user.first_name|capfirst}}
     {% else %}
         <a href="/u/{{activity.profile.slug}}">{{activity.profile.get_full_name_or_username}}</a>
     {% endif %}
@@ -90,7 +90,7 @@
 
 {% elif activity.level == 30 %}
     {% if egocentric %}
-        {{activity.profile.user.first_name}}
+        {{activity.profile.user.first_name|capfirst}}
     {% else %}
         <a href="/u/{{activity.profile.slug}}">{{activity.profile.get_full_name_or_username}}</a>
     {% endif %}
@@ -104,7 +104,7 @@
 
 {% elif activity.level == 31 %}
     {% if egocentric %}
-        {{activity.profile.user.first_name}}
+        {{activity.profile.user.first_name|capfirst}}
     {% else %}
         <a href="/u/{{activity.profile.slug}}">{{activity.profile.get_full_name_or_username}}</a>
     {% endif %}
@@ -112,7 +112,7 @@
 
 {% elif activity.level == 32 %}
     {% if egocentric %}
-        {{activity.profile.user.first_name}}
+        {{activity.profile.user.first_name|capfirst}}
     {% else %}
         <a href="/u/{{activity.profile.slug}}">{{activity.profile.get_full_name_or_username}}</a>
     {% endif %}
@@ -120,7 +120,7 @@
 
 {% elif activity.level == 33 %}
     {% if egocentric %}
-        {{activity.profile.user.first_name}}
+        {{activity.profile.user.first_name|capfirst}}
     {% else %}
         <a href="/u/{{activity.profile.slug}}">{{activity.profile.get_full_name_or_username}}</a>
     {% endif %}
@@ -128,7 +128,7 @@
 
 {% elif activity.level == 34 %}
     {% if egocentric %}
-        {{activity.profile.user.first_name}}
+        {{activity.profile.user.first_name|capfirst}}
     {% else %}
         <a href="/u/{{activity.profile.slug}}">{{activity.profile.get_full_name_or_username}}</a>
     {% endif %}
@@ -136,7 +136,7 @@
 
 {% elif activity.level == 40 %}
     {% if egocentric %}
-        {{activity.profile.user.first_name}}
+        {{activity.profile.user.first_name|capfirst}}
     {% else %}
         <a href="/u/{{activity.profile.get_full_name_or_username|slugify}}">{{activity.profile.get_full_name_or_username}}</a>
     {% endif %}
@@ -144,14 +144,14 @@
 
 {% elif activity.level == 41 %}
     {% if egocentric %}
-        {{activity.profile.user.first_name}}
+        {{activity.profile.user.first_name|capfirst}}
     {% else %}
         <a href="/u/{{activity.profile.slug}}">{{activity.profile.get_full_name_or_username}}</a>
     {% endif %}
-    a cité <a href="/u/{{activity.detail}}">{{ activity.detail|profile_fullname }}</a> dans la discussion <a href="/discussions/{{activity.content_object.parent.slug}}">{{activity.content_object.parent.title}}</a>
+    a cité <a href="/u/{{activity.detail}}">{{activity.detail|profile_fullname}}</a> dans la discussion <a href="/discussions/{{activity.content_object.parent.slug}}">{{activity.content_object.parent.title}}</a>
 {% elif activity.level == 50 %}
     {% if egocentric %}
-        {{activity.profile.user.first_name}}
+        {{activity.profile.user.first_name|capfirst}}
     {% else %}
         <a href="/u/{{activity.profile.slug}}">{{activity.profile.get_full_name_or_username}}</a>
     {% endif %}
@@ -164,7 +164,7 @@
     avec le tag «<a href="/tag/{{activity.content_object.tag.slug}}">{{activity.content_object.tag.slug}}</a>»
 {% elif activity.level == 51 %}
     {% if egocentric %}
-        {{activity.profile.user.first_name}}
+        {{activity.profile.user.first_name|capfirst}}
     {% else %}
         <a href="/u/{{activity.profile.slug}}">{{activity.profile.get_full_name_or_username}}</a>
     {% endif %}
