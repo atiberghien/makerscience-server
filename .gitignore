@@ -6,3 +6,6 @@
 makerscience_server/whoosh_index
 /makerscience_server/site_settings_prod.py
 /makerscience_server/site_settings_staging.py
+*.dump
+*.json
+/makerscience_server/site_settings.py
