@@ -126,7 +126,7 @@ OBJECTPROFILELINK_CHOICES = (
     (4, 'notation du projet'),
     (5, "invitation à rejoindre l'équipe du projet"),
     (6, "invitation à aider le projet"),
-    (7, "auteur d'une actu"),
+    (7, "auteur d'un une news"),
 
     (10, "(co)-auteur de l'expérience"),
     (11, "a une expérience similiaire"),
@@ -162,15 +162,9 @@ TWITTER_CLIENT_ID = "RXz5fy5X4M1LewAeNliME2gbM"
 TWITTER_CLIENT_SECRET = "nCz6RzDXYJAfxDw5ZNJx9ZMw1dg5RK5jDt3fr9imLqtLNtXSjx"
 
 CORS_ORIGIN_WHITELIST = (
-        'localhost:8001',
-        '127.0.0.1:8001',
-        '127.0.0.1:8002',
-        'https://api.twitter.com',
-        'http://localhost:8001',
-        'makerscience.nonetype.net'
-        'makerscience.fr'
-        'www.makerscience.fr'
-        'http://localhost:8001/'
+	'http://127.0.0.1:8001/',
+	'http://localhost:8001',
+	'https://api.twitter.com',
 )
 
 MEDIA_URL = '/media/'
