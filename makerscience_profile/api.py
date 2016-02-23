@@ -109,6 +109,11 @@ class MakerScienceProfileResource(ModelResource, SearchableMakerScienceResource)
         bundle.data["modified"] = datetime.now()
         return bundle
 
+    def hydrate_website(self, bundle):
+        if bundle.data["website"].startswith("http://") == False or bundle.data["website"].startswith("https://") == False:
+            bundle.data["website"] = "http://" + bundle.data["website"]
+        return bundle
+
     def prepend_urls(self):
         return [
             url(r"^(?P<resource_name>%s)/search%s$" % (self._meta.resource_name, trailing_slash()), self.wrap_view('ms_search'), name="api_ms_search"),
