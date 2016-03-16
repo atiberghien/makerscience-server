@@ -7,3 +7,4 @@ django-solo
 django-grappelli==2.5.7
 django-ipware
 pycrypto==2.6.1
+geopy==1.11.0

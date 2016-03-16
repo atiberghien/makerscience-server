@@ -5,7 +5,7 @@ from django.contrib import admin
 
 from tastypie.api import Api
 
-from scout.api import PlaceResource #MapResource, TileLayerResource, DataLayerResource, MarkerResource, MarkerCategoryResource, PostalAddressResource
+from scout.api import PlaceResource, PostalAddressResource #, MapResource, TileLayerResource, DataLayerResource, MarkerResource, MarkerCategoryResource
 from accounts.api import UserResource, GroupResource, ProfileResource, ObjectProfileLinkResource
 from bucket.api import BucketResource, BucketFileResource, BucketTagResource, BucketFileCommentResource
 from graffiti.api import TagResource, TaggedItemResource
@@ -34,7 +34,7 @@ api = Api(api_name='v0')
 # api.register(MarkerResource())
 # api.register(DataLayerResource())
 # api.register(MarkerCategoryResource())
-# api.register(PostalAddressResource())
+api.register(PostalAddressResource())
 api.register(PlaceResource())
 
 # Auth

@@ -1,16 +1,19 @@
 # -*- coding: utf-8 -*-
 from django.contrib.auth.models import User, Group
+from django.conf import settings
 from django.db import models
-from accounts.models import Profile
 from django.db.models.signals import post_save
 from django.dispatch.dispatcher import receiver
-from scout.models import PostalAddress, Place
+from django.contrib.gis.geos import GEOSGeometry
+
 from taggit.models import TaggedItem
 from taggit.managers import TaggableManager
 from guardian.shortcuts import assign_perm
-from autoslug import AutoSlugField
-from django.conf import settings
 from guardian.shortcuts import assign_perm
+from autoslug import AutoSlugField
+from geopy.geocoders import Nominatim
+from accounts.models import Profile
+from scout.models import PostalAddress, Place
 
 class MakerScienceProfileTaggedItem (TaggedItem):
     PROFILE_TAG_TYPE_CHOICES = (
@@ -88,3 +91,23 @@ def allow_user_to_create_MS_resources_and_project(sender, instance, created, *ar
             print permission
     # assign user to group
     instance.groups.add(group)
+
+@receiver(post_save, sender=PostalAddress)
+def geocode_postal_address(sender, instance, created, *args, **kwargs):
+    places = instance.place.all()
+    for place in instance.place.all():
+        if place.makerscienceprofile_set.count() == 0:
+            place.delete()
+
+    place, place_created = Place.objects.get_or_create(address=instance)
+
+    if instance.address_locality:
+        geolocator = Nominatim()
+        location = geolocator.geocode(instance.address_locality)
+        if location:
+            pnt = GEOSGeometry('POINT(%s %s)' % (location.longitude, location.latitude))
+            try:
+                place.geo = pnt
+                place.save()
+            except:
+                print "No place", location.address
