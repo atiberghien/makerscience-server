@@ -23,8 +23,14 @@ class MakerScienceProfileTaggedItem (TaggedItem):
     tag_type = models.CharField(max_length=2, choices=PROFILE_TAG_TYPE_CHOICES)
 
 @receiver(post_delete, sender=MakerScienceProfileTaggedItem)
-def delete_parent_taggeditem(sender, instance, **kwargs):
+def delete_makerscienceprofiletaggedItem_parent(sender, instance, **kwargs):
+    try:
+        ObjectProfileLink.objects.get(content_type__model='taggeditem',
+                                      object_id=instance.taggeditem_ptr.id).delete()
+    except:
+        pass
     instance.taggeditem_ptr.delete()
+
 
 class MakerScienceProfile(models.Model):
     slug = AutoSlugField(always_update=True,
