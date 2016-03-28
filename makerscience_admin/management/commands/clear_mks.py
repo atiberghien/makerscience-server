@@ -16,7 +16,6 @@ class Command(BaseCommand):
         print "Clearing ObjectProfileLink ...",
         for o in ObjectProfileLink.objects.all():
             if o.content_object == None or o.profile == None:
-                # print "Clearing : %s (%s) - %s " % (o.profile.get_full_name_or_username(), o.profile.user.email, o.level)
                 o.delete()
         print "[OK]"
 
@@ -36,7 +35,7 @@ class Command(BaseCommand):
 
         print "Clearing Place ...",
         for p in Place.objects.all():
-            if p.makerscienceprofile_set.count() == 0:
+            if p.makerscienceprofile_set.count() == 0 and p.project_set.count() == 0:
                 p.delete()
             else:
                 p.address.save()
