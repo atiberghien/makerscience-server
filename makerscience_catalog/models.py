@@ -2,7 +2,7 @@
 
 from django.db import models
 from django.utils.translation import ugettext as _
-from django.db.models.signals import post_save, post_delete
+from django.db.models.signals import post_save, post_delete, pre_delete
 from django.dispatch.dispatcher import receiver
 
 from guardian.shortcuts import assign_perm, remove_perm
@@ -23,6 +23,14 @@ class MakerScienceProjectTaggedItem (TaggedItem):
     )
     tag_type = models.CharField(max_length=2, choices=PROJECT_TAG_TYPE_CHOICES)
 
+@receiver(post_delete, sender=MakerScienceProjectTaggedItem)
+def delete_makerscienceprojecttaggeditem_parent(sender, instance, **kwargs):
+    try:
+        ObjectProfileLink.objects.get(content_type__model='taggeditem',
+                                      object_id=instance.taggeditem_ptr.id).delete()
+        instance.taggeditem_ptr.delete()
+    except:
+        pass
 
 class MakerScienceResourceTaggedItem (TaggedItem):
     RESOURCE_TAG_TYPE_CHOICES = (
@@ -32,6 +40,15 @@ class MakerScienceResourceTaggedItem (TaggedItem):
         ('rs', 'Ressources nécessaires'),
     )
     tag_type = models.CharField(max_length=2, choices=RESOURCE_TAG_TYPE_CHOICES)
+
+@receiver(post_delete, sender=MakerScienceResourceTaggedItem)
+def delete_makerscienceresourcetaggeditem_parent(sender, instance, **kwargs):
+    try:
+        ObjectProfileLink.objects.get(content_type__model='taggeditem',
+                                      object_id=instance.taggeditem_ptr.id).delete()
+        instance.taggeditem_ptr.delete()
+    except:
+        pass
 
 class MakerScienceProject(models.Model):
     parent = models.ForeignKey(Project)
@@ -47,6 +64,7 @@ class MakerScienceProject(models.Model):
 
     class Meta :
         ordering = ['parent__created_on',]
+
 
 @receiver(post_save, sender=MakerScienceProject)
 def assign_place_to_project(sender, created, instance, **kwargs):

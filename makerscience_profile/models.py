@@ -10,6 +10,7 @@ from taggit.managers import TaggableManager
 from guardian.shortcuts import assign_perm
 from guardian.shortcuts import assign_perm
 from autoslug import AutoSlugField
+from accounts.models import Profile, ObjectProfileLink
 from scout.models import PostalAddress, Place
 
 class MakerScienceProfileTaggedItem (TaggedItem):
@@ -20,13 +21,13 @@ class MakerScienceProfileTaggedItem (TaggedItem):
     tag_type = models.CharField(max_length=2, choices=PROFILE_TAG_TYPE_CHOICES)
 
 @receiver(post_delete, sender=MakerScienceProfileTaggedItem)
-def delete_makerscienceprofiletaggedItem_parent(sender, instance, **kwargs):
+def delete_makerscienceprofiletaggeditem_parent(sender, instance, **kwargs):
     try:
         ObjectProfileLink.objects.get(content_type__model='taggeditem',
                                       object_id=instance.taggeditem_ptr.id).delete()
+        instance.taggeditem_ptr.delete()
     except:
         pass
-    instance.taggeditem_ptr.delete()
 
 
 class MakerScienceProfile(models.Model):
