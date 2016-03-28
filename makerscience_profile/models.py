@@ -2,7 +2,7 @@
 from django.contrib.auth.models import User, Group
 from django.conf import settings
 from django.db import models
-from django.db.models.signals import post_save
+from django.db.models.signals import post_save, post_delete
 from django.dispatch.dispatcher import receiver
 from django.contrib.gis.geos import GEOSGeometry
 
@@ -21,6 +21,10 @@ class MakerScienceProfileTaggedItem (TaggedItem):
         ('IN', 'Intêrets'),
     )
     tag_type = models.CharField(max_length=2, choices=PROFILE_TAG_TYPE_CHOICES)
+
+@receiver(post_delete, sender=MakerScienceProfileTaggedItem)
+def delete_parent_taggeditem(sender, instance, **kwargs):
+    instance.taggeditem_ptr.delete()
 
 class MakerScienceProfile(models.Model):
     slug = AutoSlugField(always_update=True,
