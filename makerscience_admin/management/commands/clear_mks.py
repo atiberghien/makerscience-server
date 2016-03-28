@@ -5,13 +5,14 @@ from accounts.models import ObjectProfileLink
 from scout.models import Place
 from projectsheet.models import ProjectSheet
 from makerscience_profile.models import MakerScienceProfile
+from taggit.models import TaggedItem
 
 class Command(BaseCommand):
     help = "Clear MakerScience"
 
     def handle(self, *args, **options):
 
-        #in some obscure cases, content_object become None and crash
+        # in some obscure cases, content_object become None and crash
         print "Clearing ObjectProfileLink ...",
         for o in ObjectProfileLink.objects.all():
             if o.content_object == None or o.profile == None:
@@ -39,4 +40,9 @@ class Command(BaseCommand):
                 p.delete()
             else:
                 p.address.save()
+        print "[OK]"
+        print "Clearing orphan TaggedItem ...",
+        for t in TaggedItem.objects.all():
+            if t.content_object == None or  t.tag == None:
+                t.delete()
         print "[OK]"
