@@ -3,6 +3,7 @@ from django.db.models import Q
 from optparse import make_option
 from accounts.models import ObjectProfileLink
 from scout.models import Place
+from projects.models import Project
 from projectsheet.models import ProjectSheet
 from makerscience_profile.models import MakerScienceProfile
 from taggit.models import TaggedItem
@@ -33,6 +34,13 @@ class Command(BaseCommand):
                 p.save()
         print "[OK]"
 
+        print "Clearing Project website ...",
+        for p in Project.objects.exclude(Q(website__startswith="http://") | Q(website__startswith="http://"))\
+                                            .exclude(Q(website__isnull=True) | Q(website="")):
+                p.website = "http://"+p.website
+                p.save()
+        print "[OK]"
+
         print "Clearing Place ...",
         for p in Place.objects.all():
             if p.makerscienceprofile_set.count() == 0 and p.project_set.count() == 0:
@@ -40,6 +48,7 @@ class Command(BaseCommand):
             else:
                 p.address.save()
         print "[OK]"
+
         print "Clearing orphan TaggedItem ...",
         for t in TaggedItem.objects.all():
             if t.content_object == None or  t.tag == None:

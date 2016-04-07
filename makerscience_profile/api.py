@@ -107,7 +107,7 @@ class MakerScienceProfileResource(ModelResource, SearchableMakerScienceResource)
 
         bundle.data["lng"] = bundle.obj.location.geo.x if bundle.obj.location.geo else ""
         bundle.data["lat"] = bundle.obj.location.geo.y if bundle.obj.location.geo else ""
-        
+
         change_perm_code = "makerscience_profile.change_makerscienceprofile"
         bundle.data["can_edit"] = bundle.request.user.has_perm(change_perm_code, bundle.obj)
 
@@ -118,7 +118,7 @@ class MakerScienceProfileResource(ModelResource, SearchableMakerScienceResource)
         return bundle
 
     def hydrate_website(self, bundle):
-        if bundle.data["website"] and (bundle.data["website"].startswith("http://") == False or bundle.data["website"].startswith("https://") == False):
+        if bundle.data["website"] and (bundle.data["website"].startswith("http://") == False ^ bundle.data["website"].startswith("https://") == False):
             bundle.data["website"] = "http://" + bundle.data["website"]
         return bundle
 
