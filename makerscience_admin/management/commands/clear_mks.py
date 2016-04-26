@@ -5,6 +5,7 @@ from accounts.models import ObjectProfileLink
 from scout.models import Place
 from projects.models import Project
 from projectsheet.models import ProjectSheet
+from megafon.models import Post
 from makerscience_profile.models import MakerScienceProfile
 from taggit.models import TaggedItem
 
@@ -53,4 +54,10 @@ class Command(BaseCommand):
         for t in TaggedItem.objects.all():
             if t.content_object == None or  t.tag == None:
                 t.delete()
+        print "[OK]"
+
+        print "Clearing text-less post ...",
+        for p in Post.objects.filter(text='', title__isnull=False):
+            p.text = p.title
+            p.save()
         print "[OK]"
