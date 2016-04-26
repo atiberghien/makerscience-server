@@ -11,13 +11,16 @@ from solo.admin import SingletonModelAdmin
 from redactor.widgets import RedactorEditor
 from taggit.models import Tag, TaggedItem
 
+from megafon.models import Post
+from projects.models import Project
+from projectsheet.models import ProjectSheet
+
 from makerscience_profile.models import MakerScienceProfile
 from makerscience_catalog.models import MakerScienceProject, MakerScienceResource
 from makerscience_forum.models import MakerSciencePost
 from accounts.models import Profile, ObjectProfileLink
-from megafon.models import Post
 from .models import MakerScienceStaticContent, PageViews
-
+from simple_history.admin import SimpleHistoryAdmin
 
 # admin_registry = admin.site._registry.copy()
 # for model, model_admin in admin_registry.iteritems():
@@ -139,6 +142,37 @@ class PostAdmin(MPTTModelAdmin):
     display_smart_title.short_description = 'Titre'
 
     list_display = ('id', 'display_smart_title', 'text')
+    search_fields = ('title', 'text')
 
 
 admin.site.register(Post, PostAdmin)
+
+
+class ProjectAdmin(SimpleHistoryAdmin):
+    def has_projectsheet(self, obj):
+        return ProjectSheet.objects.filter(project=obj).exists()
+
+    has_projectsheet.short_description = 'Lié à un fiche ?'
+    has_projectsheet.boolean = True
+
+    def is_makerscienceproject(self, obj):
+        return MakerScienceProject.objects.filter(parent=obj).exists()
+
+    is_makerscienceproject.short_description = 'Est un projet ?'
+    is_makerscienceproject.boolean = True
+
+    def is_makerscienceresource(self, obj):
+        return MakerScienceResource.objects.filter(parent=obj).exists()
+
+    is_makerscienceresource.short_description = 'Est une expérience ?'
+    is_makerscienceresource.boolean = True
+
+
+    list_display = ["title", 'has_projectsheet', 'is_makerscienceproject', 'is_makerscienceresource']
+
+
+try :
+    admin.site.unregister(Project)
+except:
+    pass
+admin.site.register(Project, ProjectAdmin)
