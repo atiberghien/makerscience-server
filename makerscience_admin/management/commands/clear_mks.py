@@ -29,14 +29,14 @@ class Command(BaseCommand):
         print "[OK]"
 
         print "Clearing MakerScienceProfile website ...",
-        for p in MakerScienceProfile.objects.exclude(Q(website__startswith="http://") | Q(website__startswith="http://"))\
+        for p in MakerScienceProfile.objects.exclude(Q(website__startswith="http://") | Q(website__startswith="https://"))\
                                             .exclude(Q(website__isnull=True) | Q(website="")):
                 p.website = "http://"+p.website
                 p.save()
         print "[OK]"
 
         print "Clearing Project website ...",
-        for p in Project.objects.exclude(Q(website__startswith="http://") | Q(website__startswith="http://"))\
+        for p in Project.objects.exclude(Q(website__startswith="http://") | Q(website__startswith="https://"))\
                                             .exclude(Q(website__isnull=True) | Q(website="")):
                 p.website = "http://"+p.website
                 p.save()
