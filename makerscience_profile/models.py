@@ -36,7 +36,7 @@ class MakerScienceProfile(models.Model):
                          populate_from=lambda instance: instance.parent.get_full_name_or_username())
     parent = models.ForeignKey(Profile)
     activity = models.CharField(max_length=255)
-    bio = models.TextField()
+    bio = models.TextField(null=True, blank=True)
     location = models.ForeignKey(Place, null=True, blank=True, on_delete=models.SET_NULL)
     modified = models.DateTimeField(auto_now=True)
 
