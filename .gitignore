@@ -9,3 +9,10 @@ makerscience_server/whoosh_index
 *.dump
 *.json
 /makerscience_server/site_settings.py
+# makinacorpus
+cache
+corpus-django/
+develop_eggs
+*.bak
+venv/
+
