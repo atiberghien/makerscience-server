@@ -191,7 +191,6 @@ makina-projects.projectname:
       VOTE_TYPE_CHOICES: '()'
       AUTHENTICATED_USERS_PERMISSIONS: '()'
       MS_AUTHENTICATED_USERS_PERMISSIONS: '()'
-      PAGEVIEWS_FILTER: '()'
       #  FOO: "'bar'"
       #  BAR: "True"
   env_defaults:
