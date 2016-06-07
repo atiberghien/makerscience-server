@@ -5,7 +5,7 @@ from django.contrib import admin
 
 from tastypie.api import Api
 
-from scout.api import PlaceResource, PostalAddressResource #, MapResource, TileLayerResource, DataLayerResource, MarkerResource, MarkerCategoryResource
+from scout.api import PlaceResource, PostalAddressResource # , MapResource, TileLayerResource, DataLayerResource, MarkerResource, MarkerCategoryResource
 from accounts.api import UserResource, GroupResource, ProfileResource, ObjectProfileLinkResource
 from bucket.api import BucketResource, BucketFileResource, BucketTagResource, BucketFileCommentResource
 from graffiti.api import TagResource, TaggedItemResource
@@ -100,7 +100,8 @@ urlpatterns = patterns('',
     url(r'^admin/', include(admin.site.urls)),
     url(r'^api/', include(api.urls)),
     url(r'^bucket/', include('bucket.urls')),
-
+    url(r'^getimg/', 'makerscience_catalog.views.parse_html_img'),
+    url(r'^geturl/', 'makerscience_catalog.views.parse_url_link'),
 )
 
 if settings.DEBUG:
