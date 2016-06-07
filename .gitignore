@@ -9,3 +9,4 @@ makerscience_server/whoosh_index
 *.dump
 *.json
 /makerscience_server/site_settings.py
+/venv/
