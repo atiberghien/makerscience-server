@@ -97,7 +97,7 @@ def parse_url_link(request):
                 tree = html.fromstring(content)
                 title_tag = tree.find('.//title')
 
-                if title_tag:
+                if title_tag is not None:
                     title = title_tag.text_content()
 
                 else:
