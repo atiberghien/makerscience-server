@@ -1,4 +1,4 @@
--e git+https://github.com/makina-corpus/dataserver-ng.git@makerscience#egg=dataserver-project
+-e git+https://github.com/makinacorpus/dataserver-ng.git@makerscience#egg=dataserver-project
 -e git+https://github.com/django-notifications/django-notifications.git@0.8.0#egg=django_notifications_hq-master
 django-sekizai==0.8.1
 Whoosh==2.6.0
