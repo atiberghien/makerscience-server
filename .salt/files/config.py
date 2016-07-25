@@ -161,8 +161,8 @@ OBJECTPROFILELINK_CHOICES = (
     (6, "invitation à aider le projet"),
     (7, "auteur d'un une news"),
 
-    (9, "contributeur de la ressource"),
-    (10, "auteur d'une des ressources"),
+    (9, "auteur d'une des ressources"),
+    (10, "contributeur de la ressource"),
     (11, "a une expérience similiaire"),
     (12, "suit la ressource"),
     (13, "commentateur de la ressource"),
