@@ -162,7 +162,7 @@ OBJECTPROFILELINK_CHOICES = (
     (7, "auteur d'un une news"),
 
     (9, "contributeur de la ressource"),
-    (10, "auteur d'une des ressources'"),
+    (10, "auteur d'une des ressources"),
     (11, "a une expérience similiaire"),
     (12, "suit la ressource"),
     (13, "commentateur de la ressource"),
