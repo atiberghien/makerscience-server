@@ -90,7 +90,7 @@ def parse_url_link(request):
             infos = response.info()
 
             if infos.type not in ALLOWED_EXTENSIONS:
-                raise Exception(infos.type)
+                raise Exception(infos)
 
             elif infos.type == 'text/html':
                 content = response.read()
