@@ -7,7 +7,7 @@ from tastypie.api import Api
 
 from scout.api import PlaceResource, PostalAddressResource # , MapResource, TileLayerResource, DataLayerResource, MarkerResource, MarkerCategoryResource
 from accounts.api import UserResource, GroupResource, ProfileResource, ObjectProfileLinkResource
-from bucket.api import BucketResource, BucketFileResource, BucketTagResource, BucketFileCommentResource
+from bucket.api import BucketResource, BucketFileResource, BucketTagResource
 from graffiti.api import TagResource, TaggedItemResource
 from ucomment.api import CommentResource
 from megafon.api   import PostResource
@@ -47,7 +47,6 @@ api.register(ObjectProfileLinkResource())
 api.register(BucketResource())
 api.register(BucketTagResource())
 api.register(BucketFileResource())
-api.register(BucketFileCommentResource())
 
 #Graffiti
 api.register(TagResource())
@@ -102,7 +101,4 @@ urlpatterns = patterns('',
     url(r'^bucket/', include('bucket.urls')),
     url(r'^getimg/', 'makerscience_catalog.views.parse_html_img'),
     url(r'^geturl/', 'makerscience_catalog.views.parse_url_link'),
-)
-
-if settings.DEBUG:
-    urlpatterns += static(settings.MEDIA_URL, document_root=settings.MEDIA_ROOT)
+) + static(settings.MEDIA_URL, document_root=settings.MEDIA_ROOT)
