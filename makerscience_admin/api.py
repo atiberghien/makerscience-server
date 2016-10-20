@@ -31,7 +31,6 @@ class SearchableMakerScienceResource(object):
         uri = reverse('api_ms_search', kwargs={'api_name':self.api_name,'resource_name': self._meta.resource_name})
 
         paginator = Paginator(request.GET, sqs, resource_uri=uri, limit=limit)
-
         objects = []
         for result in paginator.page()['objects']:
             if result:
@@ -114,7 +113,6 @@ class SearchableMakerScienceResource(object):
             filtering[key] = json.loads(val)
 
         sqs = SearchQuerySet().models(self.Meta.object_class).facet('tags')
-
         if selected_facets:
             first_narrow_succes = False
             for i, facet in enumerate(selected_facets):
@@ -129,7 +127,6 @@ class SearchableMakerScienceResource(object):
             sqs = sqs.filter(**filtering)
         if ordering:
             sqs = sqs.order_by(ordering)
-
 
         self.log_throttled_access(request)
         return self.create_response(request, self.prepare_result(request, sqs, limit))

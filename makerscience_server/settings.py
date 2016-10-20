@@ -286,4 +286,4 @@ GRAPPELLI_ADMIN_TITLE = "Admin Makerscience"
 REDACTOR_OPTIONS = {'lang': 'fr'}
 REDACTOR_UPLOAD = 'uploads/'
 
-HAYSTACK_SIGNAL_PROCESSOR = 'haystack.signals.RealtimeSignalProcessor'  
+HAYSTACK_SIGNAL_PROCESSOR = 'haystack.signals.RealtimeSignalProcessor'
