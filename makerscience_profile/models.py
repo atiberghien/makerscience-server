@@ -66,6 +66,10 @@ class MakerScienceProfile(models.Model):
     def __unicode__(self):
         return "Profil Makerscience de %s" % self.parent.get_full_name_or_username()
 
+    class Meta:
+        verbose_name = "Profil Makerscience"
+        verbose_name_plural = "Profils Makerscience"
+
 
 @receiver(post_save, sender=Profile)
 def create_profile_on_user_signup(sender, created, instance, **kwargs):
