@@ -61,8 +61,12 @@ class MakerScienceProfileResourceLight(ModelResource, SearchableMakerScienceReso
         limit = 6
 
     def dehydrate(self, bundle):
-        bundle.data["lng"] = bundle.obj.location.geo.x if bundle.obj.location.geo else ""
-        bundle.data["lat"] = bundle.obj.location.geo.y if bundle.obj.location.geo else ""
+        if bundle.obj.location:
+            bundle.data["lng"] = bundle.obj.location.geo.x if bundle.obj.location.geo else ""
+            bundle.data["lat"] = bundle.obj.location.geo.y if bundle.obj.location.geo else ""
+        else :
+            bundle.data["lng"] = ""
+            bundle.data["lat"] = "" 
         return bundle
 
     def prepend_urls(self):
@@ -105,8 +109,12 @@ class MakerScienceProfileResource(ModelResource, SearchableMakerScienceResource)
     def dehydrate(self, bundle):
         bundle.data["full_name"] = "%s %s" % (bundle.obj.parent.user.first_name, bundle.obj.parent.user.last_name)
 
-        bundle.data["lng"] = bundle.obj.location.geo.x if bundle.obj.location.geo else ""
-        bundle.data["lat"] = bundle.obj.location.geo.y if bundle.obj.location.geo else ""
+        if bundle.obj.location:
+            bundle.data["lng"] = bundle.obj.location.geo.x if bundle.obj.location.geo else ""
+            bundle.data["lat"] = bundle.obj.location.geo.y if bundle.obj.location.geo else ""
+        else :
+            bundle.data["lng"] = ""
+            bundle.data["lat"] = ""
 
         change_perm_code = "makerscience_profile.change_makerscienceprofile"
         bundle.data["can_edit"] = bundle.request.user.has_perm(change_perm_code, bundle.obj)
