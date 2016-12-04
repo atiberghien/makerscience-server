@@ -33,9 +33,6 @@ from bucket.api import BucketFileResource
 class MakerScienceCatalogResource(ModelResource, SearchableMakerScienceResource):
     parent = fields.ToOneField(ProjectResource, 'parent', full=True)
     base_projectsheet = fields.ToOneField(ProjectSheetResource, 'parent__projectsheet', null=True, full=True)
-    #CAN NOT BE a "LIGHT" resource BECAUSE "LIGHT" model doesn't exist
-    linked_resources = fields.ToManyField('makerscience_catalog.api.MakerScienceResourceResource', 'linked_resources', full=True,null=True)
-    linked_makersciencepost = fields.ToManyField('makerscience_forum.api.MakerSciencePostResourceLight', 'makersciencepost_set', full=True,null=True)
 
     def dehydrate_author(self, bundle):
         try:
@@ -76,6 +73,9 @@ class MakerScienceCatalogResource(ModelResource, SearchableMakerScienceResource)
             news_bundle = news_resource.build_bundle(obj=news, request=bundle.request)
             news_bundle = news_resource.full_dehydrate(news_bundle)
             bundle.data["news"].append(news_bundle)
+
+        bundle.data["needs_length"] = bundle.obj.makersciencepost_set.filter(post_type='need').count()
+        bundle.data["linked_makersciencepost_ids"] = json.dumps(list(bundle.obj.makersciencepost_set.values_list('id', flat=True)))
 
         return bundle
 

@@ -31,10 +31,14 @@ class MakerSciencePostAuthorization(MakerScienceAPIAuthorization):
 class MakerSciencePostResourceLight(ModelResource, SearchableMakerScienceResource):
     slug = fields.CharField('parent__slug')
     parent_id = fields.IntegerField('parent__id')
+    parent = fields.ToOneField(PostResource, 'parent', full=True)
     updated_on = fields.DateField('parent__updated_on')
     title = fields.CharField('parent__title')
     answers_count = fields.IntegerField('parent__answers_count')
     tags = fields.ToManyField(TaggedItemResource, 'parent__tagged_items', full=True, null=True)
+
+    linked_projects = fields.ToManyField(MakerScienceProjectResourceLight, 'linked_projects', full=True,null=True)
+    linked_resources = fields.ToManyField(MakerScienceResourceResourceLight, 'linked_resources', full=True,null=True)
 
     class Meta:
         queryset = MakerSciencePost.objects.all()
@@ -48,6 +52,8 @@ class MakerSciencePostResourceLight(ModelResource, SearchableMakerScienceResourc
             'parent_id' : ['exact'],
             'id' : ['exact'],
         }
+
+
 
     def prepend_urls(self):
         return [
