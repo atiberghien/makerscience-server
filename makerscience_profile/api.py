@@ -19,11 +19,16 @@ from dataserver.authentication import AnonymousApiKeyAuthentication
 from accounts.api import ProfileResource, ObjectProfileLinkResource
 from accounts.models import ObjectProfileLink
 from scout.api import PlaceResource
-from graffiti.api import TaggedItemResource
+from taggit.models import Tag, TaggedItem
+from graffiti.api import TaggedItemResource, TagResource
 
 from makerscience_admin.api import SearchableMakerScienceResource
 from makerscience_server.authorizations  import  MakerScienceAPIAuthorization
 from .models import MakerScienceProfile, MakerScienceProfileTaggedItem
+from makerscience_catalog.models import MakerScienceProject, MakerScienceResource
+from makerscience_catalog.api import MakerScienceProjectResourceLight, MakerScienceResourceResourceLight
+from makerscience_forum.models import MakerSciencePost
+from makerscience_forum.api import MakerSciencePostResourceLight
 
 import json
 import os
@@ -66,7 +71,7 @@ class MakerScienceProfileResourceLight(ModelResource, SearchableMakerScienceReso
             bundle.data["lat"] = bundle.obj.location.geo.y if bundle.obj.location.geo else ""
         else :
             bundle.data["lng"] = ""
-            bundle.data["lat"] = "" 
+            bundle.data["lat"] = ""
         return bundle
 
     def prepend_urls(self):
@@ -140,7 +145,68 @@ class MakerScienceProfileResource(ModelResource, SearchableMakerScienceResource)
             url(r"^(?P<resource_name>%s)/(?P<slug>[\w-]+)/change/password%s$" % (self._meta.resource_name, trailing_slash()), self.wrap_view('change_password'), name="api_change_password"),
             url(r"^(?P<resource_name>%s)/reset/password%s$" % (self._meta.resource_name, trailing_slash()), self.wrap_view('reset_password'), name="api_reset_password"),
             url(r'^(?P<resource_name>%s)/(?P<slug>[\w-]+)/send/message%s$' % (self._meta.resource_name, trailing_slash()), self.wrap_view('send_message'), name='api_send_message'),
+
+            url(r"^(?P<resource_name>%s)/(?P<slug>[\w-]+)/(?P<object_model>[\w-]+)/(?P<level>[0-9]+)%s$" % (self._meta.resource_name, trailing_slash()), self.wrap_view('get_projects_or_resources_as_member'), name="api_get_projects_or_resources_as_member"),
+
         ]
+
+    def get_projects_or_resources_as_member(self, request, **kwargs):
+        self.method_check(request, allowed=['get'])
+        self.throttle_check(request)
+
+        object_assoc = {
+            "makerscienceproject" : {
+                'model' : MakerScienceProject,
+                'resource' : MakerScienceProjectResourceLight
+            },
+            "makerscienceresource" : {
+                'model' : MakerScienceResource,
+                'resource' : MakerScienceResourceResourceLight
+            },
+            "makerscienceprofile" : {
+                'model' : MakerScienceProfile,
+                'resource' : MakerScienceProfileResourceLight,
+            },
+            "post" : {
+                'model' : MakerSciencePost,
+                'resource' : MakerSciencePostResourceLight,
+            },
+            "taggeditem" : {
+                'model' : TaggedItem,
+                'resource' : TaggedItemResource,
+            },
+            "tag" : {
+                'model' : Tag,
+                'resource' : TagResource,
+            }
+        }
+
+        profile = MakerScienceProfile.objects.get(slug=kwargs["slug"])
+        object_model = kwargs["object_model"]
+        level = kwargs["level"]
+        lookup_field = request.GET.get('lookup_field', 'id')
+
+        objects_ids = profile.parent.objectprofilelink_set\
+                                    .filter(content_type__model=object_model, level=level)\
+                                    .values_list('object_id', flat=True)
+        print object_model, level, objects_ids
+        lookup = {'%s__in' % lookup_field : set(objects_ids)}
+        mks_objects = object_assoc[object_model]['model'].objects\
+                                    .filter(**lookup)
+
+        # try:
+        #     mks_objects = mks_objects.order_by('-parent__created_on')
+        # except:
+        #     pass
+
+        objects_as_member = []
+        for mks_object in mks_objects:
+            mks_object_resource = object_assoc[object_model]['resource']()
+            mks_object_bundle = mks_object_resource.build_bundle(obj=mks_object, request=request)
+            mks_object_bundle = mks_object_resource.full_dehydrate(mks_object_bundle)
+            objects_as_member.append(mks_object_bundle)
+        return self.create_response(request, objects_as_member)
+
 
     def send_message(self, request, **kwargs):
         self.method_check(request, allowed=['post'])
