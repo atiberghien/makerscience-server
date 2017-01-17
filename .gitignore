@@ -1,5 +1,4 @@
 /media/*
-/static/*
 *pyc
 .project
 .pydevproject
@@ -15,3 +14,5 @@ corpus-django/
 develop_eggs
 *.bak
 venv/
+/static/
+/fabfile.py
