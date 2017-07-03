@@ -63,6 +63,8 @@ class MakerScienceProfile(models.Model):
     contact_email = models.CharField(max_length=500, null=True, blank=True)
     website = models.CharField(max_length=500, null=True, blank=True)
 
+    activity_score = models.IntegerField(null=True, blank=True, default=0)
+
     def __unicode__(self):
         return "Profil Makerscience de %s" % self.parent.get_full_name_or_username()
 

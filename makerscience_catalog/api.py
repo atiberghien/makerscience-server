@@ -136,6 +136,7 @@ class MakerScienceProjectResourceLight(MakerScienceCatalogResource):
         filtering = {
             'parent_id' : ['exact'],
             'id' : ['exact'],
+	    'featured' : ['exact'],
         }
 	ordering =  ['modified']
 
@@ -161,6 +162,7 @@ class MakerScienceResourceResourceLight(MakerScienceCatalogResource):
 	filtering = {
             'parent_id' : ['exact'],
             'id' : ['exact'],
+	    'featured' : ['exact'],
         }
 	ordering =  ['modified']
 

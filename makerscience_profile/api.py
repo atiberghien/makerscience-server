@@ -42,7 +42,7 @@ class MakerScienceProfileResourceLight(ModelResource, SearchableMakerScienceReso
     address_locality = fields.CharField('location__address__address_locality', null=True)
     avatar = fields.FileField("parent__mugshot", null=True, blank=True)
     date_joined = fields.DateField("parent__user__date_joined")
-    activity_score = fields.IntegerField()
+    activity_score = fields.IntegerField('activity_score')
 
     class Meta:
         queryset = MakerScienceProfile.objects.all()
@@ -69,8 +69,6 @@ class MakerScienceProfileResourceLight(ModelResource, SearchableMakerScienceReso
         else :
             bundle.data["lng"] = ""
             bundle.data["lat"] = ""
-
-        bundle.data["activity_score"] = bundle.obj.parent.objectprofilelink_set.count()
 
         return bundle
 

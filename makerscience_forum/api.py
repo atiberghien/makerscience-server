@@ -48,6 +48,7 @@ class MakerSciencePostResourceLight(ModelResource, SearchableMakerScienceResourc
             'parent_id' : ['exact'],
             'id' : ['exact'],
         }
+	ordering = ['updated_on']
 
     def prepend_urls(self):
         return [
