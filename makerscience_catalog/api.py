@@ -125,6 +125,7 @@ class MakerScienceProjectResourceLight(MakerScienceCatalogResource):
     baseline = fields.CharField('parent__baseline', null=True)
     cover = fields.CharField('parent__projectsheet__cover__thumbnail_url', null=True)
     created_on = fields.BooleanField('parent__created_on')
+    total_score = fields.FloatField('total_score')
 
     class Meta:
         object_class = MakerScienceProject
@@ -139,7 +140,7 @@ class MakerScienceProjectResourceLight(MakerScienceCatalogResource):
             'id' : ['exact'],
             'featured' : ['exact'],
         }
-        ordering = ['modified', 'created_on', 'title']
+        ordering = ['modified', 'created_on', 'title', 'total_score']
 
 
     def dehydrate(self, bundle):
@@ -152,7 +153,7 @@ class MakerScienceResourceResourceLight(MakerScienceCatalogResource):
     baseline = fields.CharField('parent__baseline', null=True)
     cover = fields.CharField('parent__projectsheet__cover__thumbnail_url', null=True)
     created_on = fields.BooleanField('parent__created_on')
-
+    total_score = fields.FloatField('total_score')
 
     class Meta:
         object_class = MakerScienceResource
@@ -167,7 +168,7 @@ class MakerScienceResourceResourceLight(MakerScienceCatalogResource):
             'id' : ['exact'],
             'featured' : ['exact'],
         }
-        ordering = ['modified', 'created_on', 'title']
+        ordering = ['modified', 'created_on', 'title', 'total_score']
 
     def dehydrate(self, bundle):
         return self.dehydrate_author(bundle)
