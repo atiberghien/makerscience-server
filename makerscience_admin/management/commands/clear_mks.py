@@ -61,3 +61,9 @@ class Command(BaseCommand):
             p.text = p.title
             p.save()
         print "[OK]"
+
+        print "Setting profile activity score...",
+        for p in MakerScienceProfile.objects.all():
+            p.activity_score = p.parent.objectprofilelink_set.all().count()
+            p.save()
+        print "[OK]"
