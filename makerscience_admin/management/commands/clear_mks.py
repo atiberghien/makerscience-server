@@ -1,13 +1,17 @@
+from django.contrib.contenttypes.models import ContentType
 from django.core.management.base import BaseCommand
-from django.db.models import Q
-from optparse import make_option
-from accounts.models import ObjectProfileLink
+from django.db.models import Q, Avg
+
 from scout.models import Place
 from projects.models import Project
 from projectsheet.models import ProjectSheet
+from accounts.models import ObjectProfileLink
 from megafon.models import Post
-from makerscience_profile.models import MakerScienceProfile
+from starlet.models import Vote
 from taggit.models import TaggedItem
+
+from makerscience_profile.models import MakerScienceProfile
+from makerscience_catalog.models import MakerScienceProject, MakerScienceResource
 
 class Command(BaseCommand):
     help = "Clear MakerScience"
@@ -62,8 +66,18 @@ class Command(BaseCommand):
             p.save()
         print "[OK]"
 
-        print "Setting profile activity score...",
+        print "Update profile activity score...",
         for p in MakerScienceProfile.objects.all():
             p.activity_score = p.parent.objectprofilelink_set.all().count()
             p.save()
         print "[OK]"
+
+        print "Update total_score"
+        for p in MakerScienceProject.objects.all():
+            votes = Vote.objects.filter(content_type=ContentType.objects.get_for_model(p), object_id=p.id)
+            p.total_score = votes.aggregate(Avg('score'))['score__avg'] or 0.0
+            p.save()
+        for r in MakerScienceResource.objects.all():
+            votes = Vote.objects.filter(content_type=ContentType.objects.get_for_model(r), object_id=r.id)
+            r.total_score = votes.aggregate(Avg('score'))['score__avg'] or 0.0
+            r.save()
