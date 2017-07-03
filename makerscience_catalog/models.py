@@ -59,6 +59,8 @@ class MakerScienceProject(models.Model):
 
     featured = models.BooleanField(default=False)
 
+    total_score = models.FloatField(default=0.0)
+
     def __unicode__(self):
         return self.parent.title
 
@@ -83,6 +85,8 @@ class MakerScienceResource(models.Model):
     linked_resources = models.ManyToManyField("MakerScienceResource", null=True, blank=True)
 
     featured = models.BooleanField(default=False)
+
+    total_score = models.FloatField(default=0.0)
 
     class Meta :
         ordering = ['parent__created_on',]
