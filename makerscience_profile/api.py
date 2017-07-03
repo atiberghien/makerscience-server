@@ -70,7 +70,7 @@ class MakerScienceProfileResourceLight(ModelResource, SearchableMakerScienceReso
             bundle.data["lng"] = ""
             bundle.data["lat"] = ""
 
-        bundle["activity_score"] = bundle.obj.parent.objectprofilelink_set.count()
+        bundle.data["activity_score"] = bundle.obj.parent.objectprofilelink_set.count()
 
         return bundle
 
