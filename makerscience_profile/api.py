@@ -58,6 +58,7 @@ class MakerScienceProfileResourceLight(ModelResource, SearchableMakerScienceReso
             'slug' : ['exact',]
 
         }
+        ordering = ['date_joined']
         limit = 6
 
     def dehydrate(self, bundle):
