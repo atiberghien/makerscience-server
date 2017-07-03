@@ -58,7 +58,7 @@ class MakerScienceProfileResourceLight(ModelResource, SearchableMakerScienceReso
             'slug' : ['exact',]
 
         }
-        ordering = ['date_joined']
+        ordering = ['date_joined', 'modified']
         limit = 6
 
     def dehydrate(self, bundle):
@@ -67,7 +67,7 @@ class MakerScienceProfileResourceLight(ModelResource, SearchableMakerScienceReso
             bundle.data["lat"] = bundle.obj.location.geo.y if bundle.obj.location.geo else ""
         else :
             bundle.data["lng"] = ""
-            bundle.data["lat"] = "" 
+            bundle.data["lat"] = ""
         return bundle
 
     def prepend_urls(self):
