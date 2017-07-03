@@ -124,7 +124,7 @@ class MakerScienceProjectResourceLight(MakerScienceCatalogResource):
     title = fields.CharField('parent__title')
     baseline = fields.CharField('parent__baseline', null=True)
     cover = fields.CharField('parent__projectsheet__cover__thumbnail_url', null=True)
-    created_on = fields.BooleanField(model_attr='parent__created_on')
+    created_on = fields.BooleanField('parent__created_on')
 
     class Meta:
         object_class = MakerScienceProject
@@ -151,7 +151,7 @@ class MakerScienceResourceResourceLight(MakerScienceCatalogResource):
     title = fields.CharField('parent__title')
     baseline = fields.CharField('parent__baseline', null=True)
     cover = fields.CharField('parent__projectsheet__cover__thumbnail_url', null=True)
-    created_on = fields.BooleanField(model_attr='parent__created_on')
+    created_on = fields.BooleanField('parent__created_on')
 
 
     class Meta:
