@@ -137,6 +137,8 @@ class MakerScienceProjectResourceLight(MakerScienceCatalogResource):
             'parent_id' : ['exact'],
             'id' : ['exact'],
         }
+	ordering =  ['modified']
+
 
     def dehydrate(self, bundle):
         return self.dehydrate_author(bundle)
@@ -156,10 +158,11 @@ class MakerScienceResourceResourceLight(MakerScienceCatalogResource):
         resource_name = 'makerscience/resourcelight'
         always_return_data = True
         excludes = ["parent", "base_projectsheet", "question_answers", "linked_resources"]
-        filtering = {
+	filtering = {
             'parent_id' : ['exact'],
             'id' : ['exact'],
         }
+	ordering =  ['modified']
 
     def dehydrate(self, bundle):
         return self.dehydrate_author(bundle)
@@ -181,6 +184,7 @@ class MakerScienceProjectResource(MakerScienceCatalogResource):
             'featured' : ['exact'],
         }
         limit = 6
+
 
 class MakerScienceResourceAuthorization(MakerScienceAPIAuthorization):
     def __init__(self):
