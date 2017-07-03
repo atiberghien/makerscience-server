@@ -124,11 +124,12 @@ class MakerScienceProjectResourceLight(MakerScienceCatalogResource):
     title = fields.CharField('parent__title')
     baseline = fields.CharField('parent__baseline', null=True)
     cover = fields.CharField('parent__projectsheet__cover__thumbnail_url', null=True)
+    created_on = fields.BooleanField(model_attr='parent__created_on')
 
     class Meta:
         object_class = MakerScienceProject
         object_profile_link_level = 0
-        queryset = MakerScienceProject.objects.all()
+        queryset = MakerScienceProject.objects.all().order_by('?')
         allowed_methods = ['get']
         resource_name = 'makerscience/projectlight'
         always_return_data = True
@@ -136,9 +137,9 @@ class MakerScienceProjectResourceLight(MakerScienceCatalogResource):
         filtering = {
             'parent_id' : ['exact'],
             'id' : ['exact'],
-	    'featured' : ['exact'],
+            'featured' : ['exact'],
         }
-	ordering =  ['modified']
+        ordering = ['modified', 'created_on', 'title']
 
 
     def dehydrate(self, bundle):
@@ -150,21 +151,23 @@ class MakerScienceResourceResourceLight(MakerScienceCatalogResource):
     title = fields.CharField('parent__title')
     baseline = fields.CharField('parent__baseline', null=True)
     cover = fields.CharField('parent__projectsheet__cover__thumbnail_url', null=True)
+    created_on = fields.BooleanField(model_attr='parent__created_on')
+
 
     class Meta:
         object_class = MakerScienceResource
         object_profile_link_level = 10
-        queryset = MakerScienceResource.objects.all()
+        queryset = MakerScienceResource.objects.all().order_by('?')
         allowed_methods = ['get']
         resource_name = 'makerscience/resourcelight'
         always_return_data = True
         excludes = ["parent", "base_projectsheet", "question_answers", "linked_resources"]
-	filtering = {
+        filtering = {
             'parent_id' : ['exact'],
             'id' : ['exact'],
-	    'featured' : ['exact'],
+            'featured' : ['exact'],
         }
-	ordering =  ['modified']
+        ordering = ['modified', 'created_on', 'title']
 
     def dehydrate(self, bundle):
         return self.dehydrate_author(bundle)
