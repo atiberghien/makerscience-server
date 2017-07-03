@@ -45,7 +45,7 @@ class MakerScienceProfileResourceLight(ModelResource, SearchableMakerScienceReso
     activity_score = fields.IntegerField('activity_score')
 
     class Meta:
-        queryset = MakerScienceProfile.objects.all()
+        queryset = MakerScienceProfile.objects.all().order_by('?')
         allowed_methods = ['get']
         resource_name = 'makerscience/profilelight'
         authentication = AnonymousApiKeyAuthentication()
@@ -59,7 +59,7 @@ class MakerScienceProfileResourceLight(ModelResource, SearchableMakerScienceReso
             'slug' : ['exact',]
 
         }
-        ordering = ['date_joined', 'modified', 'activity_score']
+        ordering = ['date_joined', 'modified', 'activity_score', 'first_name', 'last_name']
         limit = 6
 
     def dehydrate(self, bundle):
